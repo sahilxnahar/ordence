@@ -49,14 +49,18 @@
   --ordence-white: #ffffff;
 
   /* ————— Semantic tokens (light) ————— */
-  --background: var(--ordence-paper);
+  /* Bright white canvas (Twenty-style); Warm Ivory becomes the alternating
+     section surface so the page keeps editorial warmth without losing the
+     crisp white base. Borders are stronger so structure reads clearly. */
+  --background: var(--ordence-white);
   --surface: var(--ordence-white);
+  --surface-subtle: var(--ordence-paper);
   --surface-raised: var(--ordence-white);
   --foreground: var(--ordence-ink-900);
   --muted: #556075;
   --muted-subtle: #8a92a6;
-  --border: rgba(17, 24, 39, 0.1);
-  --border-strong: rgba(17, 24, 39, 0.18);
+  --border: rgba(17, 24, 39, 0.12);
+  --border-strong: rgba(17, 24, 39, 0.24);
 
   --primary: var(--ordence-ink-900);
   --primary-foreground: var(--ordence-paper);
@@ -104,6 +108,7 @@
 .dark {
   --background: #0b101b;
   --surface: #111827;
+  --surface-subtle: #0e1524;
   --surface-raised: #1b2434;
   --foreground: #f2f4f8;
   --muted: #a8b2c7;
@@ -139,6 +144,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
   --color-surface-raised: var(--surface-raised);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
@@ -254,6 +260,37 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* ————— Marquee (infinite capability strip) ————— */
+@keyframes ordence-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: ordence-marquee 32s linear infinite;
+}
+
+.marquee-paused:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Fun link underline: draws in from the left on hover */
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1.5px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 240ms var(--ease-swift);
+}
+
+.link-draw:hover {
+  background-size: 100% 1.5px;
 }
 
 /* Respect users who opt out of motion — global kill-switch */

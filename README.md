@@ -31,3 +31,22 @@ npm run dev
 
 Before first deploy: create the KV namespaces and paste their ids into
 `wrangler.jsonc` (instructions inside that file).
+
+## CI: Cloudflare Workers Builds (git-connected deploys)
+
+In the Workers Builds settings for this repo, set:
+
+| Setting | Value |
+|---|---|
+| Build command | `npm run build:worker` |
+| Deploy command | `npx wrangler deploy` (default is fine) |
+
+`npm run build` alone is NOT enough for CI — it only compiles Next.js.
+`build:worker` runs `opennextjs-cloudflare build`, which performs the Next
+build **and** generates `.open-next/` (worker bundle + compiled OpenNext
+config). Without it, the deploy step fails with
+`Could not find compiled Open Next config`.
+
+Also required before the first successful deploy: real KV namespace ids in
+`wrangler.jsonc` — a deploy with the `<REPLACE_WITH_…>` placeholders will be
+rejected when bindings are validated.
