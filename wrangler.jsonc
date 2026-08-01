@@ -36,12 +36,12 @@
     {
       // Tenant lookup cache (L2 in src/lib/tenant/store.ts)
       "binding": "TENANT_KV",
-      "id": "<REPLACE_WITH_TENANT_KV_ID>"
+      "id": "<e4f1eda097f94c97b9952d60555a63ea>"
     },
     {
       // Next.js incremental (ISR/data) cache — used by OpenNext
       "binding": "NEXT_INC_CACHE_KV",
-      "id": "<REPLACE_WITH_INC_CACHE_KV_ID>"
+      "id": "<e3ff71ea8ffc4a7bb1bf6343b44e88fc>"
     }
   ],
   "vars": {
