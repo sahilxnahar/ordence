@@ -1,0 +1,53 @@
+/**
+ * Cloudflare Workers deployment — free plan.
+ *
+ * Free-tier envelope this config is designed around:
+ *   Workers:        100,000 requests/day, 10ms CPU avg (plenty for SSR of
+ *                   mostly-static, KV-cached pages)
+ *   Workers KV:     100k reads/day, 1k writes/day, 1GB storage
+ *   Static assets:  unlimited & free — the more you prerender, the less
+ *                   you spend from the Workers budget
+ *
+ * Setup:
+ *   1. npx wrangler kv namespace create TENANT_KV
+ *   2. npx wrangler kv namespace create NEXT_INC_CACHE_KV
+ *      → paste both ids below
+ *   3. npm run deploy
+ *   4. Cloudflare dashboard → your zone (ordence.com):
+ *        - Add custom domains: ordence.com, www.ordence.com,
+ *          admin.ordence.com, app.ordence.com
+ *        - Add a wildcard route: *.ordence.com/* → this Worker
+ *          (wildcard subdomains require ordence.com to be a zone in the
+ *          same Cloudflare account; proxied wildcard DNS is free)
+ *        - Tenant custom domains (customclientdomain.com) attach via
+ *          Cloudflare for SaaS custom hostnames — free for the first 100.
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ordence",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "kv_namespaces": [
+    {
+      // Tenant lookup cache (L2 in src/lib/tenant/store.ts)
+      "binding": "TENANT_KV",
+      "id": "<REPLACE_WITH_TENANT_KV_ID>"
+    },
+    {
+      // Next.js incremental (ISR/data) cache — used by OpenNext
+      "binding": "NEXT_INC_CACHE_KV",
+      "id": "<REPLACE_WITH_INC_CACHE_KV_ID>"
+    }
+  ],
+  "vars": {
+    "NEXT_PUBLIC_ROOT_DOMAIN": "ordence.com"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

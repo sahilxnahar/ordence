@@ -1,0 +1,271 @@
+/**
+ * Ordence Design Tokens — canonical source: the official ORDENCE Orbital
+ * brand kit (`ordence-brand-kit/tokens/ordence-brand.json`).
+ *
+ * Brand DNA (kit names):
+ *   Ink Navy      #111827 — structure, text, primary (authority, engineering)
+ *   Bright Coral  #ff5c5c — editorial accent (energy, human)
+ *   Vivid Violet  #6d45e8 — functional accent (intelligence, future)
+ *   Warm Ivory    #faf9f6 — canvas (editorial, gallery-like)
+ * The tint/shade scales below extend the kit's four anchors; the anchors
+ * themselves are byte-identical to the kit.
+ *
+ * Architecture: raw palette → semantic tokens (CSS variables) → Tailwind theme.
+ * Components consume ONLY semantic tokens, so tenant theming and dark mode
+ * are pure variable swaps — no component changes required.
+ */
+
+@import "tailwindcss";
+
+/* Class-based dark mode (next-themes toggles `.dark` on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* ————— Raw palette ————— */
+  --ordence-ink-950: #0b101b;
+  --ordence-ink-900: #111827;
+  --ordence-ink-800: #1d2637;
+  --ordence-ink-700: #2c374f;
+  --ordence-ink-600: #3e4a66;
+  --ordence-ink-500: #5a6785;
+  --ordence-ink-400: #7e8aa6;
+  --ordence-ink-300: #a8b2c7;
+  --ordence-ink-200: #cbd2e1;
+  --ordence-ink-100: #e5e9f1;
+  --ordence-ink-50: #f2f4f8;
+
+  --ordence-coral-600: #dc3d3d;
+  --ordence-coral-500: #ff5c5c;
+  --ordence-coral-400: #ff8585;
+  --ordence-coral-100: #ffe5e5;
+
+  --ordence-violet-700: #5533c7;
+  --ordence-violet-600: #6d45e8;
+  --ordence-violet-500: #8563ee;
+  --ordence-violet-400: #a186f3;
+  --ordence-violet-100: #ede8fc;
+
+  --ordence-paper: #faf9f6;
+  --ordence-white: #ffffff;
+
+  /* ————— Semantic tokens (light) ————— */
+  --background: var(--ordence-paper);
+  --surface: var(--ordence-white);
+  --surface-raised: var(--ordence-white);
+  --foreground: var(--ordence-ink-900);
+  --muted: #556075;
+  --muted-subtle: #8a92a6;
+  --border: rgba(17, 24, 39, 0.1);
+  --border-strong: rgba(17, 24, 39, 0.18);
+
+  --primary: var(--ordence-ink-900);
+  --primary-foreground: var(--ordence-paper);
+  --accent: var(--ordence-violet-600);
+  --accent-foreground: #ffffff;
+  --accent-soft: var(--ordence-violet-100);
+  --danger: var(--ordence-coral-600);
+  --danger-soft: var(--ordence-coral-100);
+  --success: #0e8a5f;
+  --warning: #b26a00;
+  --ring: var(--ordence-violet-600);
+
+  /* Tenant-overridable brand slot (tenants may repaint this at runtime) */
+  --brand: var(--ordence-violet-600);
+  --brand-contrast: #ffffff;
+
+  /* ————— Gradients ————— */
+  --gradient-brand: linear-gradient(135deg, #6d45e8 0%, #ff5c5c 100%);
+  --gradient-aurora: radial-gradient(
+      60% 80% at 20% 10%,
+      rgba(109, 69, 232, 0.14),
+      transparent 60%
+    ),
+    radial-gradient(50% 70% at 85% 20%, rgba(255, 92, 92, 0.1), transparent 60%);
+  --gradient-ink: linear-gradient(180deg, #111827 0%, #0b101b 100%);
+
+  /* ————— Elevation (flat-first: hairlines over shadows) ————— */
+  --shadow-hairline: 0 0 0 1px var(--border);
+  --shadow-low: 0 1px 2px rgba(17, 24, 39, 0.05), 0 0 0 1px var(--border);
+  --shadow-mid: 0 8px 24px -8px rgba(17, 24, 39, 0.12), 0 0 0 1px var(--border);
+  --shadow-high: 0 24px 64px -16px rgba(17, 24, 39, 0.22);
+
+  /* ————— Motion ————— */
+  --ease-swift: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 160ms;
+  --duration-base: 240ms;
+  --duration-slow: 420ms;
+
+  /* ————— Radii: pill-shaped controls, soft surfaces ————— */
+  --radius-control: 9999px;
+  --radius-surface: 1rem;
+  --radius-panel: 1.5rem;
+}
+
+.dark {
+  --background: #0b101b;
+  --surface: #111827;
+  --surface-raised: #1b2434;
+  --foreground: #f2f4f8;
+  --muted: #a8b2c7;
+  --muted-subtle: #707b93;
+  --border: rgba(242, 244, 248, 0.1);
+  --border-strong: rgba(242, 244, 248, 0.2);
+
+  --primary: #f2f4f8;
+  --primary-foreground: #111827;
+  --accent: var(--ordence-violet-500);
+  --accent-soft: rgba(133, 99, 238, 0.16);
+  --danger: var(--ordence-coral-500);
+  --danger-soft: rgba(255, 92, 92, 0.14);
+  --ring: var(--ordence-violet-400);
+
+  --brand: var(--ordence-violet-500);
+
+  --gradient-aurora: radial-gradient(
+      60% 80% at 20% 10%,
+      rgba(133, 99, 238, 0.2),
+      transparent 60%
+    ),
+    radial-gradient(50% 70% at 85% 20%, rgba(255, 92, 92, 0.12), transparent 60%);
+
+  --shadow-hairline: 0 0 0 1px var(--border);
+  --shadow-low: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border);
+  --shadow-mid: 0 8px 24px -8px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border);
+  --shadow-high: 0 24px 64px -16px rgba(0, 0, 0, 0.6);
+}
+
+/* Map semantic tokens into Tailwind's theme so utilities like
+   `bg-surface`, `text-muted`, `border-border`, `bg-brand` exist. */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-subtle: var(--muted-subtle);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-contrast: var(--brand-contrast);
+
+  --color-ink-50: var(--ordence-ink-50);
+  --color-ink-100: var(--ordence-ink-100);
+  --color-ink-200: var(--ordence-ink-200);
+  --color-ink-300: var(--ordence-ink-300);
+  --color-ink-400: var(--ordence-ink-400);
+  --color-ink-500: var(--ordence-ink-500);
+  --color-ink-600: var(--ordence-ink-600);
+  --color-ink-700: var(--ordence-ink-700);
+  --color-ink-800: var(--ordence-ink-800);
+  --color-ink-900: var(--ordence-ink-900);
+  --color-ink-950: var(--ordence-ink-950);
+  --color-coral-100: var(--ordence-coral-100);
+  --color-coral-400: var(--ordence-coral-400);
+  --color-coral-500: var(--ordence-coral-500);
+  --color-coral-600: var(--ordence-coral-600);
+  --color-violet-100: var(--ordence-violet-100);
+  --color-violet-400: var(--ordence-violet-400);
+  --color-violet-500: var(--ordence-violet-500);
+  --color-violet-600: var(--ordence-violet-600);
+  --color-violet-700: var(--ordence-violet-700);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-control: var(--radius-control);
+  --radius-surface: var(--radius-surface);
+  --radius-panel: var(--radius-panel);
+
+  --shadow-hairline: var(--shadow-hairline);
+  --shadow-low: var(--shadow-low);
+  --shadow-mid: var(--shadow-mid);
+  --shadow-high: var(--shadow-high);
+
+  --ease-swift: var(--ease-swift);
+}
+
+/* ————— Base styles ————— */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv05", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Accessible focus — visible, brand-colored, never removed */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Editorial display type: tight tracking, engineered rhythm */
+.text-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.text-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hairline {
+  box-shadow: var(--shadow-hairline);
+}
+
+.bg-aurora {
+  background-image: var(--gradient-aurora);
+}
+
+.bg-gradient-brand {
+  background-image: var(--gradient-brand);
+}
+
+.text-gradient-brand {
+  background-image: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Respect users who opt out of motion — global kill-switch */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,16 @@
+import { cn } from "@/lib/utils";
+
+/** Editorial page gutter — a single max-width rhythm across all surfaces. */
+export function Container({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={cn("mx-auto w-full max-w-6xl px-6 md:px-10", className)}>
+      {children}
+    </div>
+  );
+}
