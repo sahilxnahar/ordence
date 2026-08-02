@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
-import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
+import { RevealGroup, RevealItem } from "@/components/motion/reveal";
+import { LazyLampBand } from "@/components/three/lazy";
+import { DeferredMount } from "@/components/util/deferred-mount";
+import { BandFallback } from "@/components/marketing/band-fallback";
 
 export const metadata: Metadata = {
   title: "About — why Ordence exists",
@@ -73,13 +76,26 @@ export default function AboutPage() {
               </RevealItem>
             ))}
           </RevealGroup>
-          <Reveal className="mt-14 flex justify-center">
+        </Container>
+      </section>
+
+      <DeferredMount
+        requireCapableDevice
+        placeholder={
+          <BandFallback
+            eyebrow="Talk to a human"
+            title="Someone is actually here."
+            glow="amber"
+            body="No chatbot maze, no lead-scoring purgatory. Tell us what you're building and a person replies — usually the same day."
+          >
             <Button variant="accent" size="lg" href="/contact">
               Build with us <span aria-hidden="true">→</span>
             </Button>
-          </Reveal>
-        </Container>
-      </section>
+          </BandFallback>
+        }
+      >
+        <LazyLampBand primaryHref="/contact" primaryLabel="Build with us" />
+      </DeferredMount>
     </>
   );
 }

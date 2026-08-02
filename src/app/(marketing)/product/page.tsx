@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { LazyCommandRoom } from "@/components/three/lazy";
+import { DeferredMount } from "@/components/util/deferred-mount";
 
 export const metadata: Metadata = {
   title: "Product — your business, live",
@@ -58,7 +59,34 @@ export default function ProductPage() {
         {/* The showpiece */}
         <Container className="relative pb-20">
           <Reveal delay={0.1}>
-            <LazyCommandRoom />
+            <DeferredMount
+              requireCapableDevice
+              placeholder={
+                <div className="overflow-hidden rounded-panel border border-border bg-surface shadow-mid">
+                  <div className="flex items-center gap-1.5 border-b border-border bg-surface-subtle px-4 py-3">
+                    <span className="size-2.5 rounded-full bg-coral-400" />
+                    <span className="size-2.5 rounded-full bg-warning/60" />
+                    <span className="size-2.5 rounded-full bg-success/60" />
+                    <span className="ml-3 font-mono text-[11px] text-muted-subtle">
+                      app.ordence.com — Command Room
+                    </span>
+                  </div>
+                  <div className="relative aspect-[16/10] bg-[#0b101b]">
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-[radial-gradient(50%_60%_at_50%_50%,rgba(109,69,232,0.25),transparent_70%)]"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
+                      <p className="type-h3 text-[#dfe4f2]">
+                        Your business, running on Ordence.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              }
+            >
+              <LazyCommandRoom />
+            </DeferredMount>
           </Reveal>
         </Container>
       </section>

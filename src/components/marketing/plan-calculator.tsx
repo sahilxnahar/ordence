@@ -82,7 +82,7 @@ export function PlanCalculator() {
                 aria-pressed={industry === p.key}
                 className={`press rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
                   industry === p.key
-                    ? "border-accent bg-accent-soft text-accent"
+                    ? "border-accent bg-accent-soft text-accent-strong"
                     : "border-border text-muted hover:text-foreground"
                 }`}
               >
@@ -127,13 +127,13 @@ export function PlanCalculator() {
                 aria-pressed={termIndex === i}
                 className={`press rounded-full border px-4 py-2 text-xs font-medium transition-colors ${
                   termIndex === i
-                    ? "border-accent bg-accent-soft text-accent"
+                    ? "border-accent bg-accent-soft text-accent-strong"
                     : "border-border text-muted hover:text-foreground"
                 }`}
               >
                 {t.label}
                 {t.discount > 0 && (
-                  <span className="ml-1.5 opacity-70">
+                  <span className="ml-1.5 font-normal">
                     −{Math.round(t.discount * 100)}%
                   </span>
                 )}

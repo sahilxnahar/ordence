@@ -244,7 +244,16 @@ src/
 │   ├── auth/login/            marketing-side login page
 │   └── _parked/               NOT routed (underscore = private folder)
 ├── components/
-│   ├── ui/ layout/ marketing/ motion/ react-bits/ three/ admin/
+│   ├── ui/ layout/ marketing/ motion/ react-bits/ admin/
+│   └── three/
+│       ├── particle-field.tsx  ★ one GPU harness, three fields
+│       ├── scene-controls.tsx      collapsible slider panel per band
+│       ├── convergence-band.tsx    /crm, /ai
+│       ├── magnetosphere-band.tsx  /platform, /erp, tenant workspaces
+│       ├── lamp-band.tsx           homepage close, /about
+│       ├── scene-canvas.tsx        the ONLY sanctioned way to mount WebGL
+│       ├── lazy.tsx                dynamic imports + sized placeholders
+│       └── living-ledger / tenant-prism / command-room
 └── lib/
     ├── tenant/
     │   ├── resolve.ts         ★ pure host classification (+ tests)
@@ -326,8 +335,8 @@ a local worker. Homepage, after the P1–P6 frontend pass:
 
 | Profile | JS transferred | Canvases | WebGL contexts | DOM ready |
 |---|---|---|---|---|
-| Desktop 1440×900 | 1,596 KB | 2 | 1 | ~600 ms |
-| Mobile 390×844 | **694 KB** | 1 | **0** | ~110 ms |
+| Desktop 1440×900 | 1,623 KB | 2 | 1 | ~180 ms |
+| Mobile 390×844 | **704 KB** | 1 | **0** | ~85 ms |
 
 Before the pass the homepage mounted **4 canvases and 2 WebGL contexts on
 every device**. The mobile figure is now 56% lighter because three.js
@@ -335,10 +344,60 @@ every device**. The mobile figure is now 56% lighter because three.js
 desktop-class devices that aren't asking to save data or reduce motion.
 Phones get a designed static composition instead, not a broken one.
 
+Adding three new WebGL scenes moved mobile by **10 KB** and desktop by
+27 KB. That is the whole point of the shared harness: `particle-field.tsx`
+is a few KB of shader source that reuses the three.js chunk already on the
+page, so the fourth scene costs roughly what the second one did.
+
 Budgets to hold:
 - Mobile homepage JS ≤ 750 KB
 - At most **one** WebGL context per route, ever
 - No route above 2 canvases
+- Every dark band must be wrapped in `DeferredMount requireCapableDevice`
+  with a `BandFallback` placeholder of matching height
+- Every band pauses its render loop off-screen (`frameloop={inView ? …}`)
+
+### Scene controls
+
+Each band exposes a collapsed "Play with it" panel (`scene-controls.tsx`)
+driven by `FIELD_CONTROLS` in `particle-field.tsx`. Sliders write plain
+numbers into shader uniforms every frame — no React re-render of the WebGL
+tree, no shader recompilation. Two rules when adding a control:
+
+1. **Label it in product language, not renderer language.** "Workspaces in
+   orbit", not "Magnetic Field Size". The float is the same; the claim is
+   not.
+2. **Keep the default on a step boundary.** A default that is not a
+   multiple of `step` gets silently snapped by the browser, so Reset lands
+   somewhere other than the documented value.
+
+### Known bug, fixed — worth remembering
+
+The Cloudflare adapter bundles the server with esbuild's `keepNames`
+transform, which instruments functions with a call to its `__name` helper.
+next-themes builds its no-flash script by stringifying a function, so the
+instrumented source was serialized straight into the HTML — where the
+helper does not exist. Every route threw a ReferenceError before first
+paint, killing theme initialisation.
+
+**It reproduced only in the Workers bundle, never under `next start`.** The
+fix is a 60-byte identity shim, first script in `<head>` in
+`src/app/layout.tsx`. The lesson is the general one: verify against
+`npx opennextjs-cloudflare build` + `npx wrangler dev --local`, not just
+`npm run build`. They are not the same runtime.
+
+### Accessibility
+
+`npm run audit:a11y` runs axe-core (WCAG 2.0/2.1 A + AA) across all 14
+routes. Currently **zero violations**. The audit scrolls each page before
+analysing, because scroll-reveals sit at partial opacity until they enter
+the viewport and would otherwise be reported as contrast failures nobody
+would ever see.
+
+Contrast tokens worth knowing about: `--accent-strong` and
+`--danger-strong` exist because a hue that passes 4.5:1 on white does not
+pass on its own soft tint. Text on `bg-accent-soft` must use
+`text-accent-strong`, never `text-accent`.
 
 Re-check with:
 

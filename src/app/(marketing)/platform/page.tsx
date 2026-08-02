@@ -4,8 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
-import { LazyTenantPrism } from "@/components/three/lazy";
+import {
+  LazyTenantPrism,
+  LazyMagnetosphereBand,
+} from "@/components/three/lazy";
 import { ThemePreview } from "@/components/marketing/theme-preview";
+import { DeferredMount } from "@/components/util/deferred-mount";
+import { BandFallback } from "@/components/marketing/band-fallback";
 
 export const metadata: Metadata = {
   title: "Platform — one codebase, every brand",
@@ -66,11 +71,46 @@ export default function PlatformPage() {
           </div>
 
           {/* The showpiece */}
+          {/*
+            Same capability gate as the homepage: phones and data-saver
+            users get the static brand composition rather than 883 KB of
+            three.js for a decorative prism. The live theme repainter
+            below is the interactive proof on those devices.
+          */}
           <Reveal delay={0.1}>
-            <LazyTenantPrism />
+            <DeferredMount
+              requireCapableDevice
+              placeholder={
+                <div
+                  aria-hidden="true"
+                  className="aspect-[4/3] w-full rounded-panel border border-border bg-gradient-brand opacity-[0.10] blur-2xl"
+                />
+              }
+            >
+              <LazyTenantPrism />
+            </DeferredMount>
           </Reveal>
         </Container>
       </section>
+
+      {/*
+        The magnetosphere: one boiling core, fifty field lines arcing out
+        through five shells, every arc returning to the same centre. It is
+        a truer picture of multi-tenancy than any box diagram — and it is
+        the same component tenant workspaces render in their own colour.
+      */}
+      <DeferredMount
+        requireCapableDevice
+        placeholder={
+          <BandFallback
+            eyebrow="Multi-tenant by design"
+            title="One core. Every workspace in orbit."
+            body="Each customer gets their own subdomain, their own colours and their own module set — served from one platform at the edge, so a new workspace goes live in about a minute."
+          />
+        }
+      >
+        <LazyMagnetosphereBand />
+      </DeferredMount>
 
       {/* Live theme repainter — the pitch as a toy */}
       <section className="border-t border-border">

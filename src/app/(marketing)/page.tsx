@@ -13,7 +13,8 @@ import { TiltCard } from "@/components/motion/tilt-card";
 import { WordRotate } from "@/components/motion/word-rotate";
 import { CountUp } from "@/components/motion/count-up";
 import { LazyStrands } from "@/components/react-bits";
-import { LazyLedgerSection } from "@/components/three/lazy";
+import { LazyLedgerSection, LazyLampBand } from "@/components/three/lazy";
+import { BandFallback } from "@/components/marketing/band-fallback";
 import { DeferredMount } from "@/components/util/deferred-mount";
 
 export const metadata: Metadata = {
@@ -361,7 +362,7 @@ export default function HomePage() {
                     <span
                       className={
                         p.tone === "accent"
-                          ? "inline-flex size-11 items-center justify-center rounded-2xl bg-accent-soft text-accent transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
+                          ? "inline-flex size-11 items-center justify-center rounded-2xl bg-accent-soft text-accent-strong transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
                           : "inline-flex size-11 items-center justify-center rounded-2xl bg-danger-soft text-danger transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110"
                       }
                     >
@@ -534,40 +535,36 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* ————— 7 · CTA: CursorGrid playground ————— */}
-      <section
-        id="services"
-        className="relative border-t border-border bg-background"
+      {/*
+        ————— 7 · Close: the lamp —————
+        After three screens of capability the last note should be human,
+        so the closing band is the one calm scene of the set: a filament,
+        a cone of light and dust drifting through it. Warm amber against
+        the site's violet — the one place the brand palette steps aside.
+      */}
+      <DeferredMount
+        requireCapableDevice
+        placeholder={
+          <BandFallback
+            eyebrow="Your brand. Your domain."
+            title="Someone is actually here."
+            glow="amber"
+            body="Launch on you.ordence.com today and move to your own domain when you're ready. No migration, no downtime — and a person, not a bot, on the other end."
+          >
+            <Button variant="accent" size="lg" href={siteConfig.authEntry}>
+              Talk to us <span aria-hidden="true">→</span>
+            </Button>
+          </BandFallback>
+        }
       >
-        {/*
-          Previously a pointer-reactive canvas. A third canvas and a
-          third animation loop for a background texture the eye barely
-          registers; the static grain reads the same and costs nothing.
-        */}
-        <div className="bg-grain absolute inset-0" aria-hidden="true" />
-        <Container className="relative flex flex-col items-center gap-6 py-28 text-center">
-          <Reveal>
-            <h2 className="type-h1 max-w-2xl">
-              Your brand. Your domain.
-              <br />
-              Our engineering.
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="max-w-md text-muted">
-              Launch on you.ordence.com today — move to your own domain when
-              you&apos;re ready. No migration, no downtime.
-            </p>
-          </Reveal>
-          <Reveal delay={0.18}>
-            <Magnetic>
-              <Button variant="primary" size="lg" href={siteConfig.authEntry}>
-                Talk to us <span aria-hidden="true">→</span>
-              </Button>
-            </Magnetic>
-          </Reveal>
-        </Container>
-      </section>
+        <LazyLampBand
+          eyebrow="Your brand. Your domain."
+          title="Someone is actually here."
+          body="Launch on you.ordence.com today and move to your own domain when you're ready. No migration, no downtime — and a person, not a bot, on the other end."
+          primaryHref={siteConfig.authEntry}
+          primaryLabel="Talk to us"
+        />
+      </DeferredMount>
     </>
   );
 }

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { ProductPage } from "@/components/marketing/product-page";
+import { LazyMagnetosphereBand } from "@/components/three/lazy";
+import { DeferredMount } from "@/components/util/deferred-mount";
+import { BandFallback } from "@/components/marketing/band-fallback";
 
 export const metadata: Metadata = {
   title: "ERP — every order, on time",
@@ -42,6 +45,25 @@ export default function ErpPage() {
           body: "AR/AP aging, dunning that runs itself, and a forecast built from real receivables — not vibes.",
         },
       ]}
-    />
+    >
+      <DeferredMount
+        requireCapableDevice
+        placeholder={
+          <BandFallback
+            eyebrow="One core, every module"
+            title="Stock, orders and cash on one clock."
+            height="compact"
+            body="Procurement, production, inventory and invoicing orbit the same ledger — so a dispatch in one module is visible in all of them the moment it happens."
+          />
+        }
+      >
+        <LazyMagnetosphereBand
+          height="compact"
+          eyebrow="One core, every module"
+          title="Stock, orders and cash on one clock."
+          body="Procurement, production, inventory and invoicing orbit the same ledger — so a dispatch in one module is visible in all of them the moment it happens."
+        />
+      </DeferredMount>
+    </ProductPage>
   );
 }

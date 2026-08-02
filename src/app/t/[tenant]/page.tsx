@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { getTenantBySlug } from "@/lib/tenant/store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { LazyMagnetosphereBand } from "@/components/three/lazy";
+import { DeferredMount } from "@/components/util/deferred-mount";
+import { BandFallback } from "@/components/marketing/band-fallback";
 
 /** Tenant home — branded by the layout's CSS-variable injection. */
 export default async function TenantHomePage({
@@ -76,6 +79,34 @@ export default async function TenantHomePage({
           </Button>
         </div>
       </div>
+
+      {/*
+        The same scene /platform uses to explain multi-tenancy, painted in
+        this tenant's own accent. It is the cheapest possible proof of the
+        thing the platform page only claims: their workspace really is
+        theirs, down to the colour of the plasma. Costs nothing extra —
+        the shader is already in the shared chunk.
+      */}
+      <DeferredMount
+        requireCapableDevice
+        placeholder={
+          <BandFallback
+            eyebrow={`${tenant.name} · powered by Ordence`}
+            title="Your workspace, on your colours."
+            height="compact"
+            body={`Isolated configuration, your own domain and your own module set — served at the edge for ${tenant.name}.`}
+          />
+        }
+      >
+        <LazyMagnetosphereBand
+          height="compact"
+          accent={tenant.branding.accent}
+          secondary={tenant.branding.accent}
+          eyebrow={`${tenant.name} · powered by Ordence`}
+          title="Your workspace, on your colours."
+          body={`Isolated configuration, your own domain and your own module set — served at the edge for ${tenant.name}.`}
+        />
+      </DeferredMount>
     </div>
   );
 }

@@ -57,6 +57,36 @@ export interface ChangelogEntry {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-08-02",
+    title: "Every scene is now a playground",
+    tag: "New",
+    body: "Each dark band carries a collapsed control panel — open it and you can drive the shader directly. Ingest rate and channel noise on the convergence field, workspaces-in-orbit and brand tint on the magnetosphere, beam and filament controls on the lamp. Native sliders with real labels, so the whole panel is keyboard-operable.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Fixed: theme flash on every page",
+    tag: "Improved",
+    body: "The Cloudflare bundler was instrumenting the theme's no-flash script with a helper that does not exist in the browser, so it threw before first paint on every route — visible only in the deployed bundle, never in local development. Themes now initialise correctly.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Three dark bands, one shader",
+    tag: "New",
+    body: "A convergence field on /crm and /ai, a magnetosphere on /platform, /erp and every tenant workspace, and a lamp closing the homepage and /about. All three run from one GPU harness sharing a single WebGL chunk — the particle maths lives in a vertex shader, so the CPU uploads nothing per frame and phones get a designed static composition instead. Mobile page weight moved by 10 KB.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Your workspace, on your colours",
+    tag: "Platform",
+    body: "Tenant subdomains now open with the same scene /platform uses to explain multi-tenancy — painted in that customer's own accent colour.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Contrast, measured rather than assumed",
+    tag: "Improved",
+    body: "An automated WCAG audit across all 14 routes found 43 contrast failures. The secondary text colour was failing at 2.96:1 on the ivory surface. Retuned, plus new tokens for text on soft tints — where a hue safe on white is not safe on its own tint. Now zero violations.",
+  },
+  {
+    date: "2026-08-02",
     title: "The site became touchable",
     tag: "New",
     body: "The homepage CRM is no longer a screenshot — open a deal, move it between stages, and the weighted forecast recalculates. Pricing gained a live estimator driven by the real industry presets. Cards illuminate toward your cursor, and `g` then a letter jumps between pages. All of it added about 8 KB.",

@@ -42,6 +42,49 @@ export const LazyTenantPrism = dynamic(() => import("./tenant-prism"), {
   ),
 });
 
+/**
+ * Dark bands. Each reserves its own height so the placeholder→scene swap
+ * costs no layout shift, and each placeholder is a designed composition
+ * rather than a grey box — on a capped device it is the final experience,
+ * not a loading state.
+ */
+
+/** Homepage + /ai — omnichannel noise collapsing into one record. */
+export const LazyConvergenceBand = dynamic(() => import("./convergence-band"), {
+  ssr: false,
+  loading: () => (
+    <div
+      aria-hidden="true"
+      className="h-[520px] bg-[#080c14] bg-[radial-gradient(45%_45%_at_50%_50%,rgba(109,69,232,0.3),transparent_70%)] sm:h-[640px] lg:h-[760px]"
+    />
+  ),
+});
+
+/** /platform + tenant workspaces — one core, every workspace in orbit. */
+export const LazyMagnetosphereBand = dynamic(
+  () => import("./magnetosphere-band"),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        aria-hidden="true"
+        className="h-[560px] bg-[#080c14] bg-[radial-gradient(40%_40%_at_50%_50%,rgba(133,99,238,0.26),transparent_70%)] lg:h-[720px]"
+      />
+    ),
+  },
+);
+
+/** Closing CTA + /about — the warm, quiet one. */
+export const LazyLampBand = dynamic(() => import("./lamp-band"), {
+  ssr: false,
+  loading: () => (
+    <div
+      aria-hidden="true"
+      className="h-[600px] bg-[#07090f] bg-[radial-gradient(35%_55%_at_50%_10%,rgba(255,196,120,0.24),transparent_70%)] lg:h-[700px]"
+    />
+  ),
+});
+
 /** /product showpiece — the living isometric business diorama. */
 export const LazyCommandRoom = dynamic(() => import("./command-room"), {
   ssr: false,

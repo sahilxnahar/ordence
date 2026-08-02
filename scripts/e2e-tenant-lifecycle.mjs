@@ -32,7 +32,11 @@ for (const row of await p.$$("tbody tr")) {
 // 4 · after the 15s L1 cache window, the hostname must stop serving
 await new Promise((r) => setTimeout(r, 17000));
 await t.goto(`http://delta.localhost:${PORT}/`, { waitUntil: "domcontentloaded" });
-const afterText = await t.textContent("body");
+// innerText, not textContent: textContent includes <script> bodies, and the
+// RSC flight payload for this route carries the serialized not-found
+// component. Asserting against it reported a bare 404 on a page that
+// visibly renders the suspension notice.
+const afterText = await t.innerText("body");
 console.log("BLOCKED_AFTER_SUSPEND:", /temporarily unavailable/i.test(afterText));
 console.log("NOT_A_BARE_404:", !/doesn.t exist/i.test(afterText));
 

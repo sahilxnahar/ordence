@@ -77,6 +77,30 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${fontSans.variable} ${fontMono.variable} ${fontDisplay.variable} h-full antialiased`}
     >
+      <head>
+        {/*
+          esbuild shim — must be the first script on the page.
+
+          The Cloudflare adapter bundles the server with esbuild's
+          `keepNames` transform, which instruments every function with a
+          call to its `__name` helper. next-themes builds its no-flash
+          script by stringifying a function, so the instrumented source —
+          `__name(k2, "k2")` — gets serialized straight into the HTML,
+          where the helper does not exist. The result is a ReferenceError
+          before first paint on every route, which kills theme
+          initialisation and produces a flash of the wrong theme.
+
+          It reproduces only in the Workers bundle, never under
+          `next start`, which is why it survived this long. Defining the
+          helper as an identity function costs 60 bytes and fixes it
+          without fighting the bundler.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "window.__name=window.__name||function(f){return f};",
+          }}
+        />
+      </head>
       <body className="flex min-h-full flex-col">
         {/* Organization structured data for rich search results */}
         <script

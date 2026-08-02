@@ -168,7 +168,7 @@ export function MobileNav() {
                             <Link
                               href={l.href}
                               onClick={() => setOpen(false)}
-                              className="flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium transition-colors hover:bg-accent-soft hover:text-accent"
+                              className="flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium transition-colors hover:bg-accent-soft hover:text-accent-strong"
                             >
                               {l.label}
                               <span

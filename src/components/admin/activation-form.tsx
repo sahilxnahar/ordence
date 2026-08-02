@@ -139,7 +139,7 @@ export function ActivationForm({ request }: { request: TenantRequest }) {
               aria-pressed={industry === p.key}
               className={`rounded-full border px-4 py-2 text-xs font-medium transition-colors ${
                 industry === p.key
-                  ? "border-accent bg-accent-soft text-accent"
+                  ? "border-accent bg-accent-soft text-accent-strong"
                   : "border-border text-muted hover:text-foreground"
               }`}
             >

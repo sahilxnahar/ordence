@@ -136,7 +136,7 @@ export function CommandPalette() {
                 }}
                 onMouseEnter={() => setIndex(i)}
                 className={`flex w-full items-center justify-between rounded-xl px-4 py-2.5 text-left text-sm transition-colors ${
-                  i === index ? "bg-accent-soft text-accent" : "text-foreground"
+                  i === index ? "bg-accent-soft text-accent-strong" : "text-foreground"
                 }`}
               >
                 {c.label}

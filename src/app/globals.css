@@ -58,7 +58,12 @@
   --surface-raised: var(--ordence-white);
   --foreground: var(--ordence-ink-900);
   --muted: #556075;
-  --muted-subtle: #8a92a6;
+  /* Contrast-verified against both #ffffff and #faf9f6 (WCAG AA 4.5:1).
+     The previous #8a92a6 measured 2.96:1 on paper — legible to us, invisible
+     to anyone reading on a laptop screen at an angle. Every "-strong" token
+     below exists for the same reason: a hue is only safe on white, not on
+     its own soft tint. */
+  --muted-subtle: #68718a;
   --border: rgba(17, 24, 39, 0.12);
   --border-strong: rgba(17, 24, 39, 0.24);
 
@@ -67,10 +72,13 @@
   --accent: var(--ordence-violet-600);
   --accent-foreground: #ffffff;
   --accent-soft: var(--ordence-violet-100);
+  --accent-strong: var(--ordence-violet-700);
   --danger: var(--ordence-coral-600);
   --danger-soft: var(--ordence-coral-100);
-  --success: #0e8a5f;
-  --warning: #b26a00;
+  --danger-strong: #b52d2d;
+  --success: #0b7a54;
+  --success-soft: #e6f4ee;
+  --warning: #9a5c00;
   --ring: var(--ordence-violet-600);
 
   /* Tenant-overridable brand slot (tenants may repaint this at runtime) */
@@ -112,7 +120,7 @@
   --surface-raised: #1b2434;
   --foreground: #f2f4f8;
   --muted: #a8b2c7;
-  --muted-subtle: #707b93;
+  --muted-subtle: #909ab1;
   --border: rgba(242, 244, 248, 0.1);
   --border-strong: rgba(242, 244, 248, 0.2);
 
@@ -120,8 +128,13 @@
   --primary-foreground: #111827;
   --accent: var(--ordence-violet-500);
   --accent-soft: rgba(133, 99, 238, 0.16);
+  --accent-strong: var(--ordence-violet-400);
   --danger: var(--ordence-coral-500);
   --danger-soft: rgba(255, 92, 92, 0.14);
+  --danger-strong: var(--ordence-coral-400);
+  --success: #34d399;
+  --success-soft: rgba(52, 211, 153, 0.14);
+  --warning: #f0b429;
   --ring: var(--ordence-violet-400);
 
   --brand: var(--ordence-violet-500);
@@ -156,9 +169,12 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-strong: var(--accent-strong);
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
+  --color-danger-strong: var(--danger-strong);
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
   --color-ring: var(--ring);
   --color-brand: var(--brand);

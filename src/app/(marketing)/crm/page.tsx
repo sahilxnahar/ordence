@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { ProductPage } from "@/components/marketing/product-page";
+import { LazyConvergenceBand } from "@/components/three/lazy";
+import { DeferredMount } from "@/components/util/deferred-mount";
+import { BandFallback } from "@/components/marketing/band-fallback";
 
 export const metadata: Metadata = {
   title: "CRM — every lead, in line",
@@ -42,6 +45,32 @@ export default function CrmPage() {
           body: "Dashboards on brand tokens, scheduled to inboxes, drillable to the record. TV mode for the sales floor.",
         },
       ]}
-    />
+    >
+      {/*
+        The convergence scene belongs here rather than on the homepage:
+        "five channels in, one record out" IS the CRM pitch, and the
+        homepage already tells a chaos→order story with the Living Ledger.
+        Two particle systems making the same argument on one page is
+        repetition, not richness.
+      */}
+      <DeferredMount
+        requireCapableDevice
+        placeholder={
+          <BandFallback
+            eyebrow="One system of record"
+            title={
+              <>
+                Five channels in.
+                <br />
+                One record out.
+              </>
+            }
+            body="WhatsApp, missed calls, forms and email stop being four inboxes and start being one timeline — owned by a named person, seconds after it arrives."
+          />
+        }
+      >
+        <LazyConvergenceBand />
+      </DeferredMount>
+    </ProductPage>
   );
 }

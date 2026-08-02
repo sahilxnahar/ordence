@@ -18,7 +18,8 @@
     "e2e:tenant": "node scripts/e2e-tenant-lifecycle.mjs",
     "e2e:provisioning": "node scripts/e2e-provisioning.mjs",
     "e2e:renewal": "node scripts/e2e-renewal.mjs",
-    "measure": "node scripts/measure-page.mjs"
+    "measure": "node scripts/measure-page.mjs",
+    "audit:a11y": "node scripts/audit-a11y.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -32,11 +33,13 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
     "@opennextjs/cloudflare": "^1.20.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "axe-core": "^4.12.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
     "playwright": "^1.62.1",
