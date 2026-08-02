@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "@/components/ui/logo";
+import { LogoMark, LogoWordmark } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Container } from "@/components/ui/container";
@@ -20,14 +20,17 @@ const nav = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
-      <Container className="flex h-20 items-center justify-between gap-4">
-        {/* Big, bold brand lockup */}
+      <Container className="flex h-24 items-center justify-between gap-4">
+        {/* The brand IS the header: an unmissable lockup. The orbital mark
+            slowly completes a turn on hover — a living logo, not a sticker. */}
         <Link
           href="/"
           aria-label="Ordence home"
-          className="text-foreground transition-transform duration-200 hover:scale-[1.02]"
+          className="group flex items-center gap-3.5 text-foreground"
         >
-          <Logo className="gap-3 [&>svg:first-child]:size-12 [&>svg:nth-child(2)]:h-5" />
+          <LogoMark className="size-14 transition-transform duration-700 ease-out group-hover:rotate-[360deg] sm:size-[4.5rem]" />
+          <LogoWordmark className="h-6 sm:h-8" />
+          <span className="sr-only">Ordence</span>
         </Link>
 
         {/* Well-defined nav: its own pill surface with a hairline */}
