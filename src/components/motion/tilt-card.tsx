@@ -17,7 +17,10 @@ import {
 export function TiltCard({
   children,
   className,
-  maxTilt = 6,
+  // Softened from 6°. At the larger angle the card read as a gimmick and
+  // the text visibly sheared; at 3° it registers as the surface
+  // responding to you, which is the whole point.
+  maxTilt = 3,
 }: {
   children: React.ReactNode;
   className?: string;
@@ -31,7 +34,6 @@ export function TiltCard({
   const sy = useSpring(py, { stiffness: 220, damping: 20 });
   const rotateX = useTransform(sy, [0, 1], [maxTilt, -maxTilt]);
   const rotateY = useTransform(sx, [0, 1], [-maxTilt, maxTilt]);
-  const sheenX = useTransform(sx, [0, 1], ["-40%", "140%"]);
   const reduce = useReducedMotion();
 
   if (reduce) return <div className={className}>{children}</div>;
@@ -58,17 +60,13 @@ export function TiltCard({
       }}
     >
       {children}
-      {/* moving sheen */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{ transform: "translateZ(1px)" }}
-      >
-        <motion.div
-          className="absolute top-0 h-full w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/40 to-transparent dark:via-white/10"
-          style={{ left: sheenX }}
-        />
-      </motion.div>
+      {/*
+        The moving sheen was removed here. It added two extra elements and
+        a full-width gradient repaint per card on every pointer move, to
+        simulate a glare that a flat, hairline-bordered surface would
+        never actually produce. Cutting it is both faster and truer to
+        the material.
+      */}
     </motion.div>
   );
 }

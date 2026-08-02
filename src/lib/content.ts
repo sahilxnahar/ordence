@@ -57,6 +57,24 @@ export interface ChangelogEntry {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-08-02",
+    title: "The site became touchable",
+    tag: "New",
+    body: "The homepage CRM is no longer a screenshot — open a deal, move it between stages, and the weighted forecast recalculates. Pricing gained a live estimator driven by the real industry presets. Cards illuminate toward your cursor, and `g` then a letter jumps between pages. All of it added about 8 KB.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Frontend performance pass",
+    tag: "Improved",
+    body: "The homepage went from four canvases and two WebGL contexts to one scene, gated by device capability. Phones now load 56% less JavaScript and get a designed static composition instead of a 883 KB 3D scene they never asked for.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Typographic scale",
+    tag: "Improved",
+    body: "Ad-hoc font sizes replaced with a named fluid scale, so every heading of the same rank is identical across the site and optical tracking follows size automatically.",
+  },
+  {
+    date: "2026-08-02",
     title: "Renewals & plan visibility",
     tag: "Platform",
     body: "Every workspace now shows its seats, expiry and days remaining. Plans can be renewed in one click — extending from the existing expiry so early renewals never lose paid days — and customers can be sent a renewal reminder before anything lapses.",

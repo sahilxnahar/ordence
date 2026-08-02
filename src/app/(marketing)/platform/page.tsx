@@ -43,7 +43,7 @@ export default function PlatformPage() {
               <Badge tone="accent">Multi-tenant platform</Badge>
             </Reveal>
             <Reveal delay={0.08}>
-              <h1 className="text-display max-w-xl text-5xl font-semibold sm:text-6xl">
+              <h1 className="type-display max-w-xl">
                 One codebase.
                 <br />
                 <span className="text-gradient-brand">Every brand.</span>

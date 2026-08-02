@@ -36,7 +36,7 @@ export default async function GetStartedPage({
         <div className="space-y-8">
           <span className="kicker rise">Get started</span>
           <h1
-            className="text-display rise max-w-md text-5xl font-semibold"
+            className="type-display rise max-w-md"
             style={{ animationDelay: "120ms" }}
           >
             Your workspace,
@@ -81,7 +81,7 @@ export default async function GetStartedPage({
           {sent ? (
             <div className="flex min-h-96 flex-col items-center justify-center gap-4 text-center">
               <Badge tone="success">Request received</Badge>
-              <h2 className="text-display text-2xl font-semibold">
+              <h2 className="type-h2">
                 We&apos;re on it.
               </h2>
               <p className="max-w-xs text-sm text-muted">

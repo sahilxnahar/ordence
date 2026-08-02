@@ -17,7 +17,8 @@
     "e2e:mobile": "node scripts/e2e-mobile-nav.mjs",
     "e2e:tenant": "node scripts/e2e-tenant-lifecycle.mjs",
     "e2e:provisioning": "node scripts/e2e-provisioning.mjs",
-    "e2e:renewal": "node scripts/e2e-renewal.mjs"
+    "e2e:renewal": "node scripts/e2e-renewal.mjs",
+    "measure": "node scripts/measure-page.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

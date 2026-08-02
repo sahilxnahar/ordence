@@ -3,6 +3,8 @@ import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AccordionItem } from "@/components/ui/accordion";
+import { PlanCalculator } from "@/components/marketing/plan-calculator";
+import { SpotlightGroup } from "@/components/motion/spotlight-group";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { cn } from "@/lib/utils";
@@ -90,7 +92,7 @@ export default function PricingPage() {
         <Container className="relative flex flex-col items-center gap-6 pt-20 pb-14 text-center">
           <span className="kicker rise">Pricing</span>
           <h1
-            className="text-display rise max-w-3xl text-5xl font-semibold sm:text-6xl"
+            className="type-display rise max-w-3xl"
             style={{ animationDelay: "120ms" }}
           >
             Start free.
@@ -111,12 +113,14 @@ export default function PricingPage() {
 
       <section className="pb-24">
         <Container>
-          <RevealGroup className="grid items-stretch gap-5 lg:grid-cols-3">
+          <SpotlightGroup>
+            <RevealGroup className="grid items-stretch gap-5 lg:grid-cols-3">
             {plans.map((p) => (
               <RevealItem key={p.name} className="h-full">
                 <div
+                  data-spotlight
                   className={cn(
-                    "relative flex h-full flex-col gap-6 rounded-panel border bg-surface p-8",
+                    "spotlight relative flex h-full flex-col gap-6 rounded-panel border bg-surface p-8",
                     p.featured
                       ? "border-accent shadow-high"
                       : "border-border shadow-low",
@@ -129,7 +133,7 @@ export default function PricingPage() {
                   )}
                   <div className="space-y-1.5">
                     <h2 className="font-semibold">{p.name}</h2>
-                    <p className="text-display text-4xl font-bold">
+                    <p className="type-h1">
                       {p.price}
                       <span className="ml-1 text-sm font-normal text-muted">
                         {p.period}
@@ -163,7 +167,14 @@ export default function PricingPage() {
                 </div>
               </RevealItem>
             ))}
-          </RevealGroup>
+            </RevealGroup>
+          </SpotlightGroup>
+        </Container>
+      </section>
+
+      <section className="border-t border-border">
+        <Container className="py-24">
+          <PlanCalculator />
         </Container>
       </section>
 
@@ -171,7 +182,7 @@ export default function PricingPage() {
         <Container className="grid gap-12 py-24 lg:grid-cols-[1fr_1.4fr]">
           <Reveal className="space-y-4">
             <span className="kicker">FAQ</span>
-            <h2 className="text-display text-3xl font-semibold sm:text-4xl">
+            <h2 className="type-h1">
               The honest
               <br />
               small print.

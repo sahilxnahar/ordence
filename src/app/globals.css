@@ -228,6 +228,74 @@ body {
   border-radius: 4px;
 }
 
+/* ————— Typographic scale —————
+ *
+ * A named, fluid modular scale replaces the ad-hoc `text-5xl sm:text-6xl
+ * md:text-7xl` chains that had accumulated across pages. Two reasons:
+ * every heading of the same rank is now identical everywhere (which is
+ * most of what makes type feel "designed"), and optical tracking is tied
+ * to size — large type needs negative tracking, small type needs none,
+ * and hand-tuning that per instance is where consistency dies.
+ */
+.type-display {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 1.6rem + 5.2vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.038em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.type-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.5rem + 3.2vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.032em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.type-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.3rem + 1.9vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.024em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.type-h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  font-weight: 600;
+}
+
+.type-lead {
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  line-height: 1.6;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.type-body {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+/* Measure. Long lines are the most common reason body copy feels cheap:
+   past ~75 characters the eye loses the line it is returning to. */
+.measure {
+  max-width: 68ch;
+}
+
+.measure-narrow {
+  max-width: 46ch;
+}
+
 /* Editorial display type: tight tracking, engineered rhythm */
 .text-display {
   font-family: var(--font-display);
@@ -393,6 +461,85 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
+}
+
+/* ————— Proximity spotlight —————
+ * Driven entirely by CSS custom properties that SpotlightGroup writes on
+ * pointer move. No React re-render, no per-card listener; the browser
+ * composites a radial gradient and a border tint on the GPU.
+ */
+.spotlight {
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --spot-strength: 0;
+  position: relative;
+  isolation: isolate;
+}
+
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  opacity: var(--spot-strength);
+  transition: opacity 220ms var(--ease-swift);
+  background: radial-gradient(
+    340px circle at var(--spot-x) var(--spot-y),
+    color-mix(in srgb, var(--brand) 12%, transparent),
+    transparent 70%
+  );
+}
+
+/* The nearest card catches the light along its edge. */
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: calc(var(--spot-strength) * 0.9);
+  transition: opacity 220ms var(--ease-swift);
+  padding: 1px;
+  background: radial-gradient(
+    340px circle at var(--spot-x) var(--spot-y),
+    color-mix(in srgb, var(--brand) 55%, transparent),
+    transparent 65%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight::before,
+  .spotlight::after {
+    display: none;
+  }
+}
+
+/* Coarse pointers have no hover — skip the work entirely on touch. */
+@media (hover: none) {
+  .spotlight::before,
+  .spotlight::after {
+    display: none;
+  }
+}
+
+/* ————— Press physics —————
+ * Interactive surfaces should acknowledge a press within one frame.
+ */
+.press {
+  transition:
+    transform 140ms var(--ease-swift),
+    box-shadow 200ms var(--ease-swift);
+}
+
+.press:active {
+  transform: translateY(1px) scale(0.994);
 }
 
 /* ————— Marquee (infinite capability strip) ————— */

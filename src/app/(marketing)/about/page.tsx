@@ -36,7 +36,7 @@ export default function AboutPage() {
         <Container className="relative flex min-h-[52svh] flex-col items-center justify-center gap-7 py-24 text-center">
           <span className="kicker rise">About Ordence</span>
           <h1
-            className="text-display rise max-w-3xl text-5xl font-semibold sm:text-6xl"
+            className="type-display rise max-w-3xl"
             style={{ animationDelay: "120ms" }}
           >
             Order, engineered

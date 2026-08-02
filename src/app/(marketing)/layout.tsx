@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { KeyboardHints } from "@/components/ui/keyboard-hints";
 
 /**
  * Marketing layout — ordence.com / www.ordence.com.
@@ -18,6 +19,7 @@ export default function MarketingLayout({
         {children}
       </main>
       <SiteFooter />
+      <KeyboardHints />
     </>
   );
 }

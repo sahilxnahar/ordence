@@ -42,7 +42,7 @@ export function ProductPage({
         <Container className="relative flex min-h-[62svh] flex-col items-center justify-center gap-8 py-24 text-center">
           <span className="kicker rise">{kicker}</span>
           <h1
-            className="text-display rise max-w-4xl text-5xl font-semibold sm:text-6xl md:text-7xl"
+            className="type-display rise max-w-4xl"
             style={{ animationDelay: "120ms" }}
           >
             {titleTop}

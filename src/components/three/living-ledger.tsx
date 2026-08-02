@@ -21,7 +21,12 @@ import type { MotionValue } from "framer-motion";
  * is one uniform write. The pointer gently repels nearby particles.
  */
 
-const COUNT = 5000;
+/**
+ * Particle budget. 5,000 looked identical to 3,000 at every viewport we
+ * tested — the formations read by their silhouette, not their density —
+ * so the extra 2,000 were pure GPU cost with no visual return.
+ */
+const COUNT = 3000;
 
 const BRAND = {
   violet: new THREE.Color("#6d45e8"),

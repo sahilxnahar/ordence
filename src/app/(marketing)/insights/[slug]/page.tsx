@@ -34,7 +34,7 @@ export default async function ArticlePage({
       <Container className="relative max-w-3xl! py-20">
         <header className="mb-12 space-y-5">
           <span className="kicker">{article.kicker}</span>
-          <h1 className="text-display text-4xl font-semibold sm:text-5xl">
+          <h1 className="type-h1">
             {article.title}
           </h1>
           <p className="corner-caption">

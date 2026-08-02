@@ -41,7 +41,7 @@ export default function ProductPage() {
             <Badge tone="accent">CRM + ERP, alive</Badge>
           </Reveal>
           <Reveal delay={0.08}>
-            <h1 className="text-display max-w-3xl text-5xl font-semibold sm:text-6xl">
+            <h1 className="type-display max-w-3xl">
               This is your business,
               <br />
               <span className="text-gradient-brand">running on Ordence.</span>

@@ -319,6 +319,37 @@ scripts.
 
 ---
 
+## 10b. Frontend performance budget
+
+Measured with `npm run measure` (see `scripts/measure-page.mjs`), against
+a local worker. Homepage, after the P1–P6 frontend pass:
+
+| Profile | JS transferred | Canvases | WebGL contexts | DOM ready |
+|---|---|---|---|---|
+| Desktop 1440×900 | 1,596 KB | 2 | 1 | ~600 ms |
+| Mobile 390×844 | **694 KB** | 1 | **0** | ~110 ms |
+
+Before the pass the homepage mounted **4 canvases and 2 WebGL contexts on
+every device**. The mobile figure is now 56% lighter because three.js
+(883 KB) is gated by `lib/capability.ts` — heavy scenes load only on
+desktop-class devices that aren't asking to save data or reduce motion.
+Phones get a designed static composition instead, not a broken one.
+
+Budgets to hold:
+- Mobile homepage JS ≤ 750 KB
+- At most **one** WebGL context per route, ever
+- No route above 2 canvases
+
+Re-check with:
+
+```bash
+npm run preview                                    # terminal 1
+PW_CHROME=<chromium> PORT=8787 npm run measure /
+PW_CHROME=<chromium> PORT=8787 MOBILE=1 npm run measure /
+```
+
+---
+
 ## 11. Documentation index
 
 | File | What it covers |

@@ -43,7 +43,23 @@ export function WordRotate({
           {w}
         </span>
       ))}
-      <span style={{ gridArea: "1 / 1", position: "relative" }}>
+      {/*
+        The roll must happen inside a mask. Without `overflow: hidden` the
+        outgoing and incoming words are both fully visible during the
+        450ms crossfade, floating roughly 1.6 line-heights apart — which
+        is what a visitor sees for a fifth of every cycle. The padding /
+        negative-margin pair keeps descenders from being clipped while
+        leaving the layout box unchanged.
+      */}
+      <span
+        style={{
+          gridArea: "1 / 1",
+          position: "relative",
+          overflow: "hidden",
+          paddingBottom: "0.14em",
+          marginBottom: "-0.14em",
+        }}
+      >
         <AnimatePresence mode="popLayout" initial={false}>
           {/* className lives on the WORD itself — gradient-text utilities
               (background-clip: text) don't reach through child boundaries,

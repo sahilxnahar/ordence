@@ -24,7 +24,7 @@ export function ThemePreview() {
   return (
     <div className="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">
       <div className="space-y-5">
-        <h3 className="text-display text-2xl font-semibold sm:text-3xl">
+        <h3 className="type-h2">
           Try it — repaint a tenant.
         </h3>
         <p className="max-w-md text-sm leading-relaxed text-muted">

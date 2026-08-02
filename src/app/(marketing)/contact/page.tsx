@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { submitLead } from "@/lib/leads";
+import { CopyButton } from "@/components/ui/copy-button";
 
 export const metadata: Metadata = {
   title: "Contact — talk to the team",
@@ -27,7 +28,7 @@ export default async function ContactPage({
         <div className="space-y-6">
           <span className="kicker rise">Contact</span>
           <h1
-            className="text-display rise max-w-md text-5xl font-semibold"
+            className="type-display rise max-w-md"
             style={{ animationDelay: "120ms" }}
           >
             Talk to a human,
@@ -47,9 +48,9 @@ export default async function ContactPage({
             className="rise space-y-3 pt-4 text-sm text-muted"
             style={{ animationDelay: "360ms" }}
           >
-            <p>
-              <span className="font-medium text-foreground">Email</span> —
-              hello@ordence.com
+            <p className="flex flex-wrap items-center gap-2">
+              <span className="font-medium text-foreground">Email</span>
+              <CopyButton value="hello@ordence.com" />
             </p>
             <p>
               <span className="font-medium text-foreground">Response time</span>{" "}

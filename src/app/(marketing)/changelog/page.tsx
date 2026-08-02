@@ -22,7 +22,7 @@ export default function ChangelogPage() {
       <Container className="relative max-w-3xl! py-20">
         <Reveal className="mb-14 space-y-4">
           <span className="kicker">Changelog</span>
-          <h1 className="text-display text-5xl font-semibold">
+          <h1 className="type-display">
             Shipping is
             <br />
             <span className="text-gradient-brand font-extrabold">

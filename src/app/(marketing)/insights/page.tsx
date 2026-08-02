@@ -17,7 +17,7 @@ export default function InsightsPage() {
       <Container className="relative py-20">
         <Reveal className="mb-14 space-y-4">
           <span className="kicker">Insights</span>
-          <h1 className="text-display max-w-2xl text-5xl font-semibold">
+          <h1 className="type-display max-w-2xl">
             Operator notes,
             <br />
             <span className="text-gradient-brand font-extrabold">
@@ -35,7 +35,7 @@ export default function InsightsPage() {
                 <span className="corner-caption">
                   {a.kicker} · {a.readMinutes} min read
                 </span>
-                <h2 className="text-display text-2xl font-semibold transition-colors group-hover:text-accent">
+                <h2 className="type-h2 transition-colors group-hover:text-accent">
                   {a.title}
                 </h2>
                 <p className="flex-1 text-sm leading-relaxed text-muted">
