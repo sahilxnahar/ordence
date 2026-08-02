@@ -77,7 +77,7 @@ export function MobileNav() {
         aria-label="Open menu"
         aria-expanded={open}
         aria-haspopup="dialog"
-        className="inline-flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-foreground/5 lg:hidden"
+        className="inline-flex size-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-foreground/5 xl:hidden"
       >
         <svg
           viewBox="0 0 24 24"
@@ -103,7 +103,7 @@ export function MobileNav() {
           <AnimatePresence>
             {open && (
               <motion.div
-                className="fixed inset-0 z-50 lg:hidden"
+                className="fixed inset-0 z-50 xl:hidden"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}

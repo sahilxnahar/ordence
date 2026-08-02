@@ -445,7 +445,34 @@ body {
 }
 
 .logo-intro {
-  animation: logo-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  /*
+    Two animations on one element: the entrance plays once, then a slow
+    continuous orbit takes over for ever. The orbit is 48 seconds per turn
+    — fast enough that the mark is visibly alive if you watch it, slow
+    enough that it never competes with anything on the page. A logo that
+    spins quickly reads as a loading spinner, which is the opposite of the
+    intended impression.
+  */
+  animation:
+    logo-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+    logo-orbit 48s linear 0.9s infinite;
+}
+
+/* Hover still overrides with its own faster turn — see site-header. */
+.group:hover .logo-intro {
+  animation-play-state: paused, paused;
+}
+
+@keyframes logo-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-intro {
+    animation: none;
+  }
 }
 
 /* ————— Glass material system (NovaAI-style, for dark media sections) ————— */

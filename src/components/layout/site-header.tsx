@@ -12,6 +12,7 @@ import { HeaderScroll } from "@/components/layout/header-scroll";
 
 const nav = [
   { href: "/platform", label: "Platform" },
+  { href: "/features", label: "Capabilities" },
   { href: "/product", label: "Product" },
   { href: "/pricing", label: "Pricing" },
   { href: "/insights", label: "Insights" },
@@ -40,7 +41,7 @@ export function SiteHeader() {
         animation rather than a class swap that re-lays-out the page.
       */}
       <HeaderScroll />
-      <Container className="flex h-[var(--header-h)] items-center justify-between gap-4 transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+      <Container className="flex h-[var(--header-h)] items-center justify-between gap-3 transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
         <Link
           href="/"
           aria-label="Ordence home"
@@ -51,16 +52,24 @@ export function SiteHeader() {
           <span className="sr-only">Ordence</span>
         </Link>
 
-        {/* Well-defined nav: its own pill surface with a hairline */}
+        {/*
+          The nav sits in normal flow, not absolutely centred.
+
+          Absolute centring looked tidy while the logo was small, but it
+          takes the pill out of the layout — so as the lockup grew and a
+          fifth nav item was added, the two silently overlapped instead of
+          pushing each other apart. In flow, `justify-between` guarantees
+          they can never collide at any width or item count.
+        */}
         <nav
           aria-label="Primary"
-          className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-border bg-surface p-1.5 shadow-low lg:flex"
+          className="mx-auto hidden shrink-0 items-center gap-0.5 rounded-full border border-border bg-surface p-1.5 shadow-low xl:flex"
         >
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-full px-4 py-2 text-sm font-medium text-muted transition-all duration-200 hover:bg-foreground/[0.06] hover:text-foreground active:scale-95"
+              className="rounded-full px-3.5 py-2 text-sm font-medium whitespace-nowrap text-muted transition-all duration-200 hover:bg-foreground/[0.06] hover:text-foreground active:scale-95 xl:px-4"
             >
               {item.label}
             </Link>
@@ -75,7 +84,10 @@ export function SiteHeader() {
             variant="ghost"
             size="md"
             href={siteConfig.authEntry}
-            className="hidden sm:inline-flex"
+            /* Below xl the nav pill and the primary CTA need the room more
+               than a secondary link does — Sign in is still one tap away
+               inside the mobile sheet and on the CTA's destination. */
+            className="hidden whitespace-nowrap xl:inline-flex"
           >
             Sign in
           </Button>
@@ -84,7 +96,12 @@ export function SiteHeader() {
               the component inside happens to set its own display. */}
           <div className="max-sm:hidden">
             <Magnetic strength={0.25}>
-              <Button variant="accent" size="md" href="/get-started">
+              <Button
+                variant="accent"
+                size="md"
+                href="/get-started"
+                className="whitespace-nowrap"
+              >
                 Get started
                 <span aria-hidden="true">→</span>
               </Button>

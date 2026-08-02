@@ -311,11 +311,17 @@ const FIELD_MAGNETOSPHERE = /* glsl */ `
     vScale = 0.6 + 0.8 * (1.0 - flow);
   }
 
-  // Slow axial spin, nudged by the pointer — the scene tracks you without
-  // demanding a drag.
-  float ry = uTime * 0.1 + uPointer.x * 0.55;
+  // Axial spin, nudged by the pointer. This was 0.1 rad/s, which is
+  // technically animated and visually indistinguishable from a still
+  // image — the scene read as a static render. Tripled, plus a slow
+  // nod on the other axis so the silhouette itself changes rather than
+  // just the speckle pattern.
+  float ry = uTime * 0.32 + uPointer.x * 0.55;
+  float rx = sin(uTime * 0.11) * 0.18 + uPointer.y * 0.2;
   float cy = cos(ry), sy = sin(ry);
   pos = vec3(pos.x * cy + pos.z * sy, pos.y, -pos.x * sy + pos.z * cy);
+  float cx = cos(rx), sx = sin(rx);
+  pos = vec3(pos.x, pos.y * cx - pos.z * sx, pos.y * sx + pos.z * cx);
 
   vColor = mix(uColorC, uColorA, accentMix * clamp(uSat, 0.0, 1.0))
     * (0.55 + 0.9 * clamp(lit, 0.0, 1.0));

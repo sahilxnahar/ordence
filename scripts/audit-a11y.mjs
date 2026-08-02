@@ -17,6 +17,7 @@ const PORT = process.env.PORT ?? "8787";
 const ROUTES = [
   "/",
   "/platform",
+  "/features",
   "/product",
   "/crm",
   "/erp",

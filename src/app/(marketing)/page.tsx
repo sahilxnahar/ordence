@@ -9,7 +9,6 @@ import { LogoMark } from "@/components/ui/logo";
 import { AccordionItem } from "@/components/ui/accordion";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { TiltCard } from "@/components/motion/tilt-card";
-import { CountUp } from "@/components/motion/count-up";
 import {
   LazyHeroStage,
   LazyLedgerSection,
@@ -122,27 +121,6 @@ const products = [
     description:
       "Enterprise sites and products engineered by the team that built this one.",
   },
-] as const;
-
-/**
- * Every figure here must be one we can point at and defend.
- *
- * The previous set claimed "99.9% uptime" and "<50ms response" (neither
- * measured) and "100+ branded tenant sites" (we have none yet). Those are
- * exactly the numbers a serious first customer checks, and being caught
- * inventing them costs far more than they could ever win. These four are
- * structural facts about the product — true on day one.
- */
-const stats = [
-  { value: 4, label: "Products on one system of record" },
-  { value: 10, label: "Industry configurations, ready to switch on" },
-  {
-    value: 60,
-    prefix: "<",
-    suffix: "s",
-    label: "To provision a branded workspace",
-  },
-  { value: 100, label: "Client domains included, at no extra cost" },
 ] as const;
 
 const principles = [
@@ -370,28 +348,6 @@ export default function HomePage() {
               ))}
             </RevealGroup>
           </SpotlightGroup>
-        </Container>
-      </section>
-
-      {/* ————— 4 · Stats band: numbers that count themselves up ————— */}
-      <section className="border-t border-border bg-surface-subtle">
-        <Container className="grid grid-cols-2 gap-px overflow-hidden rounded-none py-16 md:grid-cols-4">
-          {stats.map((s) => (
-            <div
-              key={s.label}
-              className="group flex flex-col gap-2 border-l border-border px-6 first:border-0 max-md:[&:nth-child(3)]:border-0 max-md:[&:nth-child(n+3)]:mt-10"
-            >
-              <span className="text-display text-4xl font-semibold text-foreground transition-colors duration-300 group-hover:text-accent sm:text-5xl">
-                {/* Every stat is a whole number now, so no decimals prop. */}
-                <CountUp
-                  value={s.value}
-                  prefix={"prefix" in s ? s.prefix : ""}
-                  suffix={"suffix" in s ? s.suffix : ""}
-                />
-              </span>
-              <span className="text-sm text-muted">{s.label}</span>
-            </div>
-          ))}
         </Container>
       </section>
 

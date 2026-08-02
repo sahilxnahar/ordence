@@ -11,7 +11,7 @@ import { chromium } from "playwright";
  */
 
 const PORT = process.env.PORT ?? "8787";
-const ROUTES = ["/", "/platform", "/product", "/crm", "/erp", "/ai", "/services",
+const ROUTES = ["/", "/platform", "/features", "/product", "/crm", "/erp", "/ai", "/services",
   "/pricing", "/get-started", "/contact", "/about", "/insights", "/changelog"];
 const WIDTHS = [1440, 1280, 1024, 768, 390];
 

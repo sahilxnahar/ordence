@@ -262,6 +262,7 @@ src/
     │   ├── industries.ts      10 industry packs + module catalog
     │   ├── registry.ts        seed tenants (fallback if KV is empty)
     │   └── types.ts           Tenant, TenantPlan, TenantRequest
+    ├── features/catalog.ts    ★ all 500 capabilities, typed
     ├── requests.ts            signup queue server actions
     ├── leads.ts               contact-form capture
     ├── email.ts               Resend adapter (fails soft)
@@ -356,6 +357,22 @@ Budgets to hold:
 - Every dark band must be wrapped in `DeferredMount requireCapableDevice`
   with a `BandFallback` placeholder of matching height
 - Every band pauses its render loop off-screen (`frameloop={inView ? …}`)
+
+### The 500-capability catalogue
+
+`src/lib/features/catalog.ts` holds every capability as typed data: id,
+title, blurb, category, domain (`crm` | `erp` | `pack`) and pack name.
+Items 1–340 are horizontal (`pack: null`); 341–500 belong to one of 17
+industry packs.
+
+It is deliberately one file rather than CMS content, because the
+`/features` explorer, the provisioning wizard and a customer's activation
+sheet must all read the same list. `PACK_AFFINITY` models the packs that
+travel together (real estate pulls in construction) so a capability is
+never duplicated across two packs.
+
+`featuresForIndustry(pack)` is the single entry point — it returns every
+horizontal capability plus the chosen pack plus its affinities.
 
 ### Scene controls
 
