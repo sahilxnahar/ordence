@@ -12,7 +12,18 @@ import "server-only";
  * Setup: npx wrangler secret put RESEND_API_KEY
  */
 
-const FROM = "Ordence <onboarding@ordence.com>";
+/**
+ * Sending identity.
+ *
+ * Defaults to a SUBDOMAIN (send.ordence.com) rather than the root domain
+ * on purpose: ordence.com already sends human mail through Google
+ * Workspace, and a domain may only carry one SPF record. Verifying a
+ * separate subdomain in Resend keeps the two systems from fighting over
+ * SPF, and isolates transactional-sending reputation from your personal
+ * mail. Override with the EMAIL_FROM secret if you verify a different
+ * domain.
+ */
+const DEFAULT_FROM = "Ordence <onboarding@send.ordence.com>";
 
 export interface EmailResult {
   ok: boolean;
@@ -44,6 +55,7 @@ export async function sendEmail({
   replyTo?: string;
 }): Promise<EmailResult> {
   const apiKey = await getEnvValue("RESEND_API_KEY");
+  const from = (await getEnvValue("EMAIL_FROM")) ?? DEFAULT_FROM;
 
   if (!apiKey) {
     console.log(
@@ -60,7 +72,7 @@ export async function sendEmail({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: FROM,
+        from,
         to: [to],
         subject,
         html,
