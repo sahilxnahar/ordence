@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -51,14 +52,14 @@ export default function PlatformPage() {
             </Reveal>
             <Reveal delay={0.16}>
               <p className="max-w-md text-lg text-muted">
-                One beam of engineering goes in. Fully-branded client
-                platforms come out — each on its own domain, each completely
-                isolated. Spin the prism.
+                One beam of engineering goes in. Fully-branded client platforms
+                come out — each on its own domain, each completely isolated.
+                Spin the prism.
               </p>
             </Reveal>
             <Reveal delay={0.24}>
               <Magnetic>
-                <Button variant="accent" size="lg" href="/auth/login">
+                <Button variant="accent" size="lg" href={siteConfig.authEntry}>
                   Provision a tenant <span aria-hidden="true">→</span>
                 </Button>
               </Magnetic>
@@ -90,7 +91,9 @@ export default function PlatformPage() {
                 <h3 className="font-semibold transition-colors group-hover:text-accent">
                   {p.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{p.body}</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  {p.body}
+                </p>
               </RevealItem>
             ))}
           </RevealGroup>

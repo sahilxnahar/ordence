@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,15 @@ const products = [
     name: "CRM",
     tone: "accent" as const,
     icon: (
-      <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        viewBox="0 0 24 24"
+        className="size-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <circle cx="9" cy="8" r="3.25" />
         <path d="M3.5 19c.7-3 2.9-4.5 5.5-4.5S13.8 16 14.5 19" />
         <path d="M15.5 5.5a3.25 3.25 0 0 1 0 5.9M17.7 14.9c1.5.7 2.5 2 2.9 4.1" />
@@ -51,7 +60,15 @@ const products = [
     name: "ERP",
     tone: "coral" as const,
     icon: (
-      <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        viewBox="0 0 24 24"
+        className="size-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
         <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
         <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
@@ -65,7 +82,15 @@ const products = [
     name: "AI Services",
     tone: "accent" as const,
     icon: (
-      <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        viewBox="0 0 24 24"
+        className="size-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4L12 3Z" />
         <path d="M18.5 15l.9 2.3 2.1.7-2.1.7-.9 2.3-.9-2.3-2.1-.7 2.1-.7.9-2.3Z" />
       </svg>
@@ -77,7 +102,15 @@ const products = [
     name: "Web Development",
     tone: "coral" as const,
     icon: (
-      <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg
+        viewBox="0 0 24 24"
+        className="size-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <path d="M8 6l-5 6 5 6M16 6l5 6-5 6M13.5 4l-3 16" />
       </svg>
     ),
@@ -87,15 +120,49 @@ const products = [
 ] as const;
 
 const deals = [
-  { company: "Ameyaa Heights", stage: "Won", value: "₹42L", owner: "SN", tone: "success" as const },
-  { company: "Northline Retail", stage: "Proposal", value: "₹18L", owner: "AK", tone: "accent" as const },
-  { company: "Vega Logistics", stage: "Discovery", value: "₹9.5L", owner: "RM", tone: "neutral" as const },
-  { company: "Client X", stage: "Negotiation", value: "₹27L", owner: "SN", tone: "coral" as const },
+  {
+    company: "Ameyaa Heights",
+    stage: "Won",
+    value: "₹42L",
+    owner: "SN",
+    tone: "success" as const,
+  },
+  {
+    company: "Northline Retail",
+    stage: "Proposal",
+    value: "₹18L",
+    owner: "AK",
+    tone: "accent" as const,
+  },
+  {
+    company: "Vega Logistics",
+    stage: "Discovery",
+    value: "₹9.5L",
+    owner: "RM",
+    tone: "neutral" as const,
+  },
+  {
+    company: "Client X",
+    stage: "Negotiation",
+    value: "₹27L",
+    owner: "SN",
+    tone: "coral" as const,
+  },
 ] as const;
 
 const stats = [
-  { value: 99.9, decimals: 1, suffix: "%", label: "Uptime target on Cloudflare's edge" },
-  { value: 50, prefix: "<", suffix: "ms", label: "Response time, served near your users" },
+  {
+    value: 99.9,
+    decimals: 1,
+    suffix: "%",
+    label: "Uptime target on Cloudflare's edge",
+  },
+  {
+    value: 50,
+    prefix: "<",
+    suffix: "ms",
+    label: "Response time, served near your users",
+  },
   { value: 100, suffix: "+", label: "Branded tenant sites from one codebase" },
   { value: 4, label: "Products on one system of record" },
 ] as const;
@@ -146,7 +213,8 @@ export default function HomePage() {
         <Container className="relative flex min-h-[78svh] flex-col items-start justify-center gap-8 py-24">
           <Reveal>
             <span className="kicker">
-              <span className="glow-dot" aria-hidden="true" /> CRM · ERP · Web · AI
+              <span className="glow-dot" aria-hidden="true" /> CRM · ERP · Web ·
+              AI
             </span>
           </Reveal>
           <Reveal delay={0.08}>
@@ -166,7 +234,7 @@ export default function HomePage() {
           </Reveal>
           <Reveal delay={0.24} className="flex flex-wrap items-center gap-3">
             <Magnetic>
-              <Button variant="accent" size="lg" href="/auth/login">
+              <Button variant="accent" size="lg" href={siteConfig.authEntry}>
                 Start building <span aria-hidden="true">→</span>
               </Button>
             </Magnetic>
@@ -183,7 +251,16 @@ export default function HomePage() {
           </span>
           <span className="corner-caption absolute right-6 bottom-8 hidden items-center gap-2 md:flex">
             Scroll to organize
-            <svg viewBox="0 0 24 24" className="size-3.5 opacity-70" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              className="size-3.5 opacity-70"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
               <path d="M12 4v16m0 0-5-5m5 5 5-5" />
             </svg>
           </span>
@@ -197,7 +274,10 @@ export default function HomePage() {
                 key={c}
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-medium text-muted transition-colors hover:border-accent hover:text-accent"
               >
-                <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
+                <span
+                  aria-hidden="true"
+                  className="size-1.5 rounded-full bg-brand"
+                />
                 {c}
               </span>
             ))}
@@ -222,7 +302,7 @@ export default function HomePage() {
               Fast tables, clean pipelines, zero clutter. Hover the card — the
               whole interface is this responsive.
             </p>
-            <Button variant="outline" href="/auth/login">
+            <Button variant="outline" href={siteConfig.authEntry}>
               Explore the CRM
             </Button>
           </Reveal>
@@ -258,7 +338,9 @@ export default function HomePage() {
                         <td className="px-4 py-3">
                           <Badge tone={d.tone}>{d.stage}</Badge>
                         </td>
-                        <td className="px-4 py-3 font-mono text-xs">{d.value}</td>
+                        <td className="px-4 py-3 font-mono text-xs">
+                          {d.value}
+                        </td>
                         <td className="px-4 py-3">
                           <span className="inline-flex size-7 items-center justify-center rounded-full bg-brand text-xs font-semibold text-brand-contrast">
                             {d.owner}
@@ -335,7 +417,10 @@ export default function HomePage() {
       </section>
 
       {/* ————— 5 · Craft: 3D focal object + principles ————— */}
-      <section id="craft" className="relative overflow-hidden border-t border-border bg-background">
+      <section
+        id="craft"
+        className="relative overflow-hidden border-t border-border bg-background"
+      >
         <Container className="grid items-center gap-16 py-24 md:grid-cols-2">
           <div className="space-y-10">
             <Reveal className="space-y-4">
@@ -352,7 +437,9 @@ export default function HomePage() {
                   <h3 className="font-medium transition-colors duration-200 group-hover:text-accent">
                     {pr.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-muted">{pr.body}</p>
+                  <p className="text-sm leading-relaxed text-muted">
+                    {pr.body}
+                  </p>
                 </RevealItem>
               ))}
             </RevealGroup>
@@ -374,14 +461,37 @@ export default function HomePage() {
           </Reveal>
           <RevealGroup className="grid gap-5 md:grid-cols-3">
             {[
-              { quote: "Leads used to sit for hours. Now the first call happens before the enquiry form finishes celebrating.", name: "Sales Head", org: "Real-estate developer" },
-              { quote: "GST invoicing that just works, inside the same system as our pipeline. We deleted three tools.", name: "Finance Lead", org: "D2C brand" },
-              { quote: "Our clients think the platform is ours. That white-label polish wins us the pitch every time.", name: "Founder", org: "Digital agency" },
+              {
+                quote:
+                  "Leads used to sit for hours. Now the first call happens before the enquiry form finishes celebrating.",
+                name: "Sales Head",
+                org: "Real-estate developer",
+              },
+              {
+                quote:
+                  "GST invoicing that just works, inside the same system as our pipeline. We deleted three tools.",
+                name: "Finance Lead",
+                org: "D2C brand",
+              },
+              {
+                quote:
+                  "Our clients think the platform is ours. That white-label polish wins us the pitch every time.",
+                name: "Founder",
+                org: "Digital agency",
+              },
             ].map((t) => (
-              <RevealItem key={t.quote} className="flex h-full flex-col justify-between gap-6 rounded-panel border border-border bg-surface p-8 shadow-low">
-                <p className="text-sm leading-relaxed text-foreground">“{t.quote}”</p>
+              <RevealItem
+                key={t.quote}
+                className="flex h-full flex-col justify-between gap-6 rounded-panel border border-border bg-surface p-8 shadow-low"
+              >
+                <p className="text-sm leading-relaxed text-foreground">
+                  “{t.quote}”
+                </p>
                 <div className="flex items-center gap-3">
-                  <span aria-hidden="true" className="size-9 rounded-full bg-gradient-brand opacity-80" />
+                  <span
+                    aria-hidden="true"
+                    className="size-9 rounded-full bg-gradient-brand opacity-80"
+                  />
                   <div className="text-xs">
                     <p className="font-semibold">{t.name}</p>
                     <p className="text-muted">{t.org}</p>
@@ -420,7 +530,10 @@ export default function HomePage() {
       </section>
 
       {/* ————— 7 · CTA: CursorGrid playground ————— */}
-      <section id="services" className="relative border-t border-border bg-background">
+      <section
+        id="services"
+        className="relative border-t border-border bg-background"
+      >
         <LazyCursorGrid className="absolute inset-0 size-full" />
         <Container className="relative flex flex-col items-center gap-6 py-28 text-center">
           <Reveal>
@@ -438,7 +551,7 @@ export default function HomePage() {
           </Reveal>
           <Reveal delay={0.18}>
             <Magnetic>
-              <Button variant="primary" size="lg" href="/auth/login">
+              <Button variant="primary" size="lg" href={siteConfig.authEntry}>
                 Talk to us <span aria-hidden="true">→</span>
               </Button>
             </Magnetic>

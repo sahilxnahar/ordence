@@ -254,22 +254,25 @@ click **Add**.
 ordence.com
 ```
 
-**E3.** Repeat "Add → Custom domain" three more times, once for each of:
+**E3.** Repeat "Add → Custom domain" once more for:
 
 ```
 www.ordence.com
 ```
 
-```
-admin.ordence.com
-```
+Cloudflare sets up DNS and HTTPS certificates automatically.
 
-```
-app.ordence.com
-```
-
-Cloudflare sets up DNS and HTTPS certificates for each automatically —
-you don't need to do anything else for these four.
+> **Do NOT add `app.ordence.com` here.** That hostname belongs to your
+> separate CRM application — bind it as a Custom Domain on *that* Worker
+> instead. A Custom Domain (or an explicit `app.ordence.com/*` route) is
+> more specific than this Worker's `*.ordence.com/*` wildcard, so the CRM
+> wins the hostname even though both exist in the same zone. The
+> marketing Worker deliberately returns 404 for it, so if you ever see a
+> 404 at app.ordence.com it means the CRM binding is missing.
+>
+> **Do NOT add `admin.ordence.com` either** — the admin console is parked
+> until you ask for it. Leaving it unbound means the hostname resolves to
+> nothing at all, which is the safest state.
 
 **E4.** Now the wildcard, so EVERY client subdomain
 (ameyaa.ordence.com, clientx.ordence.com, …) works without adding them

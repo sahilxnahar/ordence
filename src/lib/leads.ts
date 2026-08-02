@@ -11,7 +11,11 @@ import { redirect } from "next/navigation";
 
 interface KVLike {
   get(key: string): Promise<string | null>;
-  put(key: string, value: string, opts?: { expirationTtl?: number }): Promise<void>;
+  put(
+    key: string,
+    value: string,
+    opts?: { expirationTtl?: number },
+  ): Promise<void>;
 }
 
 async function getKv(): Promise<KVLike | null> {
@@ -21,6 +25,33 @@ async function getKv(): Promise<KVLike | null> {
     return ((env as Record<string, unknown>)["TENANT_KV"] as KVLike) ?? null;
   } catch {
     return null;
+  }
+}
+
+export interface Lead {
+  name: string;
+  email: string;
+  company: string;
+  interest: string;
+  message: string;
+  at: string;
+}
+
+/** Newest-first captured leads, for the admin inbox. */
+export async function listLeads(limit = 50): Promise<Lead[]> {
+  const kv = await getKv();
+  if (!kv) return [];
+  try {
+    const index = JSON.parse((await kv.get("leads:index")) ?? "[]") as string[];
+    const leads = await Promise.all(
+      index.slice(0, limit).map(async (id) => {
+        const raw = await kv.get(id);
+        return raw ? (JSON.parse(raw) as Lead) : null;
+      }),
+    );
+    return leads.filter((l): l is Lead => l !== null);
+  } catch {
+    return [];
   }
 }
 

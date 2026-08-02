@@ -16,10 +16,8 @@ const base =
   "active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50 select-none";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-primary text-primary-foreground hover:opacity-90 shadow-low",
-  accent:
-    "bg-brand text-brand-contrast hover:opacity-90 shadow-low",
+  primary: "bg-primary text-primary-foreground hover:opacity-90 shadow-low",
+  accent: "bg-brand text-brand-contrast hover:opacity-90 shadow-low",
   outline:
     "border border-border-strong bg-surface text-foreground hover:border-foreground/40 hover:bg-background",
   ghost: "text-foreground hover:bg-foreground/5",

@@ -43,7 +43,8 @@ export default function CursorGrid({
     const pointer = { x: -9999, y: -9999 };
 
     const css = getComputedStyle(canvas);
-    const dotColor = css.getPropertyValue("--grid-dot") || "rgba(17,24,39,0.18)";
+    const dotColor =
+      css.getPropertyValue("--grid-dot") || "rgba(17,24,39,0.18)";
     const hotColor = css.getPropertyValue("--grid-hot") || "#6d45e8";
 
     function resize() {
@@ -139,7 +140,8 @@ export default function CursorGrid({
       className={className}
       style={
         {
-          "--grid-dot": "color-mix(in srgb, var(--foreground) 14%, transparent)",
+          "--grid-dot":
+            "color-mix(in srgb, var(--foreground) 14%, transparent)",
           "--grid-hot": "var(--brand)",
         } as React.CSSProperties
       }

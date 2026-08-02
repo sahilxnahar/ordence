@@ -9,7 +9,11 @@ export const metadata: Metadata = {
   description: "Every meaningful improvement to the Ordence platform, dated.",
 };
 
-const tagTone = { New: "accent", Improved: "success", Platform: "neutral" } as const;
+const tagTone = {
+  New: "accent",
+  Improved: "success",
+  Platform: "neutral",
+} as const;
 
 export default function ChangelogPage() {
   return (
@@ -21,7 +25,9 @@ export default function ChangelogPage() {
           <h1 className="text-display text-5xl font-semibold">
             Shipping is
             <br />
-            <span className="text-gradient-brand font-extrabold">the culture.</span>
+            <span className="text-gradient-brand font-extrabold">
+              the culture.
+            </span>
           </h1>
         </Reveal>
         <RevealGroup className="space-y-0 border-l border-border pl-8">

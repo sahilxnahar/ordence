@@ -28,7 +28,13 @@ export default function GlobalError({
           padding: "1.5rem",
         }}
       >
-        <h1 style={{ fontSize: "2rem", fontWeight: 600, letterSpacing: "-0.03em" }}>
+        <h1
+          style={{
+            fontSize: "2rem",
+            fontWeight: 600,
+            letterSpacing: "-0.03em",
+          }}
+        >
           Ordence hit a critical error.
         </h1>
         <button

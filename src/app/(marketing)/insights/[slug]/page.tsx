@@ -48,7 +48,10 @@ export default async function ArticlePage({
         </header>
         <div className="space-y-6">
           {article.body.map((p, i) => (
-            <p key={i} className="text-[1.05rem] leading-[1.8] text-foreground/85">
+            <p
+              key={i}
+              className="text-[1.05rem] leading-[1.8] text-foreground/85"
+            >
               {p}
             </p>
           ))}

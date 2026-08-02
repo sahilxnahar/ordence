@@ -25,11 +25,41 @@ interface District {
 }
 
 const DISTRICTS: District[] = [
-  { name: "CRM Quarter", feature: "Leads route here in under a second", position: [-2.2, 0, -1.4], size: [1.4, 1.1, 1.4], accent: "#6d45e8" },
-  { name: "Revenue Tower", feature: "Invoices, GST-ready, auto-reconciled", position: [0.2, 0, -2.0], size: [1.0, 2.2, 1.0], accent: "#8563ee" },
-  { name: "Warehouse", feature: "Multi-location stock, live to every quote", position: [2.3, 0, -0.8], size: [1.8, 0.8, 1.3], accent: "#ff5c5c" },
-  { name: "Support Studio", feature: "Omnichannel tickets with SLA timers", position: [-2.0, 0, 1.6], size: [1.2, 0.9, 1.1], accent: "#0e8a5f" },
-  { name: "Dispatch Bay", feature: "Pick, pack, ship with live tracking", position: [2.2, 0, 1.8], size: [1.4, 0.7, 1.2], accent: "#b26a00" },
+  {
+    name: "CRM Quarter",
+    feature: "Leads route here in under a second",
+    position: [-2.2, 0, -1.4],
+    size: [1.4, 1.1, 1.4],
+    accent: "#6d45e8",
+  },
+  {
+    name: "Revenue Tower",
+    feature: "Invoices, GST-ready, auto-reconciled",
+    position: [0.2, 0, -2.0],
+    size: [1.0, 2.2, 1.0],
+    accent: "#8563ee",
+  },
+  {
+    name: "Warehouse",
+    feature: "Multi-location stock, live to every quote",
+    position: [2.3, 0, -0.8],
+    size: [1.8, 0.8, 1.3],
+    accent: "#ff5c5c",
+  },
+  {
+    name: "Support Studio",
+    feature: "Omnichannel tickets with SLA timers",
+    position: [-2.0, 0, 1.6],
+    size: [1.2, 0.9, 1.1],
+    accent: "#0e8a5f",
+  },
+  {
+    name: "Dispatch Bay",
+    feature: "Pick, pack, ship with live tracking",
+    position: [2.2, 0, 1.8],
+    size: [1.4, 0.7, 1.2],
+    accent: "#b26a00",
+  },
 ] as const;
 
 type EventKind = "lead" | "ship" | "invoice" | "ticket";
@@ -140,8 +170,10 @@ function CityScene({
   useFrame(({ pointer }) => {
     if (!rig.current) return;
     // gentle parallax
-    rig.current.rotation.y += (pointer.x * 0.25 - rig.current.rotation.y) * 0.04;
-    rig.current.rotation.x += (-pointer.y * 0.08 - rig.current.rotation.x) * 0.04;
+    rig.current.rotation.y +=
+      (pointer.x * 0.25 - rig.current.rotation.y) * 0.04;
+    rig.current.rotation.x +=
+      (-pointer.y * 0.08 - rig.current.rotation.x) * 0.04;
   });
 
   const roads = useMemo(
@@ -160,7 +192,10 @@ function CityScene({
         <meshStandardMaterial color="#111827" roughness={0.95} />
       </mesh>
       {/* grid lines */}
-      <gridHelper args={[10, 24, "#26314a", "#1b2434"]} position={[0, 0.001, 0]} />
+      <gridHelper
+        args={[10, 24, "#26314a", "#1b2434"]}
+        position={[0, 0.001, 0]}
+      />
       {/* roads */}
       {roads.map((r, i) => (
         <mesh key={i} position={r.pos as unknown as [number, number, number]}>
@@ -212,7 +247,11 @@ export default function CommandRoom({ className }: { className?: string }) {
         setFlashes((m) => ({ ...m, ["Revenue Tower"]: now }));
         setTowerGrow((g) => Math.min(g + 0.12, 1.4));
       } else if (ev.kind === "ship") {
-        setFlashes((m) => ({ ...m, ["Dispatch Bay"]: now, ["Warehouse"]: now }));
+        setFlashes((m) => ({
+          ...m,
+          ["Dispatch Bay"]: now,
+          ["Warehouse"]: now,
+        }));
         setTrucks((t) => [...t.slice(-2), now]);
       } else {
         setFlashes((m) => ({ ...m, ["Support Studio"]: now }));
@@ -283,7 +322,9 @@ export default function CommandRoom({ className }: { className?: string }) {
                   className="size-1.5 shrink-0 rounded-full"
                   style={{ background: dotColor[e.kind] }}
                 />
-                <span className="truncate text-xs text-[#dfe4f2]">{e.label}</span>
+                <span className="truncate text-xs text-[#dfe4f2]">
+                  {e.label}
+                </span>
               </div>
             ))}
           </div>

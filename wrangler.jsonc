@@ -14,13 +14,21 @@
  *      → paste both ids below
  *   3. npm run deploy
  *   4. Cloudflare dashboard → your zone (ordence.com):
- *        - Add custom domains: ordence.com, www.ordence.com,
- *          admin.ordence.com, app.ordence.com
+ *        - Add custom domains to THIS Worker: ordence.com, www.ordence.com
  *        - Add a wildcard route: *.ordence.com/* → this Worker
- *          (wildcard subdomains require ordence.com to be a zone in the
- *          same Cloudflare account; proxied wildcard DNS is free)
+ *          (serves tenant subdomains; wildcard subdomains require
+ *          ordence.com to be a zone in the same Cloudflare account —
+ *          proxied wildcard DNS is free)
  *        - Tenant custom domains (customclientdomain.com) attach via
  *          Cloudflare for SaaS custom hostnames — free for the first 100.
+ *
+ *   NOT this Worker:
+ *        - app.ordence.com is served by the separate CRM application.
+ *          Bind it there as a Custom Domain, or add an explicit route
+ *          `app.ordence.com/*` on that Worker — either is more specific
+ *          than this Worker's `*.ordence.com/*` wildcard, so the CRM
+ *          wins the hostname. This Worker 404s it deliberately.
+ *        - admin.ordence.com is parked; leave it unbound.
  */
 {
   "$schema": "node_modules/wrangler/config-schema.json",

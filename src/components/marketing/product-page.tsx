@@ -67,12 +67,18 @@ export function ProductPage({
 
           {/* TERRA-style corner captions */}
           {cornerLeft && (
-            <span className="corner-caption rise absolute bottom-8 left-6 hidden md:block" style={{ animationDelay: "560ms" }}>
+            <span
+              className="corner-caption rise absolute bottom-8 left-6 hidden md:block"
+              style={{ animationDelay: "560ms" }}
+            >
               {cornerLeft}
             </span>
           )}
           {cornerRight && (
-            <span className="corner-caption rise absolute right-6 bottom-8 hidden md:block" style={{ animationDelay: "560ms" }}>
+            <span
+              className="corner-caption rise absolute right-6 bottom-8 hidden md:block"
+              style={{ animationDelay: "560ms" }}
+            >
               {cornerRight}
             </span>
           )}

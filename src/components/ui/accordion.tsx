@@ -16,10 +16,7 @@ export function AccordionItem({
 }) {
   return (
     <details
-      className={cn(
-        "group border-b border-border last:border-0",
-        className,
-      )}
+      className={cn("group border-b border-border last:border-0", className)}
     >
       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left font-medium transition-colors hover:text-accent [&::-webkit-details-marker]:hidden">
         {question}

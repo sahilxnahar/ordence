@@ -201,8 +201,14 @@ export default function LivingLedger({
     <points>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[data.chaos, 3]} />
-        <bufferAttribute attach="attributes-aPipeline" args={[data.pipeline, 3]} />
-        <bufferAttribute attach="attributes-aLattice" args={[data.lattice, 3]} />
+        <bufferAttribute
+          attach="attributes-aPipeline"
+          args={[data.pipeline, 3]}
+        />
+        <bufferAttribute
+          attach="attributes-aLattice"
+          args={[data.lattice, 3]}
+        />
         <bufferAttribute attach="attributes-aOrbit" args={[data.orbit, 3]} />
         <bufferAttribute attach="attributes-aColor" args={[data.colors, 3]} />
         <bufferAttribute attach="attributes-aSeed" args={[data.seeds, 1]} />

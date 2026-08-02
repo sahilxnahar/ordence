@@ -1,7 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
 import SceneCanvas from "./scene-canvas";
 import LivingLedger from "./living-ledger";
 
@@ -36,7 +41,11 @@ export default function LedgerSection() {
   // Caption opacities: each act owns a quarter of the scroll.
   const o0 = useTransform(scrollYProgress, [0, 0.16, 0.25], [1, 1, 0]);
   const o1 = useTransform(scrollYProgress, [0.2, 0.3, 0.41, 0.5], [0, 1, 1, 0]);
-  const o2 = useTransform(scrollYProgress, [0.45, 0.55, 0.66, 0.75], [0, 1, 1, 0]);
+  const o2 = useTransform(
+    scrollYProgress,
+    [0.45, 0.55, 0.66, 0.75],
+    [0, 1, 1, 0],
+  );
   const o3 = useTransform(scrollYProgress, [0.72, 0.85, 1], [0, 1, 1]);
   const opacities = [o0, o1, o2, o3];
 

@@ -40,7 +40,10 @@ export function normalizeHost(rawHost: string): string {
   return host.includes("]") ? host : host.split(":")[0];
 }
 
-export function classifyHost(rawHost: string, rootDomain: string): HostDecision {
+export function classifyHost(
+  rawHost: string,
+  rootDomain: string,
+): HostDecision {
   const host = normalizeHost(rawHost);
   const root = rootDomain.toLowerCase();
 

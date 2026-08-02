@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import { notFound } from "next/navigation";
 import { getTenantBySlug } from "@/lib/tenant/store";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,10 @@ export default async function TenantHomePage({
   const { tenant: slug } = await params;
   const tenant = await getTenantBySlug(slug);
   if (!tenant) notFound();
+  // The layout replaces children with a "workspace paused" notice, but the
+  // page still executes — returning early keeps its markup out of the RSC
+  // payload entirely rather than rendering content nobody should see.
+  if (tenant.status !== "active") return null;
 
   const enabled = (
     Object.entries(tenant.features) as [string, boolean][]
@@ -42,8 +47,8 @@ export default async function TenantHomePage({
           style={{ animationDelay: "240ms" }}
         >
           A dedicated, branded environment for {tenant.name} — isolated
-          configuration and permissions, served from the shared Ordence
-          platform at the edge.
+          configuration and permissions, served from the shared Ordence platform
+          at the edge.
         </p>
         <div
           className="rise grid w-full gap-4 pt-2 sm:grid-cols-2"
@@ -66,7 +71,7 @@ export default async function TenantHomePage({
         </div>
         {/* This button is repainted by the tenant's --brand token. */}
         <div className="rise" style={{ animationDelay: "480ms" }}>
-          <Button variant="accent" size="lg" href="/auth/login">
+          <Button variant="accent" size="lg" href={siteConfig.authEntry}>
             Enter workspace <span aria-hidden="true">→</span>
           </Button>
         </div>

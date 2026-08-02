@@ -16,10 +16,34 @@ import SceneCanvas from "./scene-canvas";
  */
 
 const TENANTS = [
-  { slug: "ameyaa", name: "Ameyaa", accent: "#6d45e8", domain: "ameyaa.ordence.com", blurb: "Real-estate CRM in Ameyaa's violet — their leads, their brand." },
-  { slug: "clientx", name: "Client X", accent: "#ff5c5c", domain: "customclientdomain.com", blurb: "Full ERP on a custom domain — coral brand, same codebase." },
-  { slug: "northline", name: "Northline", accent: "#0e8a5f", domain: "northline.ordence.com", blurb: "Retail suite in Northline green — provisioned in under a minute." },
-  { slug: "vega", name: "Vega", accent: "#b26a00", domain: "vega.ordence.com", blurb: "Logistics workspace in amber — every tenant fully isolated." },
+  {
+    slug: "ameyaa",
+    name: "Ameyaa",
+    accent: "#6d45e8",
+    domain: "ameyaa.ordence.com",
+    blurb: "Real-estate CRM in Ameyaa's violet — their leads, their brand.",
+  },
+  {
+    slug: "clientx",
+    name: "Client X",
+    accent: "#ff5c5c",
+    domain: "customclientdomain.com",
+    blurb: "Full ERP on a custom domain — coral brand, same codebase.",
+  },
+  {
+    slug: "northline",
+    name: "Northline",
+    accent: "#0e8a5f",
+    domain: "northline.ordence.com",
+    blurb: "Retail suite in Northline green — provisioned in under a minute.",
+  },
+  {
+    slug: "vega",
+    name: "Vega",
+    accent: "#b26a00",
+    domain: "vega.ordence.com",
+    blurb: "Logistics workspace in amber — every tenant fully isolated.",
+  },
 ] as const;
 
 /** Draw a mini website mockup onto a canvas texture. */
@@ -163,12 +187,20 @@ function PrismScene({ onFront }: { onFront: (index: number) => void }) {
             <group
               key={t.slug}
               name="site"
-              position={[Math.cos(angle) * r, Math.sin(i * 2.1) * 0.25, Math.sin(angle) * r]}
+              position={[
+                Math.cos(angle) * r,
+                Math.sin(i * 2.1) * 0.25,
+                Math.sin(angle) * r,
+              ]}
               rotation={[0, -angle + Math.PI / 2, 0]}
             >
               <mesh>
                 <planeGeometry args={[1.5, 1]} />
-                <meshBasicMaterial map={textures[i]} toneMapped={false} side={THREE.DoubleSide} />
+                <meshBasicMaterial
+                  map={textures[i]}
+                  toneMapped={false}
+                  side={THREE.DoubleSide}
+                />
               </mesh>
               {/* accent edge under the card */}
               <mesh position={[0, -0.56, 0]}>

@@ -18,12 +18,30 @@ export default function ServicesPage() {
       cornerLeft="Edge-deployed · sub-second"
       cornerRight="No. 004 — Studio"
       features={[
-        { title: "Launch", body: "A fast, beautiful lead-capture site on your Ordence subdomain — live in days, every form feeding your CRM." },
-        { title: "Growth", body: "Full marketing site on your own domain: interactive moments, SEO foundations, analytics, content engine." },
-        { title: "Custom", body: "Product-grade builds — portals, dashboards, e-commerce — on the same edge architecture as Ordence itself." },
-        { title: "Always wired in", body: "Every project ships pre-connected: forms, chat, booking and analytics land in your CRM automatically." },
-        { title: "Performance guaranteed", body: "Core Web Vitals in the green as a contractual target, not a hope. Static-first, globally cached." },
-        { title: "One team, no handoffs", body: "Design, engineering and the platform under one roof — the site and the software never drift apart." },
+        {
+          title: "Launch",
+          body: "A fast, beautiful lead-capture site on your Ordence subdomain — live in days, every form feeding your CRM.",
+        },
+        {
+          title: "Growth",
+          body: "Full marketing site on your own domain: interactive moments, SEO foundations, analytics, content engine.",
+        },
+        {
+          title: "Custom",
+          body: "Product-grade builds — portals, dashboards, e-commerce — on the same edge architecture as Ordence itself.",
+        },
+        {
+          title: "Always wired in",
+          body: "Every project ships pre-connected: forms, chat, booking and analytics land in your CRM automatically.",
+        },
+        {
+          title: "Performance guaranteed",
+          body: "Core Web Vitals in the green as a contractual target, not a hope. Static-first, globally cached.",
+        },
+        {
+          title: "One team, no handoffs",
+          body: "Design, engineering and the platform under one roof — the site and the software never drift apart.",
+        },
       ]}
     />
   );

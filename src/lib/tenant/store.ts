@@ -15,9 +15,16 @@ import { seedTenantByDomain, seedTenantBySlug } from "./registry";
  * stampede the origin — important on a request-capped free plan.
  */
 
-const MEMORY_TTL_MS = 60_000; // 1 min — fast tenant config propagation
+/**
+ * L1 TTL is deliberately short. Suspension is a security-adjacent action —
+ * an admin who suspends a tenant expects the hostname to stop serving
+ * promptly, and a 60s window of continued service is too long to defend.
+ * 15s still absorbs the overwhelming majority of repeat reads within a
+ * traffic burst, so the KV free-tier read budget stays comfortable.
+ */
+const MEMORY_TTL_MS = 15_000;
 const NEGATIVE_TTL_MS = 15_000;
-const KV_TTL_SECONDS = 300; // 5 min at the edge
+const KV_TTL_SECONDS = 60; // edge cache; bounds worst-case propagation
 
 interface CacheEntry {
   value: Tenant | null;
@@ -112,6 +119,8 @@ export async function getTenantBySlug(slug: string): Promise<Tenant | null> {
   return lookup(`slug:${slug}`);
 }
 
-export async function getTenantByDomain(domain: string): Promise<Tenant | null> {
+export async function getTenantByDomain(
+  domain: string,
+): Promise<Tenant | null> {
   return lookup(`domain:${domain.toLowerCase()}`);
 }

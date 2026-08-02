@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { siteConfig } from "@/config/site";
 
 /**
  * ⌘K command palette — dependency-free, ~2KB. Fuzzy-ish filter over the
@@ -22,7 +23,7 @@ const COMMANDS = [
   { label: "Changelog", hint: "What shipped", href: "/changelog" },
   { label: "About", hint: "Company", href: "/about" },
   { label: "Contact — talk to us", hint: "Action", href: "/contact" },
-  { label: "Sign in", hint: "Action", href: "/auth/login" },
+  { label: "Sign in", hint: "Workspace", href: siteConfig.authEntry },
 ] as const;
 
 export function CommandPalette() {
@@ -68,7 +69,15 @@ export function CommandPalette() {
         title="Search — ⌘K"
         className="hidden size-9 items-center justify-center rounded-full border border-border text-muted transition-colors hover:text-foreground sm:inline-flex"
       >
-        <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+        <svg
+          viewBox="0 0 24 24"
+          className="size-4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          aria-hidden="true"
+        >
           <circle cx="11" cy="11" r="7" />
           <path d="m21 21-4.3-4.3" />
         </svg>
@@ -112,7 +121,9 @@ export function CommandPalette() {
         />
         <ul className="max-h-80 overflow-y-auto p-2">
           {results.length === 0 && (
-            <li className="px-4 py-6 text-center text-sm text-muted">No matches.</li>
+            <li className="px-4 py-6 text-center text-sm text-muted">
+              No matches.
+            </li>
           )}
           {results.map((c, i) => (
             <li key={c.href}>

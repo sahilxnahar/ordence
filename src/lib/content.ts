@@ -55,10 +55,70 @@ export interface ChangelogEntry {
 }
 
 export const CHANGELOG: ChangelogEntry[] = [
-  { date: "2026-08-02", title: "Three WebGL showpieces", tag: "New", body: "The Living Ledger scroll story on the homepage, the draggable Tenant Prism on /platform, and the living Command Room diorama on /product." },
-  { date: "2026-08-02", title: "Admin tenant provisioning", tag: "Platform", body: "Tenants can now be provisioned from the admin console straight into edge KV — subdomains go live within about a minute." },
-  { date: "2026-08-02", title: "Command palette", tag: "New", body: "Press ⌘K anywhere on the site to jump between pages." },
-  { date: "2026-08-01", title: "Official Orbital brand system", tag: "Improved", body: "The full brand kit — colors, inline SVG logo, favicons — now drives every token on the site, light and dark." },
-  { date: "2026-08-01", title: "Twenty-inspired redesign", tag: "Improved", body: "White canvas, defined pill navigation, interactive tilt cards, marquee, count-up stats and FAQ." },
-  { date: "2026-08-01", title: "Cloudflare Workers deployment", tag: "Platform", body: "The entire platform ships on Cloudflare's free tier via OpenNext — static-first, KV-cached, globally fast." },
+  {
+    date: "2026-08-02",
+    title: "Surfaces split",
+    tag: "Platform",
+    body: "ordence.com is now purely the marketing site. app.ordence.com is served by the separate CRM application, and the admin console is parked until it can ship behind authentication.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Mobile navigation",
+    tag: "New",
+    body: "A full-height slide-in menu with focus management and Escape-to-close. Fixed a containing-block bug that had trapped the overlay inside the header.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Tenant suspension",
+    tag: "Platform",
+    body: "Suspend or resume any tenant from the Command Grid. Paused workspaces now explain themselves instead of returning a bare 404, and changes propagate within about 15 seconds.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Platform health & lead inbox",
+    tag: "New",
+    body: "Live fleet counts, free-tier budget tracking and module adoption — plus every captured lead, in the admin console.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Test suite",
+    tag: "Improved",
+    body: "16 unit tests covering hostname routing, plus end-to-end scripts for the tenant lifecycle and mobile navigation.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Three WebGL showpieces",
+    tag: "New",
+    body: "The Living Ledger scroll story on the homepage, the draggable Tenant Prism on /platform, and the living Command Room diorama on /product.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Admin tenant provisioning",
+    tag: "Platform",
+    body: "Tenants can now be provisioned from the admin console straight into edge KV — subdomains go live within about a minute.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Command palette",
+    tag: "New",
+    body: "Press ⌘K anywhere on the site to jump between pages.",
+  },
+  {
+    date: "2026-08-01",
+    title: "Official Orbital brand system",
+    tag: "Improved",
+    body: "The full brand kit — colors, inline SVG logo, favicons — now drives every token on the site, light and dark.",
+  },
+  {
+    date: "2026-08-01",
+    title: "Twenty-inspired redesign",
+    tag: "Improved",
+    body: "White canvas, defined pill navigation, interactive tilt cards, marquee, count-up stats and FAQ.",
+  },
+  {
+    date: "2026-08-01",
+    title: "Cloudflare Workers deployment",
+    tag: "Platform",
+    body: "The entire platform ships on Cloudflare's free tier via OpenNext — static-first, KV-cached, globally fast.",
+  },
 ] as const;

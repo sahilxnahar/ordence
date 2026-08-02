@@ -4,8 +4,13 @@ import { siteConfig } from "@/config/site";
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      // Public marketing surfaces are crawlable; internal surfaces never.
-      { userAgent: "*", allow: "/", disallow: ["/admin", "/app", "/auth", "/t/"] },
+      {
+        userAgent: "*",
+        allow: "/",
+        // Tenant surfaces are reachable only via their own hostnames, and
+        // the auth page has nothing to index.
+        disallow: ["/auth", "/t/"],
+      },
     ],
     sitemap: `${siteConfig.url}/sitemap.xml`,
   };

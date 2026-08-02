@@ -55,7 +55,7 @@ export default function Strands({
     }
 
     const strands: Strand[] = Array.from({ length: count }, (_, i) => ({
-      baseY: 0.18 + (i / count) * 0.68 + (Math.sin(i * 7.3) * 0.03),
+      baseY: 0.18 + (i / count) * 0.68 + Math.sin(i * 7.3) * 0.03,
       amp: 26 + (i % 5) * 12,
       freq: 0.8 + (i % 4) * 0.35,
       speed: 0.12 + (i % 3) * 0.05,

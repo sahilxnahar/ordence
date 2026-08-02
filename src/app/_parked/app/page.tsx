@@ -10,10 +10,30 @@ import Link from "next/link";
  */
 
 const modules = [
-  { key: "crm", name: "CRM", desc: "Pipelines, contacts, conversations", state: "Preview" },
-  { key: "erp", name: "ERP", desc: "Inventory, orders, invoices", state: "Preview" },
-  { key: "ai", name: "AI Assistant", desc: "Summaries, drafts, insight", state: "Preview" },
-  { key: "analytics", name: "Analytics", desc: "Dashboards & reports", state: "Preview" },
+  {
+    key: "crm",
+    name: "CRM",
+    desc: "Pipelines, contacts, conversations",
+    state: "Preview",
+  },
+  {
+    key: "erp",
+    name: "ERP",
+    desc: "Inventory, orders, invoices",
+    state: "Preview",
+  },
+  {
+    key: "ai",
+    name: "AI Assistant",
+    desc: "Summaries, drafts, insight",
+    state: "Preview",
+  },
+  {
+    key: "analytics",
+    name: "Analytics",
+    desc: "Dashboards & reports",
+    state: "Preview",
+  },
 ] as const;
 
 export default function AppHomePage() {
@@ -32,7 +52,9 @@ export default function AppHomePage() {
               className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-muted"
             >
               {m.name}
-              <span className="font-mono text-[10px] tracking-wider text-muted-subtle uppercase">soon</span>
+              <span className="font-mono text-[10px] tracking-wider text-muted-subtle uppercase">
+                soon
+              </span>
             </span>
           ))}
         </nav>
@@ -54,16 +76,20 @@ export default function AppHomePage() {
                 The product mounts here.
               </h1>
               <p className="max-w-lg text-sm text-muted">
-                Authentication and the first CRM screens are the next
-                milestones on the roadmap. Everything below is the real
-                shell they land in.
+                Authentication and the first CRM screens are the next milestones
+                on the roadmap. Everything below is the real shell they land in.
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {modules.map((m) => (
-                <div key={m.key} className="group rounded-panel border border-border bg-surface p-6 shadow-low transition-shadow hover:shadow-mid">
+                <div
+                  key={m.key}
+                  className="group rounded-panel border border-border bg-surface p-6 shadow-low transition-shadow hover:shadow-mid"
+                >
                   <div className="flex items-center justify-between">
-                    <h2 className="font-semibold transition-colors group-hover:text-accent">{m.name}</h2>
+                    <h2 className="font-semibold transition-colors group-hover:text-accent">
+                      {m.name}
+                    </h2>
                     <Badge tone="neutral">{m.state}</Badge>
                   </div>
                   <p className="mt-2 text-sm text-muted">{m.desc}</p>

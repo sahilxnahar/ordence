@@ -4,22 +4,26 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { Tenant } from "./types";
 import { isValidTenantSlug } from "./resolve";
+import { SEED_TENANTS, seedTenantBySlug } from "./registry";
 
 /**
- * Admin provisioning — writes tenants straight into TENANT_KV using the
- * exact keys the edge middleware reads (`tenant:slug:*`, `tenant:domain:*`),
- * so a created tenant's subdomain is LIVE within the cache TTL. An index
- * key lets the admin panel list KV-provisioned tenants (KV has no cheap
- * list-by-prefix on hot paths).
+ * Admin provisioning + fleet management.
  *
- * NOTE: admin.ordence.com must be protected by real authentication before
- * production traffic — see BLUEPRINT.md §Authentication. Until auth lands,
- * these actions are safe to demo but the admin host should stay unshared.
+ * Everything writes to the SAME keys the edge middleware reads
+ * (`tenant:slug:*`, `tenant:domain:*`), so changes go live within the
+ * cache TTL with no deploy. Because `store.ts` checks KV before the seed
+ * registry, writing a seed slug into KV acts as an override — which is
+ * how seed tenants become editable without a code change.
+ *
+ * SECURITY: admin.ordence.com must sit behind real authentication before
+ * this is exposed publicly — see BLUEPRINT.md §Authentication. These
+ * actions are intentionally unguarded only while the host is private.
  */
 
 interface KVLike {
   get(key: string): Promise<string | null>;
   put(key: string, value: string): Promise<void>;
+  delete?(key: string): Promise<void>;
 }
 
 async function getKv(): Promise<KVLike | null> {
@@ -32,60 +36,147 @@ async function getKv(): Promise<KVLike | null> {
   }
 }
 
-export async function listKvTenants(): Promise<Tenant[]> {
-  const kv = await getKv();
-  if (!kv) return [];
-  try {
-    const index = JSON.parse((await kv.get("tenants:index")) ?? "[]") as string[];
-    const tenants = await Promise.all(
-      index.map(async (slug) => {
-        const raw = await kv.get(`tenant:slug:${slug}`);
-        return raw && raw !== "null" ? (JSON.parse(raw) as Tenant) : null;
-      }),
-    );
-    return tenants.filter((t): t is Tenant => t !== null);
-  } catch {
-    return [];
+/** Persist a tenant to every key the router might resolve it by. */
+async function writeTenant(kv: KVLike, tenant: Tenant): Promise<void> {
+  await kv.put(`tenant:slug:${tenant.slug}`, JSON.stringify(tenant));
+  for (const domain of tenant.domains) {
+    await kv.put(`tenant:domain:${domain}`, JSON.stringify(tenant));
+  }
+  const index = JSON.parse((await kv.get("tenants:index")) ?? "[]") as string[];
+  if (!index.includes(tenant.slug)) {
+    index.unshift(tenant.slug);
+    await kv.put("tenants:index", JSON.stringify(index));
   }
 }
 
-export async function createTenant(formData: FormData): Promise<void> {
-  const slug = String(formData.get("slug") ?? "").toLowerCase().trim();
-  const name = String(formData.get("name") ?? "").trim();
-  const accent = String(formData.get("accent") ?? "#6d45e8");
-  const domain = String(formData.get("domain") ?? "").toLowerCase().trim();
+/** Read one tenant, preferring the KV override over the seed registry. */
+export async function getManagedTenant(slug: string): Promise<Tenant | null> {
+  const kv = await getKv();
+  if (kv) {
+    const raw = await kv.get(`tenant:slug:${slug}`);
+    if (raw && raw !== "null") return JSON.parse(raw) as Tenant;
+  }
+  return seedTenantBySlug(slug);
+}
 
-  if (!isValidTenantSlug(slug) || !name) {
-    redirect("/tenants?error=invalid");
+/** The full fleet: KV-provisioned tenants merged over seed defaults. */
+export async function listManagedTenants(): Promise<
+  { tenant: Tenant; source: "kv" | "seed" }[]
+> {
+  const kv = await getKv();
+  const bySlug = new Map<string, { tenant: Tenant; source: "kv" | "seed" }>();
+
+  for (const seed of SEED_TENANTS) {
+    bySlug.set(seed.slug, { tenant: seed, source: "seed" });
   }
 
-  const tenant: Tenant = {
+  if (kv) {
+    try {
+      const index = JSON.parse(
+        (await kv.get("tenants:index")) ?? "[]",
+      ) as string[];
+      for (const slug of index) {
+        const raw = await kv.get(`tenant:slug:${slug}`);
+        if (raw && raw !== "null") {
+          bySlug.set(slug, { tenant: JSON.parse(raw) as Tenant, source: "kv" });
+        }
+      }
+    } catch {
+      /* fleet view degrades to seeds rather than erroring the page */
+    }
+  }
+
+  return [...bySlug.values()];
+}
+
+function tenantFromForm(formData: FormData, existing?: Tenant | null): Tenant {
+  const slug = String(formData.get("slug") ?? "")
+    .toLowerCase()
+    .trim();
+  const domain = String(formData.get("domain") ?? "")
+    .toLowerCase()
+    .trim();
+  return {
     slug,
-    name,
-    domains: domain ? [domain] : [],
-    branding: { accent, accentContrast: "#ffffff", radius: "pill" },
+    name: String(formData.get("name") ?? "").trim(),
+    domains: domain
+      ? [domain, ...(existing?.domains ?? []).filter((d) => d !== domain)]
+      : (existing?.domains ?? []),
+    branding: {
+      accent: String(formData.get("accent") ?? "#6d45e8"),
+      accentContrast: "#ffffff",
+      radius: existing?.branding.radius ?? "pill",
+    },
     features: {
       crm: formData.get("crm") === "on",
       erp: formData.get("erp") === "on",
       ai: formData.get("ai") === "on",
       web: formData.get("web") === "on",
     },
-    status: "active",
+    status: existing?.status ?? "active",
   };
+}
+
+export async function createTenant(formData: FormData): Promise<void> {
+  const tenant = tenantFromForm(formData);
+  if (!isValidTenantSlug(tenant.slug) || !tenant.name) {
+    redirect("/tenants?error=invalid");
+  }
 
   const kv = await getKv();
   if (kv) {
-    await kv.put(`tenant:slug:${slug}`, JSON.stringify(tenant));
-    if (domain) {
-      await kv.put(`tenant:domain:${domain}`, JSON.stringify(tenant));
+    // Refuse to silently clobber an existing tenant.
+    const existing = await kv.get(`tenant:slug:${tenant.slug}`);
+    if ((existing && existing !== "null") || seedTenantBySlug(tenant.slug)) {
+      redirect("/tenants?error=exists");
     }
-    const index = JSON.parse((await kv.get("tenants:index")) ?? "[]") as string[];
-    if (!index.includes(slug)) index.unshift(slug);
-    await kv.put("tenants:index", JSON.stringify(index));
+    await writeTenant(kv, tenant);
   } else {
     console.log("[ordence] createTenant (no KV binding):", tenant);
   }
 
   revalidatePath("/tenants");
-  redirect(`/tenants?created=${slug}`);
+  redirect(`/tenants?created=${tenant.slug}`);
+}
+
+export async function updateTenant(formData: FormData): Promise<void> {
+  const slug = String(formData.get("slug") ?? "")
+    .toLowerCase()
+    .trim();
+  if (!isValidTenantSlug(slug)) redirect("/tenants?error=invalid");
+
+  const existing = await getManagedTenant(slug);
+  const tenant = tenantFromForm(formData, existing);
+  if (!tenant.name) redirect("/tenants?error=invalid");
+
+  const kv = await getKv();
+  if (kv) await writeTenant(kv, tenant);
+  else console.log("[ordence] updateTenant (no KV binding):", tenant);
+
+  revalidatePath("/tenants");
+  redirect(`/tenants?updated=${slug}`);
+}
+
+/**
+ * Suspend/resume. Suspended tenants fail the middleware's active check,
+ * so their hostname immediately serves the domain-not-found page.
+ */
+export async function toggleTenantStatus(formData: FormData): Promise<void> {
+  const slug = String(formData.get("slug") ?? "")
+    .toLowerCase()
+    .trim();
+  const existing = await getManagedTenant(slug);
+  if (!existing) redirect("/tenants?error=missing");
+
+  const updated: Tenant = {
+    ...existing,
+    status: existing.status === "active" ? "suspended" : "active",
+  };
+
+  const kv = await getKv();
+  if (kv) await writeTenant(kv, updated);
+  else console.log("[ordence] toggleTenantStatus (no KV binding):", updated);
+
+  revalidatePath("/tenants");
+  redirect(`/tenants?updated=${slug}`);
 }

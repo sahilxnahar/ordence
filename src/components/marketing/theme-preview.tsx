@@ -44,7 +44,10 @@ export function ThemePreview() {
               className="size-9 rounded-full border-2 transition-transform hover:scale-110"
               style={{
                 background: p.color,
-                borderColor: accent === p.color && !custom ? "var(--foreground)" : "transparent",
+                borderColor:
+                  accent === p.color && !custom
+                    ? "var(--foreground)"
+                    : "transparent",
               }}
             />
           ))}
@@ -71,10 +74,17 @@ export function ThemePreview() {
       >
         <div className="flex items-center justify-between border-b border-border pb-4">
           <span className="flex items-center gap-2.5 font-semibold">
-            <span aria-hidden="true" className="size-6 rounded-full transition-colors" style={{ background: accent }} />
+            <span
+              aria-hidden="true"
+              className="size-6 rounded-full transition-colors"
+              style={{ background: accent }}
+            />
             Your Brand
           </span>
-          <span className="rounded-full px-3.5 py-1.5 text-xs font-semibold text-white transition-colors" style={{ background: accent }}>
+          <span
+            className="rounded-full px-3.5 py-1.5 text-xs font-semibold text-white transition-colors"
+            style={{ background: accent }}
+          >
             Get started
           </span>
         </div>
@@ -83,9 +93,18 @@ export function ThemePreview() {
           <div className="h-3.5 w-1/2 rounded-full bg-foreground/15" />
           <div className="flex gap-2 pt-2">
             {[38, 62, 45].map((w, i) => (
-              <div key={i} className="h-16 flex-1 rounded-xl border border-border p-2.5">
-                <div className="mb-2 h-2 rounded-full bg-foreground/12" style={{ width: `${w}%` }} />
-                <div className="h-2 w-1/2 rounded-full transition-colors" style={{ background: accent, opacity: 0.75 }} />
+              <div
+                key={i}
+                className="h-16 flex-1 rounded-xl border border-border p-2.5"
+              >
+                <div
+                  className="mb-2 h-2 rounded-full bg-foreground/12"
+                  style={{ width: `${w}%` }}
+                />
+                <div
+                  className="h-2 w-1/2 rounded-full transition-colors"
+                  style={{ background: accent, opacity: 0.75 }}
+                />
               </div>
             ))}
           </div>

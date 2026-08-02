@@ -20,7 +20,9 @@ export default function InsightsPage() {
           <h1 className="text-display max-w-2xl text-5xl font-semibold">
             Operator notes,
             <br />
-            <span className="text-gradient-brand font-extrabold">not content marketing.</span>
+            <span className="text-gradient-brand font-extrabold">
+              not content marketing.
+            </span>
           </h1>
         </Reveal>
         <RevealGroup className="grid gap-5 md:grid-cols-2">

@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -74,13 +75,15 @@ export default function ProductPage() {
                 <h3 className="font-semibold transition-colors group-hover:text-accent">
                   {m.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{m.body}</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  {m.body}
+                </p>
               </RevealItem>
             ))}
           </RevealGroup>
           <Reveal className="mt-12 flex justify-center">
             <Magnetic>
-              <Button variant="accent" size="lg" href="/auth/login">
+              <Button variant="accent" size="lg" href={siteConfig.authEntry}>
                 Run yours on Ordence <span aria-hidden="true">→</span>
               </Button>
             </Magnetic>

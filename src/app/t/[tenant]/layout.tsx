@@ -30,13 +30,44 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * Suspended workspaces get an explicit, calm explanation rather than a
+ * bare 404. The page genuinely exists — telling a visitor "not found"
+ * when the real cause is a billing or admin action sends them hunting
+ * for a typo that isn't there.
+ */
+function SuspendedWorkspace({ name }: { name: string }) {
+  return (
+    <div className="flex min-h-svh flex-col items-center justify-center gap-5 p-6 text-center">
+      <span className="kicker">Workspace unavailable</span>
+      <h1 className="text-display max-w-lg text-4xl font-semibold">
+        {name} is temporarily unavailable.
+      </h1>
+      <p className="max-w-md text-muted">
+        This workspace has been paused by an administrator. If you believe this
+        is unexpected, contact your Ordence administrator to restore access.
+      </p>
+      <a
+        href="https://ordence.com"
+        className="rounded-full border border-border-strong bg-surface px-6 py-3 text-sm font-medium transition-colors hover:bg-background"
+      >
+        Go to ordence.com
+      </a>
+    </div>
+  );
+}
+
 export default async function TenantLayout({
   children,
   params,
 }: TenantParams & { children: React.ReactNode }) {
   const { tenant: slug } = await params;
   const tenant = await getTenantBySlug(slug);
-  if (!tenant || tenant.status !== "active") notFound();
+  // Unknown slug is a genuine 404; a known-but-paused workspace is not.
+  if (!tenant) notFound();
+  if (tenant.status !== "active") {
+    return <SuspendedWorkspace name={tenant.name} />;
+  }
 
   const radius =
     tenant.branding.radius === "sharp"
@@ -77,7 +108,9 @@ export default async function TenantLayout({
       </main>
       <footer className="border-t border-border">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-6 text-xs text-muted-subtle">
-          <span>© {new Date().getFullYear()} {tenant.name}</span>
+          <span>
+            © {new Date().getFullYear()} {tenant.name}
+          </span>
           <span>
             Powered by{" "}
             <a

@@ -39,8 +39,8 @@ export function SiteFooter() {
         <div className="space-y-4">
           <Logo className="gap-3 [&>svg:first-child]:size-16 [&>svg:nth-child(2)]:h-7" />
           <p className="max-w-xs text-sm text-muted">
-            The operating system for ambitious businesses — CRM, ERP, web and
-            AI on one platform.
+            The operating system for ambitious businesses — CRM, ERP, web and AI
+            on one platform.
           </p>
         </div>
         {columns.map((col) => (
@@ -63,7 +63,9 @@ export function SiteFooter() {
       </Container>
       <div className="border-t border-border">
         <Container className="flex h-14 items-center justify-between text-xs text-muted-subtle">
-          <span>© {new Date().getFullYear()} Ordence. All rights reserved.</span>
+          <span>
+            © {new Date().getFullYear()} Ordence. All rights reserved.
+          </span>
           <span>Crafted on ordence.com</span>
         </Container>
       </div>

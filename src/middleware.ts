@@ -18,10 +18,20 @@ import { siteConfig } from "@/config/site";
  *
  * Host → surface mapping:
  *   ordence.com, www.ordence.com   → /            (marketing route group)
- *   admin.ordence.com              → /admin/*     (operations console)
- *   app.ordence.com                → /app/*       (signed-in product shell)
  *   ameyaa.ordence.com             → /t/ameyaa/*  (tenant site)
  *   customclientdomain.com         → /t/{slug}/*  (via KV-cached lookup)
+ *
+ * Deliberately NOT served by this Worker:
+ *   app.ordence.com    — owned by the separate CRM application. Bind it
+ *                        there as a Custom Domain (or an explicit
+ *                        `app.ordence.com/*` route, which beats this
+ *                        Worker's `*.ordence.com/*` wildcard on
+ *                        specificity). If a request still reaches here,
+ *                        the CRM binding is missing — so we 404 rather
+ *                        than serve a stub that looks like the product.
+ *   admin.ordence.com  — parked (see src/app/_parked/README.md). Returns
+ *                        404 so the hostname reveals nothing until an
+ *                        authenticated console is deployed.
  *
  * Security invariants:
  *   1. Internal path prefixes (/t, /admin, /app) are unreachable from the
@@ -39,7 +49,9 @@ export const config = {
   ],
 };
 
-export default async function middleware(request: NextRequest): Promise<NextResponse> {
+export default async function middleware(
+  request: NextRequest,
+): Promise<NextResponse> {
   const url = request.nextUrl;
   const host = request.headers.get("host") ?? siteConfig.rootDomain;
   const decision = classifyHost(host, siteConfig.rootDomain);
@@ -52,17 +64,13 @@ export default async function middleware(request: NextRequest): Promise<NextResp
   const withHeaders = { request: { headers: requestHeaders } };
 
   switch (decision.surface) {
-    case "admin": {
-      // admin.ordence.com/*  →  /admin/*
-      const rewritten = url.clone();
-      rewritten.pathname = `/admin${url.pathname === "/" ? "" : url.pathname}`;
-      return NextResponse.rewrite(rewritten, withHeaders);
-    }
-
+    // Neither hostname is this Worker's to serve. Reaching this branch
+    // means a DNS/route binding is missing upstream, so fail closed with
+    // a 404 instead of exposing a placeholder or a parked console.
+    case "admin":
     case "app": {
-      // app.ordence.com/*  →  /app/*
       const rewritten = url.clone();
-      rewritten.pathname = `/app${url.pathname === "/" ? "" : url.pathname}`;
+      rewritten.pathname = "/404";
       return NextResponse.rewrite(rewritten, withHeaders);
     }
 
@@ -94,19 +102,22 @@ export default async function middleware(request: NextRequest): Promise<NextResp
 
     case "preview":
     case "marketing": {
-      // Guard internal prefixes on the public host. `/admin` and `/app`
-      // redirect to their canonical subdomains; `/t/*` is never public.
-      if (url.pathname === "/admin" || url.pathname.startsWith("/admin/")) {
-        return NextResponse.redirect(
-          `https://admin.${siteConfig.rootDomain}${url.pathname.replace(/^\/admin/, "") || "/"}`,
-        );
-      }
+      // /app on the marketing host is a convenience shortcut into the
+      // separate CRM application.
       if (url.pathname === "/app" || url.pathname.startsWith("/app/")) {
         return NextResponse.redirect(
-          `https://app.${siteConfig.rootDomain}${url.pathname.replace(/^\/app/, "") || "/"}`,
+          `${siteConfig.appUrl}${url.pathname.replace(/^\/app/, "") || "/"}`,
         );
       }
-      if (url.pathname.startsWith("/t/") || url.pathname === "/domain-not-found") {
+      // Internal-only prefixes are never reachable from the public host.
+      // `/admin` is parked, and `/t/*` must never be addressable directly
+      // or one tenant's surface could be requested from another's URL.
+      if (
+        url.pathname === "/admin" ||
+        url.pathname.startsWith("/admin/") ||
+        url.pathname.startsWith("/t/") ||
+        url.pathname === "/domain-not-found"
+      ) {
         const rewritten = url.clone();
         rewritten.pathname = "/404";
         return NextResponse.rewrite(rewritten, withHeaders);

@@ -11,9 +11,7 @@ export default function LoginPage() {
     <div className="space-y-6 rounded-panel border border-border bg-surface p-8 shadow-mid">
       <div className="space-y-1.5">
         <h1 className="text-xl font-semibold tracking-tight">Welcome back</h1>
-        <p className="text-sm text-muted">
-          Sign in to your Ordence workspace.
-        </p>
+        <p className="text-sm text-muted">Sign in to your Ordence workspace.</p>
       </div>
 
       <form className="space-y-4" action="#" method="post">

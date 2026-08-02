@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import Link from "next/link";
 import { LogoMark, LogoWordmark } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { Container } from "@/components/ui/container";
 import { Magnetic } from "@/components/motion/magnetic";
 import { CommandPalette } from "@/components/ui/command-palette";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
+import { MobileNav } from "@/components/layout/mobile-nav";
 
 const nav = [
   { href: "/platform", label: "Platform" },
@@ -55,15 +57,21 @@ export function SiteHeader() {
           <ScrollProgress />
           <CommandPalette />
           <ThemeToggle />
-          <Button variant="ghost" size="md" href="/auth/login" className="hidden sm:inline-flex">
+          <Button
+            variant="ghost"
+            size="md"
+            href={siteConfig.authEntry}
+            className="hidden sm:inline-flex"
+          >
             Sign in
           </Button>
-          <Magnetic strength={0.25}>
-            <Button variant="accent" size="md" href="/auth/login">
+          <Magnetic strength={0.25} className="max-sm:hidden">
+            <Button variant="accent" size="md" href={siteConfig.authEntry}>
               Get started
               <span aria-hidden="true">→</span>
             </Button>
           </Magnetic>
+          <MobileNav />
         </div>
       </Container>
     </header>

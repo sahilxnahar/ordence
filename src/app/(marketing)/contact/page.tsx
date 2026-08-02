@@ -26,23 +26,45 @@ export default async function ContactPage({
       <Container className="relative grid gap-14 py-20 lg:grid-cols-[1fr_1.1fr]">
         <div className="space-y-6">
           <span className="kicker rise">Contact</span>
-          <h1 className="text-display rise max-w-md text-5xl font-semibold" style={{ animationDelay: "120ms" }}>
+          <h1
+            className="text-display rise max-w-md text-5xl font-semibold"
+            style={{ animationDelay: "120ms" }}
+          >
             Talk to a human,
             <br />
-            <span className="text-gradient-brand font-extrabold">not a funnel.</span>
+            <span className="text-gradient-brand font-extrabold">
+              not a funnel.
+            </span>
           </h1>
-          <p className="rise max-w-md text-lg text-muted" style={{ animationDelay: "240ms" }}>
-            Tell us what you&apos;re building. We reply within one business
-            day — usually much faster.
+          <p
+            className="rise max-w-md text-lg text-muted"
+            style={{ animationDelay: "240ms" }}
+          >
+            Tell us what you&apos;re building. We reply within one business day
+            — usually much faster.
           </p>
-          <div className="rise space-y-3 pt-4 text-sm text-muted" style={{ animationDelay: "360ms" }}>
-            <p><span className="font-medium text-foreground">Email</span> — hello@ordence.com</p>
-            <p><span className="font-medium text-foreground">Response time</span> — under 24 hours, weekdays</p>
-            <p className="corner-caption pt-6">Stillness starts within · Ordence Studio</p>
+          <div
+            className="rise space-y-3 pt-4 text-sm text-muted"
+            style={{ animationDelay: "360ms" }}
+          >
+            <p>
+              <span className="font-medium text-foreground">Email</span> —
+              hello@ordence.com
+            </p>
+            <p>
+              <span className="font-medium text-foreground">Response time</span>{" "}
+              — under 24 hours, weekdays
+            </p>
+            <p className="corner-caption pt-6">
+              Stillness starts within · Ordence Studio
+            </p>
           </div>
         </div>
 
-        <div className="rise rounded-panel border border-border bg-surface p-8 shadow-mid" style={{ animationDelay: "300ms" }}>
+        <div
+          className="rise rounded-panel border border-border bg-surface p-8 shadow-mid"
+          style={{ animationDelay: "300ms" }}
+        >
           {sent ? (
             <div className="flex min-h-72 flex-col items-center justify-center gap-4 text-center">
               <Badge tone="success">Message received</Badge>
@@ -51,7 +73,9 @@ export default async function ContactPage({
                 Your message is safely in our queue — expect a reply within one
                 business day.
               </p>
-              <Button variant="outline" href="/">Back to home</Button>
+              <Button variant="outline" href="/">
+                Back to home
+              </Button>
             </div>
           ) : (
             <form action={submitLead} className="space-y-4">
@@ -62,21 +86,47 @@ export default async function ContactPage({
               )}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <label htmlFor="name" className="text-sm font-medium">Name</label>
-                  <input id="name" name="name" required className={inputClass} placeholder="Your name" />
+                  <label htmlFor="name" className="text-sm font-medium">
+                    Name
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    required
+                    className={inputClass}
+                    placeholder="Your name"
+                  />
                 </div>
                 <div className="space-y-1.5">
-                  <label htmlFor="email" className="text-sm font-medium">Work email</label>
-                  <input id="email" name="email" type="email" required className={inputClass} placeholder="you@company.com" />
+                  <label htmlFor="email" className="text-sm font-medium">
+                    Work email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    className={inputClass}
+                    placeholder="you@company.com"
+                  />
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <label htmlFor="company" className="text-sm font-medium">Company</label>
-                  <input id="company" name="company" className={inputClass} placeholder="Company name" />
+                  <label htmlFor="company" className="text-sm font-medium">
+                    Company
+                  </label>
+                  <input
+                    id="company"
+                    name="company"
+                    className={inputClass}
+                    placeholder="Company name"
+                  />
                 </div>
                 <div className="space-y-1.5">
-                  <label htmlFor="interest" className="text-sm font-medium">Interested in</label>
+                  <label htmlFor="interest" className="text-sm font-medium">
+                    Interested in
+                  </label>
                   <select id="interest" name="interest" className={inputClass}>
                     <option>CRM</option>
                     <option>ERP</option>
@@ -87,7 +137,9 @@ export default async function ContactPage({
                 </div>
               </div>
               <div className="space-y-1.5">
-                <label htmlFor="message" className="text-sm font-medium">Message</label>
+                <label htmlFor="message" className="text-sm font-medium">
+                  Message
+                </label>
                 <textarea
                   id="message"
                   name="message"

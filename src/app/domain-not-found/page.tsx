@@ -17,8 +17,8 @@ export default function DomainNotFoundPage() {
         This domain isn&apos;t linked to a workspace.
       </h1>
       <p className="max-w-md text-muted">
-        If you just connected this domain, DNS may still be propagating. If
-        you believe this is an error, contact your Ordence administrator.
+        If you just connected this domain, DNS may still be propagating. If you
+        believe this is an error, contact your Ordence administrator.
       </p>
       <a
         href="https://ordence.com"

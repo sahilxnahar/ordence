@@ -18,7 +18,9 @@
 import dynamic from "next/dynamic";
 
 function DecorativeFallback({ className }: { className?: string }) {
-  return <div className={className} style={{ opacity: 0.5 }} aria-hidden="true" />;
+  return (
+    <div className={className} style={{ opacity: 0.5 }} aria-hidden="true" />
+  );
 }
 
 export const LazyCursorGrid = dynamic(() => import("./cursor-grid"), {

@@ -17,12 +17,30 @@ export default function ErpPage() {
       cornerLeft="Three-way match · always"
       cornerRight="No. 002 — Operations OS"
       features={[
-        { title: "Live multi-location stock", body: "Bins, batches, serials and expiry — synced into every quote so promise dates are promises, not guesses." },
-        { title: "Procurement with proof", body: "RFQs, vendor scorecards and three-way match (PO ↔ GRN ↔ invoice) close the gap where money leaks." },
-        { title: "GST-native finance", body: "E-invoicing, e-way bills, GSTR-ready reports, TDS — statutory India handled in the core ledger, not a plugin." },
-        { title: "Manufacturing depth", body: "Multi-level BOMs, work orders, shop-floor terminals and yield tracking for teams that make real things." },
-        { title: "Orders end-to-end", body: "Capture from CRM, web or marketplace; pick-pack-ship with courier labels; COD reconciliation without spreadsheets." },
-        { title: "Cash-flow foresight", body: "AR/AP aging, dunning that runs itself, and a forecast built from real receivables — not vibes." },
+        {
+          title: "Live multi-location stock",
+          body: "Bins, batches, serials and expiry — synced into every quote so promise dates are promises, not guesses.",
+        },
+        {
+          title: "Procurement with proof",
+          body: "RFQs, vendor scorecards and three-way match (PO ↔ GRN ↔ invoice) close the gap where money leaks.",
+        },
+        {
+          title: "GST-native finance",
+          body: "E-invoicing, e-way bills, GSTR-ready reports, TDS — statutory India handled in the core ledger, not a plugin.",
+        },
+        {
+          title: "Manufacturing depth",
+          body: "Multi-level BOMs, work orders, shop-floor terminals and yield tracking for teams that make real things.",
+        },
+        {
+          title: "Orders end-to-end",
+          body: "Capture from CRM, web or marketplace; pick-pack-ship with courier labels; COD reconciliation without spreadsheets.",
+        },
+        {
+          title: "Cash-flow foresight",
+          body: "AR/AP aging, dunning that runs itself, and a forecast built from real receivables — not vibes.",
+        },
       ]}
     />
   );
