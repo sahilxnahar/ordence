@@ -49,9 +49,9 @@ export default async function TenantHomePage({
           className="rise max-w-xl text-lg text-muted"
           style={{ animationDelay: "240ms" }}
         >
-          A dedicated, branded environment for {tenant.name} — isolated
-          configuration and permissions, served from the shared Ordence platform
-          at the edge.
+          A dedicated environment for {tenant.name} — your branding, your
+          domain, your data, with configuration and permissions isolated to
+          this workspace alone.
         </p>
         <div
           className="rise grid w-full gap-4 pt-2 sm:grid-cols-2"
@@ -91,7 +91,7 @@ export default async function TenantHomePage({
         requireCapableDevice
         placeholder={
           <BandFallback
-            eyebrow={`${tenant.name} · powered by Ordence`}
+            eyebrow={`${tenant.name} · your workspace`}
             title="Your workspace, on your colours."
             height="compact"
             body={`Isolated configuration, your own domain and your own module set — served at the edge for ${tenant.name}.`}
@@ -102,7 +102,7 @@ export default async function TenantHomePage({
           height="compact"
           accent={tenant.branding.accent}
           secondary={tenant.branding.accent}
-          eyebrow={`${tenant.name} · powered by Ordence`}
+          eyebrow={`${tenant.name} · your workspace`}
           title="Your workspace, on your colours."
           body={`Isolated configuration, your own domain and your own module set — served at the edge for ${tenant.name}.`}
         />

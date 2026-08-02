@@ -71,7 +71,7 @@ export default function ConvergenceBand() {
     <section
       ref={wrapper}
       aria-label="Every channel becomes one record"
-      className="relative isolate overflow-hidden bg-[#080c14]"
+      className="relative isolate overflow-hidden bg-[#08090c]"
     >
       <div className="relative h-[520px] sm:h-[640px] lg:h-[760px]">
         <div className="absolute inset-0" aria-hidden="true">
@@ -117,7 +117,7 @@ export default function ConvergenceBand() {
             the type on a settled ground without dimming the scene above it. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#080c14] via-[#080c14]/85 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#08090c] via-[#08090c]/85 to-transparent"
         />
 
         {/* Copy lives in the lower third so the core is never behind a word. */}
@@ -157,7 +157,7 @@ export default function ConvergenceBand() {
       {/* Hairline seam back into the white page. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[#080c14]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[#08090c]"
       />
     </section>
   );

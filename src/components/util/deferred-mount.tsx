@@ -22,6 +22,7 @@ export function DeferredMount({
   rootMargin = "300px",
   className,
   requireCapableDevice = false,
+  releaseWhenDistant = false,
 }: {
   children: React.ReactNode;
   /** Rendered until the real content mounts — must match its height. */
@@ -38,13 +39,29 @@ export function DeferredMount({
    * boundary as props.
    */
   requireCapableDevice?: boolean;
+  /**
+   * Unmount again once the section is far off-screen.
+   *
+   * Mounting on approach bounds the *download*; it does not bound how
+   * many scenes are alive at once. Three WebGL bands on one page meant
+   * three live contexts and three GPU allocations for the whole session,
+   * even though at most one is ever on screen. With this on, a scene
+   * releases its context when it is more than a screen away and rebuilds
+   * on the way back — which costs a few frames nobody sees, and holds
+   * the "one context per route" budget by construction.
+   *
+   * Only for self-contained scenery. Anything holding state a visitor
+   * would be annoyed to lose should stay mounted.
+   */
+  releaseWhenDistant?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node || show) return;
+    if (!node) return;
+    if (!releaseWhenDistant && show) return;
     if (requireCapableDevice && !allowsHeavyScene()) return;
 
     // No IntersectionObserver (very old browsers): render immediately
@@ -56,18 +73,42 @@ export function DeferredMount({
       return () => cancelAnimationFrame(id);
     }
 
-    const io = new IntersectionObserver(
+    if (!releaseWhenDistant) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            setShow(true);
+            io.disconnect();
+          }
+        },
+        { rootMargin },
+      );
+      io.observe(node);
+      return () => io.disconnect();
+    }
+
+    // Two observers: a near ring that mounts, and a far ring that
+    // releases. One observer with a single margin would thrash at the
+    // boundary — mounting and unmounting on every scroll wobble.
+    const near = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setShow(true);
-          io.disconnect();
-        }
+        if (entries.some((e) => e.isIntersecting)) setShow(true);
       },
       { rootMargin },
     );
-    io.observe(node);
-    return () => io.disconnect();
-  }, [rootMargin, show, requireCapableDevice]);
+    const far = new IntersectionObserver(
+      (entries) => {
+        if (entries.every((e) => !e.isIntersecting)) setShow(false);
+      },
+      { rootMargin: "120% 0px 120% 0px" },
+    );
+    near.observe(node);
+    far.observe(node);
+    return () => {
+      near.disconnect();
+      far.disconnect();
+    };
+  }, [rootMargin, show, requireCapableDevice, releaseWhenDistant]);
 
   return (
     <div ref={ref} className={className}>

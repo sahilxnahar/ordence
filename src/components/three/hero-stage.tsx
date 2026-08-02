@@ -73,7 +73,7 @@ export default function HeroStage() {
   return (
     <section
       aria-label="Ordence — the operating system for ambitious businesses"
-      className="relative isolate overflow-hidden bg-[#080c14]"
+      className="relative isolate overflow-hidden bg-[#08090c]"
     >
       <div className="relative flex min-h-[88svh] flex-col justify-center">
         {/* Copy sits underneath. It is readable through the swarm because

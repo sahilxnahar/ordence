@@ -10,47 +10,57 @@ import { Magnetic } from "@/components/motion/magnetic";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Pricing — start free, scale honestly",
+  title: "Plans — quoted to your business",
   description:
-    "Simple plans for the Ordence platform: start on your subdomain free, upgrade when the business does.",
+    "Three tiers of the Ordence platform. Pricing is quoted against your industry, seat count and modules rather than published as a list.",
 };
 
+/*
+ * Tiers without numbers.
+ *
+ * Nothing here is free and nothing here carries a published rate: the
+ * commercial position is that we quote against the shape of a business,
+ * so a list price on this page would be a promise made before we know
+ * anything about the buyer. The tiers still do the job a pricing page
+ * has to do — show what changes as you grow, and make it obvious which
+ * row you are.
+ */
 const plans = [
   {
     name: "Launch",
-    price: "Free",
-    period: "forever",
+    price: "Quoted",
+    period: "per month",
     blurb: "For getting your brand live and leads flowing.",
     features: [
       "Your branded subdomain",
       "CRM core — contacts, pipeline, tasks",
       "Lead-capture forms & inbox",
-      "2 team members",
-      "Community support",
+      "Up to 5 team members",
+      "Email support, answered by a person",
     ],
-    cta: "Start free",
+    cta: "Request a quote",
     featured: false,
   },
   {
     name: "Growth",
-    price: "₹4,999",
-    period: "/month",
+    price: "Quoted",
+    period: "per month",
     blurb: "For teams running the whole business on Ordence.",
     features: [
       "Everything in Launch",
       "ERP — inventory, invoicing (GST-ready)",
       "Automation engine & AI assistant",
       "Custom domain with TLS",
-      "10 team members",
+      "Up to 25 team members",
       "Priority support",
     ],
-    cta: "Start Growth",
+    cta: "Request a quote",
     featured: true,
   },
   {
     name: "Scale",
-    price: "Custom",
-    period: "",
+    price: "Quoted",
+    period: "per month",
     blurb: "For multi-entity operations and white-label partners.",
     features: [
       "Everything in Growth",
@@ -67,8 +77,8 @@ const plans = [
 
 const faqs = [
   {
-    q: "Can I really start free?",
-    a: "Yes — Launch is free forever on your ordence.com subdomain, with the CRM core included. You only pay when you need ERP depth, automation, or your own domain.",
+    q: "Why aren't the prices listed?",
+    a: "Because a list price would be a number we picked before knowing anything about you. What you pay depends on your industry pack, your seat count and which modules you actually switch on — so we quote it, in writing, as one fixed figure with nothing conditional underneath. Tell us the shape of your business and you have that number quickly.",
   },
   {
     q: "What happens when I upgrade?",
@@ -90,23 +100,25 @@ export default function PricingPage() {
       <section className="relative overflow-hidden">
         <div className="bg-aurora absolute inset-0" aria-hidden="true" />
         <Container className="relative flex flex-col items-center gap-6 pt-20 pb-14 text-center">
-          <span className="kicker rise">Pricing</span>
+          <span className="kicker rise">Plans</span>
           <h1
             className="type-display rise max-w-3xl"
             style={{ animationDelay: "120ms" }}
           >
-            Start free.
+            One number.
             <br />
             <span className="text-gradient-brand font-extrabold">
-              Scale honestly.
+              Nothing underneath it.
             </span>
           </h1>
           <p
             className="rise max-w-lg text-lg text-muted"
             style={{ animationDelay: "240ms" }}
           >
-            No per-feature nickel-and-diming. Three plans, everything listed,
-            upgrade only when the business asks for it.
+            We quote against your industry, your team size and the modules you
+            actually switch on — then hold that figure. No per-feature
+            nickel-and-diming, and no charge for the modules your industry
+            needs to work at all.
           </p>
         </Container>
       </section>
@@ -172,13 +184,13 @@ export default function PricingPage() {
         </Container>
       </section>
 
-      <section className="border-t border-border">
+      <section className="seam">
         <Container className="py-24">
           <PlanCalculator />
         </Container>
       </section>
 
-      <section className="border-t border-border bg-surface-subtle">
+      <section className="seam">
         <Container className="grid gap-12 py-24 lg:grid-cols-[1fr_1.4fr]">
           <Reveal className="space-y-4">
             <span className="kicker">FAQ</span>

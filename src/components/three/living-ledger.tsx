@@ -29,9 +29,21 @@ import type { MotionValue } from "framer-motion";
 const COUNT = 3000;
 
 const BRAND = {
-  violet: new THREE.Color("#6d45e8"),
-  coral: new THREE.Color("#ff5c5c"),
-  ink: new THREE.Color("#8a94b8"),
+  /*
+    The before/after is told in gold, not in brand colour.
+
+    Previously every particle was violet, coral or slate — three hues that
+    are individually fine and collectively invisible at 2px on black,
+    which is why the "movement" in this scene could not be seen. Gold
+    reads on black at any size, and a *ramp* of gold lets the transition
+    be a change in the material itself: tarnished and uneven before,
+    refined and bright after.
+  */
+  goldDull: new THREE.Color("#7a5a18"),
+  goldMid: new THREE.Color("#a8791f"),
+  goldBright: new THREE.Color("#e8bd63"),
+  goldPale: new THREE.Color("#f2d494"),
+  violet: new THREE.Color("#8563ee"),
 };
 
 function buildFormations() {
@@ -40,6 +52,7 @@ function buildFormations() {
   const lattice = new Float32Array(COUNT * 3);
   const orbit = new Float32Array(COUNT * 3);
   const colors = new Float32Array(COUNT * 3);
+  const colorsTo = new Float32Array(COUNT * 3);
   const seeds = new Float32Array(COUNT);
 
   // Deterministic pseudo-random (stable across renders/hydration)
@@ -95,16 +108,26 @@ function buildFormations() {
       orbit[i3 + 2] = (rand() - 0.5) * 0.25;
     }
 
-    /* colors — mostly ink, accented violet + coral like the mark */
+    /*
+      Two colours per particle: where it starts (dull gold, uneven) and
+      where it ends (bright gold, with violet threaded through as the
+      brand's signature). The shader mixes between them on uProgress, so
+      the field visibly warms as the story resolves — the transition is
+      the colour, not just the position.
+    */
     const pick = rand();
-    const c =
-      pick < 0.18 ? BRAND.coral : pick < 0.55 ? BRAND.violet : BRAND.ink;
-    colors[i3] = c.r;
-    colors[i3 + 1] = c.g;
-    colors[i3 + 2] = c.b;
+    const from = pick < 0.5 ? BRAND.goldDull : BRAND.goldMid;
+    const to =
+      pick < 0.14 ? BRAND.violet : pick < 0.6 ? BRAND.goldBright : BRAND.goldPale;
+    colors[i3] = from.r;
+    colors[i3 + 1] = from.g;
+    colors[i3 + 2] = from.b;
+    colorsTo[i3] = to.r;
+    colorsTo[i3 + 1] = to.g;
+    colorsTo[i3 + 2] = to.b;
   }
 
-  return { chaos, pipeline, lattice, orbit, colors, seeds };
+  return { chaos, pipeline, lattice, orbit, colors, colorsTo, seeds };
 }
 
 const vertexShader = /* glsl */ `
@@ -112,6 +135,7 @@ const vertexShader = /* glsl */ `
   attribute vec3 aLattice;
   attribute vec3 aOrbit;
   attribute vec3 aColor;
+  attribute vec3 aColorTo;
   attribute float aSeed;
 
   uniform float uProgress;   // 0..3 across the four formations
@@ -144,12 +168,17 @@ const vertexShader = /* glsl */ `
     float force = smoothstep(0.9, 0.0, dist) * 0.45;
     pos.xy += normalize(d + 0.0001) * force;
 
-    vColor = aColor;
+    // uProgress runs 0→3 across the four acts; normalise and ease so the
+    // warming lands with the final act rather than halfway through.
+    float warm = smoothstep(0.15, 0.92, uProgress / 3.0);
+    vColor = mix(aColor, aColorTo, warm);
     vTwinkle = 0.65 + 0.35 * sin(uTime * (1.0 + aSeed * 2.0) + aSeed * 20.0);
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = uSize * (1.0 / -mv.z) * (0.7 + aSeed * 0.6);
+    // Bigger than before. At 2px on a near-black canvas these read as
+    // sensor noise; the scene has to be legible before it can be pretty.
+    gl_PointSize = uSize * 1.55 * (1.0 / -mv.z) * (0.7 + aSeed * 0.6);
   }
 `;
 
@@ -163,7 +192,7 @@ const fragmentShader = /* glsl */ `
     float d = length(uv);
     float alpha = smoothstep(0.5, 0.12, d) * vTwinkle;
     if (alpha < 0.01) discard;
-    gl_FragColor = vec4(vColor, alpha * 0.9);
+    gl_FragColor = vec4(vColor, alpha);
   }
 `;
 
@@ -216,6 +245,10 @@ export default function LivingLedger({
         />
         <bufferAttribute attach="attributes-aOrbit" args={[data.orbit, 3]} />
         <bufferAttribute attach="attributes-aColor" args={[data.colors, 3]} />
+        <bufferAttribute
+          attach="attributes-aColorTo"
+          args={[data.colorsTo, 3]}
+        />
         <bufferAttribute attach="attributes-aSeed" args={[data.seeds, 1]} />
       </bufferGeometry>
       <shaderMaterial

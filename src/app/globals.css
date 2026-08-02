@@ -45,6 +45,20 @@
   --ordence-violet-400: #a186f3;
   --ordence-violet-100: #ede8fc;
 
+  /* ————— Gold —————
+     Not in the original brand kit. Added because the site's one
+     genuinely dark, cinematic moment — the before/after story — needs a
+     second accent that reads as warmth against violet, and because gold
+     on near-black is the cheapest luxury signal there is. Ramped so
+     motion can be shown as a *change in gold*, which is legible on black
+     in a way that a change in violet is not.  */
+  --ordence-gold-700: #7a5a18;
+  --ordence-gold-600: #a8791f;
+  --ordence-gold-500: #d4a136;
+  --ordence-gold-400: #e8bd63;
+  --ordence-gold-300: #f2d494;
+  --ordence-gold-100: #fbeed0;
+
   --ordence-paper: #faf9f6;
   --ordence-white: #ffffff;
 
@@ -80,6 +94,9 @@
   --success-soft: #e6f4ee;
   --warning: #9a5c00;
   --ring: var(--ordence-violet-600);
+  --gold: var(--ordence-gold-600);
+  --gold-soft: #fbeed0;
+  --gold-strong: var(--ordence-gold-700);
 
   /* Tenant-overridable brand slot (tenants may repaint this at runtime) */
   --brand: var(--ordence-violet-600);
@@ -114,6 +131,11 @@
   --header-h: 6.5rem;
   --logo-mark: 4.5rem;
   --logo-word: 2rem;
+
+  /* ————— Radii: pill-shaped controls, soft surfaces ————— */
+  --radius-control: 9999px;
+  --radius-surface: 1rem;
+  --radius-panel: 1.5rem;
 }
 
 @media (min-width: 1024px) {
@@ -122,23 +144,30 @@
     --logo-mark: 8rem;
     --logo-word: 3.5rem;
   }
-
-  /* ————— Radii: pill-shaped controls, soft surfaces ————— */
-  --radius-control: 9999px;
-  --radius-surface: 1rem;
-  --radius-panel: 1.5rem;
 }
 
 .dark {
-  --background: #0b101b;
-  --surface: #111827;
-  --surface-subtle: #0e1524;
-  --surface-raised: #1b2434;
-  --foreground: #f2f4f8;
-  --muted: #a8b2c7;
-  --muted-subtle: #909ab1;
-  --border: rgba(242, 244, 248, 0.1);
-  --border-strong: rgba(242, 244, 248, 0.2);
+  /* ————— Black, not navy —————
+     The previous dark theme was a blue-grey (#0b101b) that read as "dark
+     mode". This is near-black with a barely-there warm cast, so the
+     violet and gold accents sit on it like light rather than like paint.
+     Surfaces step in tiny increments — 3 to 6 points of luminance — which
+     is what makes a black interface feel deep rather than flat. Jump too
+     far between them and it reads as grey panels on black. */
+  --background: #08090c;
+  --surface: #0e1014;
+  --surface-subtle: #0b0d10;
+  --surface-raised: #14171d;
+  --foreground: #f4f5f7;
+  --muted: #a7adba;
+  --muted-subtle: #8d94a3;
+  --border: rgba(244, 245, 247, 0.09);
+  --border-strong: rgba(244, 245, 247, 0.2);
+
+  /* Gold, as a first-class accent alongside the brand violet. */
+  --gold: var(--ordence-gold-500);
+  --gold-soft: rgba(212, 161, 54, 0.14);
+  --gold-strong: var(--ordence-gold-300);
 
   --primary: #f2f4f8;
   --primary-foreground: #111827;
@@ -153,7 +182,16 @@
   --warning: #f0b429;
   --ring: var(--ordence-violet-400);
 
-  --brand: var(--ordence-violet-500);
+  /*
+    Violet-600, not 500, for the button fill.
+
+    Violet-500 is the right accent for *text* on black (4.54:1) but the
+    wrong fill for a solid button: white on it measures 4.19:1, which is
+    a fail, and it produced 21 identical contrast violations across the
+    site. Violet-600 takes white to 5.73:1 and is still bright against a
+    near-black canvas.
+  */
+  --brand: var(--ordence-violet-600);
 
   --gradient-aurora: radial-gradient(
       60% 80% at 20% 10%,
@@ -189,6 +227,9 @@
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --color-danger-strong: var(--danger-strong);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-strong: var(--gold-strong);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);
@@ -382,6 +423,29 @@ body {
   animation: blurFadeUp 1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
 }
 
+/* Ledger act captions — restart on every act change, always land at 1. */
+.act-caption {
+  animation: act-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes act-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .act-caption {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 /* ————— Mono kicker with flanking hairline rules ————— */
 .kicker {
   display: inline-flex;
@@ -473,6 +537,35 @@ body {
   .logo-intro {
     animation: none;
   }
+}
+
+/* ————— Seam —————
+   The section separator on a single-canvas site.
+
+   Hard `border-t` rules and alternating background fills are what make a
+   page read as a stack of panels. On black they are worse: every rule is
+   a visible grey line and every fill is a slightly different black. A
+   seam replaces both with a hairline that fades out at the edges — enough
+   to say "new idea starts here", not enough to cut the page in two.  */
+.seam {
+  position: relative;
+}
+
+.seam::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--border-strong) 18%,
+    var(--border-strong) 82%,
+    transparent
+  );
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 /* ————— Glass material system (NovaAI-style, for dark media sections) ————— */

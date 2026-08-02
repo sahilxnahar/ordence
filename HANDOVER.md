@@ -336,8 +336,8 @@ a local worker. Homepage, after the P1–P6 frontend pass:
 
 | Profile | JS transferred | Canvases | WebGL contexts | DOM ready |
 |---|---|---|---|---|
-| Desktop 1440×900 | 1,623 KB | 2 | 1 | ~180 ms |
-| Mobile 390×844 | **704 KB** | 1 | **0** | ~85 ms |
+| Desktop 1440×900 | ~1,744 KB | 2 | 1–2 | ~90 ms |
+| Mobile 390×844 | **728 KB** | 0 | **0** | ~180 ms |
 
 Before the pass the homepage mounted **4 canvases and 2 WebGL contexts on
 every device**. The mobile figure is now 56% lighter because three.js
@@ -352,7 +352,11 @@ page, so the fourth scene costs roughly what the second one did.
 
 Budgets to hold:
 - Mobile homepage JS ≤ 750 KB
-- At most **one** WebGL context per route, ever
+- **One** live WebGL context at rest; **two** is allowed transiently while
+  one band hands over to the next. Never three. This is enforced by
+  `releaseWhenDistant` on `DeferredMount`, which unmounts a scene once it
+  is more than a screen away and rebuilds it on the way back — without it
+  the homepage accumulated a context per band for the whole session.
 - No route above 2 canvases
 - Every dark band must be wrapped in `DeferredMount requireCapableDevice`
   with a `BandFallback` placeholder of matching height

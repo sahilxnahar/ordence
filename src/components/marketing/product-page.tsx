@@ -87,7 +87,7 @@ export function ProductPage({
 
       {children}
 
-      <section className="border-t border-border bg-surface-subtle">
+      <section className="seam">
         <Container className="py-24">
           <RevealGroup className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f) => (

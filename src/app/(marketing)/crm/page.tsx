@@ -29,8 +29,8 @@ export default function CrmPage() {
           body: "Required fields per stage, rotting-deal alerts and win/loss capture keep the forecast something you can say out loud.",
         },
         {
-          title: "Omnichannel inbox",
-          body: "Email, WhatsApp, calls and web chat in one timeline per customer — with collision detection so nobody replies twice.",
+          title: "One timeline per customer",
+          body: "Every enquiry, note, document and task against a single record, with collision detection so nobody replies twice. Inbound email, WhatsApp and telephony connect in a later wave — we'll tell you which channels are live for you before you sign, not after.",
         },
         {
           title: "AI on every screen",

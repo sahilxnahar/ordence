@@ -60,10 +60,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf9f6" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b101b" },
-  ],
+  // One colour, because the site has one canvas. Matches --background in
+  // the dark theme so the browser chrome on mobile is continuous with the
+  // page rather than a lighter bar sitting above it.
+  themeColor: "#08090c",
   width: "device-width",
   initialScale: 1,
 };

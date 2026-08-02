@@ -62,7 +62,7 @@ export function FeatureExplorer() {
   }
 
   return (
-    <section aria-label="Capability explorer" className="border-t border-border">
+    <section aria-label="Capability explorer" className="seam">
       <Container className="py-20">
         {/* ————— industry selector ————— */}
         <div className="mb-10">

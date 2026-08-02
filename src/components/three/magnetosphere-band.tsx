@@ -58,7 +58,7 @@ export default function MagnetosphereBand({
     <section
       ref={wrapper}
       aria-label={title}
-      className="relative isolate overflow-hidden bg-[#080c14]"
+      className="relative isolate overflow-hidden bg-[#08090c]"
     >
       <div
         className={

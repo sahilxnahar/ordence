@@ -24,7 +24,7 @@ export async function generateMetadata({
   if (!tenant) return { title: "Not found" };
   return {
     title: { default: tenant.name, template: `%s — ${tenant.name}` },
-    description: `${tenant.name}, powered by Ordence.`,
+    description: `${tenant.name} — workspace.`,
     // Tenant sites own their SEO identity; the platform stays invisible.
     robots: { index: tenant.status === "active", follow: true },
   };
@@ -106,7 +106,7 @@ export default async function TenantLayout({
       <main id="main" className="flex-1">
         {children}
       </main>
-      <footer className="border-t border-border">
+      <footer className="seam">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-6 text-xs text-muted-subtle">
           <span>
             © {new Date().getFullYear()} {tenant.name}

@@ -26,7 +26,7 @@ export const LazyLedgerSection = dynamic(() => import("./ledger-section"), {
   loading: () => (
     <div
       aria-hidden="true"
-      className="h-svh bg-[#0b101b] bg-[radial-gradient(60%_60%_at_50%_45%,rgba(109,69,232,0.2),transparent_70%)]"
+      className="h-svh bg-[#08090c] bg-[radial-gradient(60%_60%_at_50%_45%,rgba(109,69,232,0.2),transparent_70%)]"
     />
   ),
 });
@@ -55,7 +55,7 @@ export const LazyHeroStage = dynamic(() => import("./hero-stage"), {
   loading: () => (
     <div
       aria-hidden="true"
-      className="min-h-[88svh] bg-[#080c14] bg-[radial-gradient(46%_46%_at_66%_50%,rgba(133,99,238,0.34),transparent_70%)]"
+      className="min-h-[88svh] bg-[#08090c] bg-[radial-gradient(46%_46%_at_66%_50%,rgba(133,99,238,0.34),transparent_70%)]"
     />
   ),
 });
@@ -71,7 +71,7 @@ export const LazyProductSpotlight = dynamic(
     loading: () => (
       <div
         aria-hidden="true"
-        className="h-[700px] bg-[#080c14] bg-[radial-gradient(42%_44%_at_62%_48%,rgba(133,99,238,0.28),transparent_70%)] lg:h-[780px]"
+        className="h-[700px] bg-[#08090c] bg-[radial-gradient(42%_44%_at_62%_48%,rgba(133,99,238,0.28),transparent_70%)] lg:h-[780px]"
       />
     ),
   },
@@ -83,7 +83,7 @@ export const LazyConvergenceBand = dynamic(() => import("./convergence-band"), {
   loading: () => (
     <div
       aria-hidden="true"
-      className="h-[520px] bg-[#080c14] bg-[radial-gradient(45%_45%_at_50%_50%,rgba(109,69,232,0.3),transparent_70%)] sm:h-[640px] lg:h-[760px]"
+      className="h-[520px] bg-[#08090c] bg-[radial-gradient(45%_45%_at_50%_50%,rgba(109,69,232,0.3),transparent_70%)] sm:h-[640px] lg:h-[760px]"
     />
   ),
 });
@@ -96,7 +96,7 @@ export const LazyMagnetosphereBand = dynamic(
     loading: () => (
       <div
         aria-hidden="true"
-        className="h-[560px] bg-[#080c14] bg-[radial-gradient(40%_40%_at_50%_50%,rgba(133,99,238,0.26),transparent_70%)] lg:h-[720px]"
+        className="h-[560px] bg-[#08090c] bg-[radial-gradient(40%_40%_at_50%_50%,rgba(133,99,238,0.26),transparent_70%)] lg:h-[720px]"
       />
     ),
   },
@@ -108,7 +108,7 @@ export const LazyLampBand = dynamic(() => import("./lamp-band"), {
   loading: () => (
     <div
       aria-hidden="true"
-      className="h-[600px] bg-[#07090f] bg-[radial-gradient(35%_55%_at_50%_10%,rgba(255,196,120,0.24),transparent_70%)] lg:h-[700px]"
+      className="h-[600px] bg-[#06070a] bg-[radial-gradient(35%_55%_at_50%_10%,rgba(255,196,120,0.24),transparent_70%)] lg:h-[700px]"
     />
   ),
 });
@@ -119,7 +119,7 @@ export const LazyCommandRoom = dynamic(() => import("./command-room"), {
   loading: () => (
     <div
       aria-hidden="true"
-      className="aspect-[16/10] w-full rounded-panel border border-border bg-[#0b101b]"
+      className="aspect-[16/10] w-full rounded-panel border border-border bg-[#08090c]"
     />
   ),
 });

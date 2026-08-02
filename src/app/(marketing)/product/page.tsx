@@ -71,7 +71,7 @@ export default function ProductPage() {
                       app.ordence.com — Command Room
                     </span>
                   </div>
-                  <div className="relative aspect-[16/10] bg-[#0b101b]">
+                  <div className="relative aspect-[16/10] bg-[#08090c]">
                     <div
                       aria-hidden="true"
                       className="absolute inset-0 bg-[radial-gradient(50%_60%_at_50%_50%,rgba(109,69,232,0.25),transparent_70%)]"
@@ -91,7 +91,7 @@ export default function ProductPage() {
         </Container>
       </section>
 
-      <section className="border-t border-border bg-surface-subtle">
+      <section className="seam">
         <Container className="py-24">
           <RevealGroup className="grid gap-5 sm:grid-cols-2">
             {modules.map((m) => (

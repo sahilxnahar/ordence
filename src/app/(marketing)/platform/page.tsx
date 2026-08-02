@@ -4,13 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
-import {
-  LazyTenantPrism,
-  LazyMagnetosphereBand,
-} from "@/components/three/lazy";
+import { LazyTenantPrism } from "@/components/three/lazy";
 import { ThemePreview } from "@/components/marketing/theme-preview";
 import { DeferredMount } from "@/components/util/deferred-mount";
-import { BandFallback } from "@/components/marketing/band-fallback";
 
 export const metadata: Metadata = {
   title: "Platform — one codebase, every brand",
@@ -94,32 +90,21 @@ export default function PlatformPage() {
       </section>
 
       {/*
-        The magnetosphere: one boiling core, fifty field lines arcing out
-        through five shells, every arc returning to the same centre. It is
-        a truer picture of multi-tenancy than any box diagram — and it is
-        the same component tenant workspaces render in their own colour.
+        The magnetosphere band used to sit here. Removed: on this page it
+        restated what the Tenant Prism above already shows interactively,
+        and a second full-height scene between two of them made the page
+        feel padded rather than rich. The scene still earns its place on
+        tenant workspaces, where it renders in that customer's own colour
+        and is therefore about them rather than about us.
       */}
-      <DeferredMount
-        requireCapableDevice
-        placeholder={
-          <BandFallback
-            eyebrow="Multi-tenant by design"
-            title="One core. Every workspace in orbit."
-            body="Each customer gets their own subdomain, their own colours and their own module set — served from one platform at the edge, so a new workspace goes live in about a minute."
-          />
-        }
-      >
-        <LazyMagnetosphereBand />
-      </DeferredMount>
-
       {/* Live theme repainter — the pitch as a toy */}
-      <section className="border-t border-border">
+      <section className="seam">
         <Container className="py-24">
           <ThemePreview />
         </Container>
       </section>
 
-      <section className="border-t border-border bg-surface-subtle">
+      <section className="seam">
         <Container className="py-24">
           <RevealGroup className="grid gap-5 sm:grid-cols-2">
             {pillars.map((p) => (

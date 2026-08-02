@@ -104,8 +104,8 @@ export function SceneBand({
     [field],
   );
 
-  const bg = tone === "amber" ? "bg-[#07090f]" : "bg-[#080c14]";
-  const scrimFrom = tone === "amber" ? "from-[#07090f]" : "from-[#080c14]";
+  const bg = tone === "amber" ? "bg-[#06070a]" : "bg-[#08090c]";
+  const scrimFrom = tone === "amber" ? "from-[#06070a]" : "from-[#08090c]";
 
   return (
     <section

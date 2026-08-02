@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Marquee } from "@/components/ui/marquee";
 import { PipelineDemo } from "@/components/marketing/pipeline-demo";
 import { SpotlightGroup } from "@/components/motion/spotlight-group";
-import { LogoMark } from "@/components/ui/logo";
+import { CraftDiagram } from "@/components/marketing/craft-diagram";
 import { AccordionItem } from "@/components/ui/accordion";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { TiltCard } from "@/components/motion/tilt-card";
@@ -155,6 +155,34 @@ const faqs = [
     q: "Can we start small and grow?",
     a: "That's the design. Start with one product — CRM, ERP, AI or a website — and switch on the rest when you're ready. Everything shares one system of record.",
   },
+  {
+    q: "What does it cost?",
+    a: "It depends on your industry, your seat count and which modules you switch on, so we quote rather than publish a price list. Tell us the shape of your business and you get a fixed number, in writing, with nothing conditional hidden underneath it.",
+  },
+  {
+    q: "How long does it take to go live?",
+    a: "A branded workspace is live the same day it's approved — subdomain, colours and modules included. Migrating your existing data and wiring up your specific workflows is the part that takes real time, and we give you a dated plan for it rather than an estimate.",
+  },
+  {
+    q: "Do we own our data?",
+    a: "Yes, without qualification. Full export is self-serve and available at any time in open formats. There is no exit fee and no period where your records are held while a contract winds down.",
+  },
+  {
+    q: "Will our customers know you exist?",
+    a: "Not unless you tell them. There is no Ordence badge, footer credit or branded login screen on anything your customers touch. The workspace carries your logo, your colours and your domain.",
+  },
+  {
+    q: "What happens to our existing systems?",
+    a: "Most clients keep Tally as their statutory book and sync to it rather than replacing it. For everything else — spreadsheets, a legacy CRM, a folder of quotations — we import what's worth keeping and archive the rest so nothing is lost.",
+  },
+  {
+    q: "Who can see our data internally?",
+    a: "Access is role-based, and our own support staff cannot enter your workspace silently. Support access is consented, time-limited, shown to you with a banner while it's active, and written to your audit log — not ours.",
+  },
+  {
+    q: "What if we outgrow it?",
+    a: "Custom objects, fields and workflows are configuration rather than a development project, so most growth is absorbed without us being involved. When you genuinely need something new built, it's a scoped piece of work with a date, not an open-ended engagement.",
+  },
 ] as const;
 
 /* ————— page ————— */
@@ -168,7 +196,7 @@ function LedgerFallback() {
   return (
     <section
       aria-label="From scattered records to one system"
-      className="relative flex h-svh items-center justify-center overflow-hidden bg-[#0b101b]"
+      className="relative flex h-svh items-center justify-center overflow-hidden bg-[#08090c]"
     >
       <div
         aria-hidden="true"
@@ -202,8 +230,9 @@ export default function HomePage() {
       <section className="relative overflow-hidden">
         <DeferredMount
           requireCapableDevice
+          releaseWhenDistant
           placeholder={
-            <div className="relative isolate flex min-h-[80svh] items-center overflow-hidden bg-[#080c14]">
+            <div className="relative isolate flex min-h-[80svh] items-center overflow-hidden bg-[#08090c]">
               <div
                 aria-hidden="true"
                 className="absolute inset-0"
@@ -270,7 +299,11 @@ export default function HomePage() {
         · viewport — even when allowed, nothing loads until the section
           is approached. The fallback is the same height, so no shift.
       */}
-      <DeferredMount requireCapableDevice placeholder={<LedgerFallback />}>
+      <DeferredMount
+        requireCapableDevice
+        releaseWhenDistant
+        placeholder={<LedgerFallback />}
+      >
         <LazyLedgerSection />
       </DeferredMount>
 
@@ -282,21 +315,22 @@ export default function HomePage() {
         company name — a demo that looks broken argues against the
         product it is meant to sell.
       */}
-      <section id="demo" className="border-t border-border bg-surface-subtle">
+      <section id="demo" className="seam">
         <Container className="py-24">
           <Reveal className="mb-10 flex flex-wrap items-end justify-between gap-6">
             <div className="space-y-4">
               <p className="text-eyebrow">Product</p>
               <h2 className="type-h1">
-                A CRM that feels like
+                A CRM that arrives
                 <br />
-                it was built this year.
+                shaped like your business.
               </h2>
             </div>
             <div className="space-y-4">
               <p className="type-body measure-narrow">
-                This is not a screenshot. Open a deal, move it between stages,
-                and watch the weighted forecast recalculate.
+                This is not a screenshot. Pick your industry and the whole
+                board changes — stages, records, fields, and the actions your
+                team actually performs.
               </p>
               <Button variant="outline" href="/crm">
                 Explore the CRM
@@ -311,7 +345,7 @@ export default function HomePage() {
       </section>
 
       {/* ————— 3 · Platform grid: tilt cards with icons ————— */}
-      <section id="platform" className="border-t border-border bg-background">
+      <section id="platform" className="seam">
         <Container className="py-24">
           <Reveal className="mb-14 max-w-2xl space-y-4">
             <p className="text-eyebrow">Platform</p>
@@ -392,21 +426,17 @@ export default function HomePage() {
           >
             <div
               aria-hidden="true"
-              className="absolute inset-[12%] rounded-full bg-gradient-brand opacity-[0.14] blur-3xl"
+              className="absolute inset-[18%] rounded-full bg-gradient-brand opacity-[0.10] blur-3xl"
             />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 rounded-full border border-border"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute inset-[14%] rounded-full border border-border"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute inset-[28%] rounded-full border border-border-strong"
-            />
-            <LogoMark className="absolute top-1/2 left-1/2 size-24 -translate-x-1/2 -translate-y-1/2 text-foreground" />
+            {/*
+              The focal object is the request path, not the logo. A brand
+              mark inside three rings is decoration on a section whose
+              heading claims engineering; a labelled diagram of how one
+              hostname becomes exactly one surface is the evidence.
+            */}
+            <div className="relative flex w-full items-center justify-center text-foreground">
+              <CraftDiagram />
+            </div>
           </Reveal>
         </Container>
       </section>
@@ -419,25 +449,49 @@ export default function HomePage() {
         than the proof was ever worth. Commitments are first-person,
         checkable, and stronger while the logo wall is still empty.
       */}
-      <section className="border-t border-border bg-surface-subtle">
+      <section className="seam">
         <Container className="py-24">
           <Reveal className="mb-12 flex flex-col items-center gap-4 text-center">
             <span className="kicker">Our commitments</span>
             <h2 className="type-h1 max-w-xl">What you can hold us to.</h2>
           </Reveal>
-          <RevealGroup className="grid gap-5 md:grid-cols-3">
+          <RevealGroup className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 title: "A person answers",
                 body: "Every request is read by someone on the team, usually the same day. No ticket queue, no bot deflection before a human sees it.",
               },
               {
+                title: "We tell you what isn't built yet",
+                body: "Our capability map shows the whole platform, and we will say plainly which parts are live for you today. You will never discover a gap after signature.",
+              },
+              {
+                title: "Encrypted in transit and at rest",
+                body: "TLS everywhere, encryption at rest, and tenant isolation enforced by the database rather than by application code that a single missing clause could bypass.",
+              },
+              {
                 title: "Your data leaves when you do",
                 body: "Full export, self-serve, any time. Nothing about this platform is designed to make leaving difficult.",
               },
               {
+                title: "Delivery dates we actually hold",
+                body: "A branded workspace goes live the same day it is approved. Larger scopes get a dated plan, and if a date is going to move you hear it from us first.",
+              },
+              {
+                title: "Judged on what it does for you",
+                body: "Adoption, response times and clean books are the measures that matter. If the system is not moving them, that is our problem to fix, not yours to absorb.",
+              },
+              {
                 title: "The price we quote is the price",
                 body: "No per-feature surprises after signature, and no charge for the modules your industry needs to work at all.",
+              },
+              {
+                title: "Your brand, not ours",
+                body: "No Ordence logo, badge or footer credit anywhere your customers can see. The platform is infrastructure; the brand on it is yours.",
+              },
+              {
+                title: "Conflicts declared, not discovered",
+                body: "If we work with a direct competitor of yours we will tell you before you sign, not after you find out.",
               },
             ].map((c) => (
               <RevealItem
@@ -456,7 +510,7 @@ export default function HomePage() {
       </section>
 
       {/* ————— 6 · FAQ: zero-JS interactive accordion ————— */}
-      <section id="faq" className="border-t border-border bg-surface-subtle">
+      <section id="faq" className="seam">
         <Container className="grid gap-12 py-24 lg:grid-cols-[1fr_1.4fr]">
           <Reveal className="space-y-4">
             <p className="text-eyebrow">FAQ</p>
@@ -492,6 +546,7 @@ export default function HomePage() {
       */}
       <DeferredMount
         requireCapableDevice
+        releaseWhenDistant
         placeholder={
           <BandFallback
             eyebrow="What Ordence does"

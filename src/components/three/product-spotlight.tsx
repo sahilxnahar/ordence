@@ -162,7 +162,7 @@ export default function ProductSpotlight() {
       ref={wrapper}
       aria-label="What Ordence does"
       className={`relative isolate overflow-hidden ${
-        spot.tone === "amber" ? "bg-[#07090f]" : "bg-[#080c14]"
+        spot.tone === "amber" ? "bg-[#06070a]" : "bg-[#08090c]"
       } transition-colors duration-700`}
     >
       <div className="relative h-[700px] lg:h-[780px]">
@@ -193,8 +193,8 @@ export default function ProductSpotlight() {
           aria-hidden="true"
           className={`pointer-events-none absolute inset-y-0 left-0 w-full lg:w-3/5 ${
             spot.tone === "amber"
-              ? "bg-gradient-to-r from-[#07090f] via-[#07090f]/85 to-transparent"
-              : "bg-gradient-to-r from-[#080c14] via-[#080c14]/85 to-transparent"
+              ? "bg-gradient-to-r from-[#06070a] via-[#06070a]/85 to-transparent"
+              : "bg-gradient-to-r from-[#08090c] via-[#08090c]/85 to-transparent"
           }`}
         />
 
@@ -215,7 +215,7 @@ export default function ProductSpotlight() {
                 onClick={() => select(i)}
                 className={`press rounded-full border px-5 py-2.5 text-sm font-medium transition-colors ${
                   i === index
-                    ? "border-white/70 bg-white text-[#080c14]"
+                    ? "border-white/70 bg-white text-[#08090c]"
                     : "border-white/25 text-white/70 hover:border-white/50 hover:text-white"
                 }`}
               >

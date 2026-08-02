@@ -30,7 +30,7 @@ export function BandFallback({
     <section
       aria-label={typeof title === "string" ? title : eyebrow}
       className={`relative flex items-center justify-center overflow-hidden ${
-        amber ? "bg-[#07090f]" : "bg-[#080c14]"
+        amber ? "bg-[#06070a]" : "bg-[#08090c]"
       } ${height === "tall" ? "min-h-[520px] lg:min-h-[720px]" : "min-h-[420px] lg:min-h-[520px]"}`}
     >
       <div

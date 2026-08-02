@@ -57,6 +57,36 @@ export interface ChangelogEntry {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-08-02",
+    title: "The site turned black",
+    tag: "Improved",
+    body: "One canvas from top to bottom — near-black with violet and a new gold ramp, replacing a page that alternated white and ivory panels. Section rules became fading seams, the three dark bands stopped being three slightly different darks, and black is now the default rather than whatever your operating system preferred.",
+  },
+  {
+    date: "2026-08-02",
+    title: "The pipeline knows your industry",
+    tag: "New",
+    body: "Pick Real Estate, Healthcare, Manufacturing or Professional Services and the whole board changes — stages, records, reference fields, and the actions your team actually performs. Block a unit, record consent, release a work order, bill a milestone.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Upload your logo, take its colours",
+    tag: "New",
+    body: "Drop a logo into the tenant repainter and the workspace rebrands in the colours found in your mark, extracted in your browser and never uploaded. A colour wheel and eight presets sit beside it.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Prices come off the website",
+    tag: "Improved",
+    body: "Plans now say what changes as you grow without publishing a rate. The estimator became a scope builder: choose industry, seats and term, and send that configuration for a written quote.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Before and after, in gold",
+    tag: "Improved",
+    body: "The homepage story was invisible — 2px violet particles on a dark canvas, with two headlines overlapping each other. Particles now run a tarnished-to-bright gold ramp that warms as the story resolves, and exactly one caption exists at a time.",
+  },
+  {
+    date: "2026-08-02",
     title: "Every scene is now a playground",
     tag: "New",
     body: "Each dark band carries a collapsed control panel — open it and you can drive the shader directly. Ingest rate and channel noise on the convergence field, workspaces-in-orbit and brand tint on the magnetosphere, beam and filament controls on the lamp. Native sliders with real labels, so the whole panel is keyboard-operable.",

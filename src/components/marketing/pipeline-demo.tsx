@@ -1,106 +1,140 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import {
+  OWNER_TONE,
+  PIPELINES,
+  type PipelineRecord,
+} from "@/lib/features/pipelines";
 
 /**
- * A CRM company's homepage should let you touch the CRM.
+ * A CRM company's homepage should let you touch the CRM — and it should
+ * be *your* CRM, not a generic one.
  *
- * This replaced a static screenshot-style table. Deals can be moved
- * between stages, selected to reveal their record, and the weighted
- * forecast recomputes as you go — which demonstrates the product's
- * actual claim (honest pipelines, stage probability, instant totals)
- * far better than a picture of it.
+ * This was a single hard-coded sales pipeline: four stages, four invented
+ * companies, two buttons. It demonstrated a kanban board. The product's
+ * actual claim is that it arrives already shaped like your industry, and
+ * a generic board is evidence against that claim rather than for it.
  *
- * State is a handful of strings in `useState`; the animation is
- * layout-driven. Nothing is fetched, nothing is persisted.
+ * So the industry selector drives everything — stage names, records, the
+ * reference field, the noun for a record, and the actions available on
+ * it. Blocking a unit, recording consent and releasing a work order are
+ * different verbs because they are genuinely different businesses.
+ *
+ * Nothing is fetched and nothing persists. Actions report what the system
+ * would have done, in the words a system would use, and that log is what
+ * earns a visitor's third and fourth click.
  */
-
-const STAGES = [
-  { key: "discovery", label: "Discovery", probability: 0.2 },
-  { key: "proposal", label: "Proposal", probability: 0.45 },
-  { key: "negotiation", label: "Negotiation", probability: 0.7 },
-  { key: "won", label: "Won", probability: 1 },
-] as const;
-
-type StageKey = (typeof STAGES)[number]["key"];
-
-interface Deal {
-  id: string;
-  company: string;
-  value: number; // in lakhs
-  owner: string;
-  stage: StageKey;
-  contact: string;
-  note: string;
-}
-
-const INITIAL: Deal[] = [
-  { id: "d1", company: "Ameyaa Heights", value: 42, owner: "SN", stage: "won", contact: "Procurement lead", note: "Signed after the site-visit workflow demo." },
-  { id: "d2", company: "Northline Retail", value: 18, owner: "AK", stage: "proposal", contact: "Head of Ops", note: "Wants POS and inventory in one view." },
-  { id: "d3", company: "Vega Logistics", value: 9.5, owner: "RM", stage: "discovery", contact: "Fleet manager", note: "Evaluating trip and POD tracking." },
-  { id: "d4", company: "Lumen Foods", value: 27, owner: "SN", stage: "negotiation", contact: "Founder", note: "Negotiating seats for a 40-person team." },
-];
-
-/**
- * Avatar inks, not brand inks. White initials on coral-500 measure 2.55:1 —
- * these are the darkened variants that clear 4.5:1 against white text.
- */
-const OWNER_TONE: Record<string, string> = {
-  SN: "var(--ordence-violet-700)",
-  AK: "#b52d2d",
-  RM: "var(--ordence-ink-700)",
-};
 
 function formatLakh(value: number): string {
   return `₹${value % 1 === 0 ? value : value.toFixed(1)}L`;
 }
 
+interface LogEntry {
+  id: number;
+  text: string;
+}
+
 export function PipelineDemo() {
-  const [deals, setDeals] = useState<Deal[]>(INITIAL);
-  const [selectedId, setSelectedId] = useState<string | null>("d2");
+  const [industryIndex, setIndustryIndex] = useState(0);
+  const pipeline = PIPELINES[industryIndex];
+
+  const [records, setRecords] = useState<PipelineRecord[]>(pipeline.records);
+  const [selectedId, setSelectedId] = useState<string | null>(
+    pipeline.records[1].id,
+  );
+  const [log, setLog] = useState<LogEntry[]>([]);
+  // A monotonic id, held in a ref rather than state: the log needs stable
+  // keys for its exit animations, and bumping a counter through setState
+  // would re-render the whole board for a number nothing reads.
+  const logSeq = useRef(0);
   const reduce = useReducedMotion();
 
-  const selected = deals.find((d) => d.id === selectedId) ?? null;
+  const selectIndustry = useCallback((i: number) => {
+    setIndustryIndex(i);
+    setRecords(PIPELINES[i].records);
+    setSelectedId(PIPELINES[i].records[1].id);
+    setLog([]);
+  }, []);
 
-  // Weighted forecast: the number a sales leader actually reports.
+  const selected = records.find((r) => r.id === selectedId) ?? null;
+
+  // Weighted forecast: the number an operator actually reports upward.
   const { total, weighted } = useMemo(() => {
     let total = 0;
     let weighted = 0;
-    for (const d of deals) {
-      const stage = STAGES.find((s) => s.key === d.stage)!;
-      total += d.value;
-      weighted += d.value * stage.probability;
+    for (const r of records) {
+      total += r.value;
+      weighted += r.value * pipeline.stages[r.stage].probability;
     }
     return { total, weighted };
-  }, [deals]);
+  }, [records, pipeline]);
 
-  function moveDeal(id: string, direction: 1 | -1) {
-    setDeals((current) =>
-      current.map((d) => {
-        if (d.id !== id) return d;
-        const index = STAGES.findIndex((s) => s.key === d.stage);
-        const next = Math.min(STAGES.length - 1, Math.max(0, index + direction));
-        return { ...d, stage: STAGES[next].key };
-      }),
-    );
-  }
+  const move = useCallback(
+    (id: string, direction: 1 | -1) => {
+      setRecords((current) =>
+        current.map((r) =>
+          r.id === id
+            ? {
+                ...r,
+                stage: Math.min(
+                  pipeline.stages.length - 1,
+                  Math.max(0, r.stage + direction),
+                ),
+              }
+            : r,
+        ),
+      );
+    },
+    [pipeline],
+  );
+
+  const runAction = useCallback((text: string) => {
+    const id = (logSeq.current += 1);
+    // Newest first, capped at four — an unbounded log would grow past the
+    // panel and push the board's height around as the visitor clicks.
+    setLog((entries) => [{ id, text }, ...entries].slice(0, 4));
+  }, []);
 
   return (
     <div className="overflow-hidden rounded-panel border border-border bg-surface shadow-mid">
       {/* window chrome */}
-      <div className="flex items-center gap-1.5 border-b border-border bg-surface-subtle px-4 py-3">
+      <div className="flex flex-wrap items-center gap-1.5 border-b border-border bg-surface-subtle px-4 py-3">
         <span className="size-2.5 rounded-full bg-coral-400" />
         <span className="size-2.5 rounded-full bg-warning/60" />
         <span className="size-2.5 rounded-full bg-success/60" />
         <span className="ml-3 font-mono text-[11px] text-muted-subtle">
-          app.ordence.com — Pipeline
+          app.ordence.com — {pipeline.label}
         </span>
         <span className="ml-auto font-mono text-[11px] text-accent">
           live · try it
         </span>
+      </div>
+
+      {/* industry selector — the whole point of the component */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
+        <span className="mr-1 font-mono text-[10px] tracking-[0.18em] text-muted-subtle uppercase">
+          Industry
+        </span>
+        {PIPELINES.map((p, i) => (
+          <button
+            key={p.key}
+            type="button"
+            aria-pressed={i === industryIndex}
+            onClick={() => selectIndustry(i)}
+            className={cn(
+              "press rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+              i === industryIndex
+                ? "border-accent bg-accent-soft text-accent-strong"
+                : "border-border text-muted hover:border-border-strong hover:text-foreground",
+            )}
+          >
+            {p.label}
+          </button>
+        ))}
       </div>
 
       {/* forecast bar */}
@@ -123,22 +157,19 @@ export function PipelineDemo() {
             {formatLakh(Number(weighted.toFixed(1)))}
           </motion.p>
         </div>
-        <p className="ml-auto max-w-[14rem] text-xs text-muted">
-          Move a deal and the forecast recalculates by stage probability.
+        <p className="ml-auto max-w-[22rem] text-xs text-muted">
+          {pipeline.claim}
         </p>
       </div>
 
       <div className="grid lg:grid-cols-[2fr_1fr]">
         {/* board */}
         <div className="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
-          {STAGES.map((stage) => {
-            const inStage = deals.filter((d) => d.stage === stage.key);
+          {pipeline.stages.map((stage, stageIndex) => {
+            const inStage = records.filter((r) => r.stage === stageIndex);
             return (
-              <div key={stage.key} className="min-h-48 bg-surface p-3">
+              <div key={stage.label} className="min-h-56 bg-surface p-3">
                 <div className="mb-2.5 flex items-center justify-between gap-2">
-                  {/* Tracking is dropped here: the column headers are the
-                      one place letterspacing costs more width than the
-                      layout can spare. */}
                   <p className="font-mono text-[10px] tracking-normal text-muted uppercase">
                     {stage.label}
                   </p>
@@ -148,9 +179,9 @@ export function PipelineDemo() {
                 </div>
                 <div className="space-y-2">
                   <AnimatePresence initial={false}>
-                    {inStage.map((deal) => (
+                    {inStage.map((record) => (
                       <motion.div
-                        key={deal.id}
+                        key={record.id}
                         layout={!reduce}
                         initial={reduce ? false : { opacity: 0, scale: 0.96 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -162,28 +193,31 @@ export function PipelineDemo() {
                       >
                         <button
                           type="button"
-                          onClick={() => setSelectedId(deal.id)}
-                          aria-pressed={selectedId === deal.id}
+                          onClick={() => setSelectedId(record.id)}
+                          aria-pressed={selectedId === record.id}
                           className={cn(
                             "press w-full rounded-xl border p-2.5 text-left transition-colors",
-                            selectedId === deal.id
+                            selectedId === record.id
                               ? "border-accent bg-accent-soft"
-                              : "border-border bg-surface hover:bg-foreground/[0.03]",
+                              : "border-border bg-surface hover:bg-foreground/[0.04]",
                           )}
                         >
                           <span className="block truncate text-xs font-medium">
-                            {deal.company}
+                            {record.title}
                           </span>
-                          <span className="mt-1 flex items-center justify-between">
+                          <span className="mt-0.5 block truncate font-mono text-[10px] text-muted-subtle">
+                            {record.reference}
+                          </span>
+                          <span className="mt-1.5 flex items-center justify-between">
                             <span className="font-mono text-[11px] text-muted">
-                              {formatLakh(deal.value)}
+                              {formatLakh(record.value)}
                             </span>
                             <span
                               aria-hidden="true"
                               className="inline-flex size-5 items-center justify-center rounded-full text-[9px] font-semibold text-white"
-                              style={{ background: OWNER_TONE[deal.owner] }}
+                              style={{ background: OWNER_TONE[record.owner] }}
                             >
-                              {deal.owner}
+                              {record.owner}
                             </span>
                           </span>
                         </button>
@@ -197,19 +231,23 @@ export function PipelineDemo() {
         </div>
 
         {/* record panel */}
-        <div className="border-t border-border bg-surface-subtle p-5 md:border-t-0 md:border-l">
+        <div className="border-t border-border bg-surface-subtle p-5 lg:border-t-0 lg:border-l">
           {selected ? (
             <motion.div
-              key={selected.id}
+              key={selected.id + pipeline.key}
               initial={reduce ? false : { opacity: 0, x: 8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.25 }}
               className="space-y-4"
             >
               <div>
-                <p className="corner-caption">Record</p>
-                <h3 className="type-h3 mt-1">{selected.company}</h3>
+                <p className="corner-caption">{pipeline.noun}</p>
+                <h3 className="type-h3 mt-1">{selected.title}</h3>
+                <p className="mt-1 font-mono text-[11px] text-muted-subtle">
+                  {selected.reference}
+                </p>
               </div>
+
               <dl className="space-y-2 text-xs">
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted">Value</dt>
@@ -219,31 +257,72 @@ export function PipelineDemo() {
                   <dt className="text-muted">Stage</dt>
                   <dd>
                     <Badge tone="accent">
-                      {STAGES.find((s) => s.key === selected.stage)?.label}
+                      {pipeline.stages[selected.stage].label}
                     </Badge>
                   </dd>
                 </div>
                 <div className="flex justify-between gap-4">
                   <dt className="text-muted">Contact</dt>
-                  <dd>{selected.contact}</dd>
+                  <dd>{selected.contactRole}</dd>
                 </div>
               </dl>
+
               <p className="rounded-xl bg-surface p-3 text-xs leading-relaxed text-muted">
                 {selected.note}
               </p>
+
+              {/* the industry's own verbs */}
+              <div>
+                <p className="corner-caption mb-2">Actions</p>
+                <div className="grid gap-1.5 sm:grid-cols-2">
+                  {pipeline.actions.map((a) => (
+                    <button
+                      key={a.label}
+                      type="button"
+                      onClick={() => runAction(a.result)}
+                      className="press rounded-lg border border-border bg-surface px-2.5 py-2 text-left text-[11px] font-medium transition-colors hover:border-accent hover:text-accent-strong"
+                    >
+                      {a.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {log.length > 0 && (
+                <ul className="space-y-1.5 border-t border-border pt-3">
+                  <AnimatePresence initial={false}>
+                    {log.map((entry) => (
+                      <motion.li
+                        key={entry.id}
+                        initial={reduce ? false : { opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex gap-2 text-[11px] leading-relaxed text-muted"
+                      >
+                        <span aria-hidden="true" className="text-success">
+                          ✓
+                        </span>
+                        <span>{entry.text}</span>
+                      </motion.li>
+                    ))}
+                  </AnimatePresence>
+                </ul>
+              )}
+
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => moveDeal(selected.id, -1)}
-                  disabled={selected.stage === STAGES[0].key}
+                  onClick={() => move(selected.id, -1)}
+                  disabled={selected.stage === 0}
                   className="press flex-1 rounded-full border border-border px-3 py-2 text-xs font-medium transition-colors hover:bg-foreground/5 disabled:opacity-40"
                 >
                   ← Back
                 </button>
                 <button
                   type="button"
-                  onClick={() => moveDeal(selected.id, 1)}
-                  disabled={selected.stage === STAGES[STAGES.length - 1].key}
+                  onClick={() => move(selected.id, 1)}
+                  disabled={selected.stage === pipeline.stages.length - 1}
                   className="press flex-1 rounded-full bg-brand px-3 py-2 text-xs font-medium text-brand-contrast transition-opacity hover:opacity-90 disabled:opacity-40"
                 >
                   Advance →
@@ -251,7 +330,9 @@ export function PipelineDemo() {
               </div>
             </motion.div>
           ) : (
-            <p className="text-xs text-muted">Select a deal to open its record.</p>
+            <p className="text-xs text-muted">
+              Select a {pipeline.noun.toLowerCase()} to open its record.
+            </p>
           )}
         </div>
       </div>

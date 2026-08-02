@@ -27,7 +27,7 @@ export function CapabilitySection({
   rows: CapabilityRow[];
 }) {
   return (
-    <section className="relative overflow-hidden bg-[#0b101b]">
+    <section className="relative overflow-hidden bg-[#08090c]">
       <LazyStrands className="absolute inset-0 size-full opacity-60" />
       <div
         aria-hidden="true"
@@ -53,7 +53,7 @@ export function CapabilitySection({
           <Reveal delay={0.3} className="mt-8 flex flex-wrap gap-3">
             <Button
               href="/contact"
-              className="rounded-full bg-white text-[#0b101b] hover:bg-white/85"
+              className="rounded-full bg-white text-[#08090c] hover:bg-white/85"
             >
               Run the demo <span aria-hidden="true">→</span>
             </Button>

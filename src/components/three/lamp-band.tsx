@@ -55,7 +55,7 @@ export default function LampBand({
     <section
       ref={wrapper}
       aria-label={title}
-      className="relative isolate overflow-hidden bg-[#07090f]"
+      className="relative isolate overflow-hidden bg-[#06070a]"
     >
       <div className="relative h-[600px] lg:h-[700px]">
         <div className="absolute inset-0" aria-hidden="true">
@@ -79,7 +79,7 @@ export default function LampBand({
 
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#07090f] via-[#07090f]/85 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#06070a] via-[#06070a]/85 to-transparent"
         />
         <Container className="relative flex h-full flex-col items-center justify-end pb-16 text-center">
           <p className="font-mono text-[11px] tracking-[0.24em] text-white/45 uppercase">

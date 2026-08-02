@@ -280,7 +280,7 @@ export default function CommandRoom({ className }: { className?: string }) {
           </span>
         </div>
 
-        <div className="relative aspect-[16/10] bg-[#0b101b]">
+        <div className="relative aspect-[16/10] bg-[#08090c]">
           <SceneCanvas
             frameloop="always"
             camera={{ position: [7.5, 6.5, 8.5], fov: 30 }}

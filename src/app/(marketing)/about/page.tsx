@@ -59,7 +59,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="border-t border-border bg-surface-subtle">
+      <section className="seam">
         <Container className="py-24">
           <RevealGroup className="grid gap-5 sm:grid-cols-2">
             {values.map((v) => (

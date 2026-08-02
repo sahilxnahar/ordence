@@ -15,25 +15,28 @@ import { INDUSTRY_PACKS, MODULE_CATALOG } from "@/lib/tenant/industries";
  * quietly demonstrates the industry-pack idea better than a paragraph
  * about it could.
  *
- * Indicative only, and it says so: quoting a firm price from a slider
+ * A scope builder, not a price calculator: quoting a firm number from a slider
  * and then charging something else is the fastest way to lose trust.
  */
 
-const BASE_PER_SEAT = 399; // ₹ per user per month, Growth tier
+/*
+ * No published price.
+ *
+ * This used to be a live estimator at a fixed per-seat rate. Pricing is
+ * now quoted rather than listed, so the component keeps everything that
+ * was useful about it — pick your industry, set your team size, choose a
+ * term, watch the module list assemble — and drops the only part that
+ * was a commitment we are not ready to make in public. What the visitor
+ * builds here is submitted as the scope of their quote request.
+ */
 const MIN_SEATS = 3;
 const MAX_SEATS = 250;
 
 const TERMS = [
-  { months: 1, label: "Monthly", discount: 0 },
-  { months: 12, label: "12 months", discount: 0.15 },
-  { months: 24, label: "24 months", discount: 0.25 },
+  { months: 1, label: "Monthly" },
+  { months: 12, label: "12 months" },
+  { months: 24, label: "24 months" },
 ] as const;
-
-const inr = new Intl.NumberFormat("en-IN", {
-  style: "currency",
-  currency: "INR",
-  maximumFractionDigits: 0,
-});
 
 export function PlanCalculator() {
   const [seats, setSeats] = useState(12);
@@ -44,11 +47,14 @@ export function PlanCalculator() {
   const term = TERMS[termIndex];
   const pack = INDUSTRY_PACKS.find((p) => p.key === industry)!;
 
-  const { monthly, saved } = useMemo(() => {
-    const list = seats * BASE_PER_SEAT;
-    const monthly = Math.round(list * (1 - term.discount));
-    return { monthly, saved: Math.round((list - monthly) * term.months) };
-  }, [seats, term]);
+  // What the visitor is assembling is a scope, not a bill.
+  const summary = useMemo(
+    () =>
+      `${pack.label} · ${seats} ${seats === 1 ? "user" : "users"} · ${
+        term.months === 1 ? "monthly" : `${term.months}-month term`
+      }`,
+    [pack, seats, term],
+  );
 
   const modules = useMemo(
     () =>
@@ -132,11 +138,7 @@ export function PlanCalculator() {
                 }`}
               >
                 {t.label}
-                {t.discount > 0 && (
-                  <span className="ml-1.5 font-normal">
-                    −{Math.round(t.discount * 100)}%
-                  </span>
-                )}
+
               </button>
             ))}
           </div>
@@ -145,24 +147,26 @@ export function PlanCalculator() {
 
       {/* result */}
       <div className="rounded-panel border border-border bg-surface p-8 shadow-mid">
-        <p className="corner-caption">Indicative monthly</p>
+        <p className="corner-caption">Your configuration</p>
         <motion.p
-          key={monthly}
+          key={summary}
           initial={reduce ? false : { opacity: 0.5, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.22 }}
-          className="type-display mt-1 tabular-nums"
+          className="type-h3 mt-2"
         >
-          {inr.format(monthly)}
+          {summary}
         </motion.p>
-        <p className="type-body mt-1">
-          {inr.format(BASE_PER_SEAT)} per user · billed{" "}
-          {term.months === 1 ? "monthly" : `over ${term.months} months`}
+        <p className="type-body mt-3 text-muted">
+          We quote against the shape of your business rather than a per-seat
+          list price — the modules your industry needs to work at all are
+          never a line item. Send this configuration and you get a fixed
+          number in writing.
         </p>
 
-        {saved > 0 && (
-          <Badge tone="success" className="mt-4">
-            Saves {inr.format(saved)} across the term
+        {term.months > 1 && (
+          <Badge tone="accent" className="mt-4">
+            Longer terms are priced better
           </Badge>
         )}
 
@@ -191,7 +195,7 @@ export function PlanCalculator() {
           Request this configuration <span aria-hidden="true">→</span>
         </Button>
         <p className="mt-3 text-center text-[11px] text-muted-subtle">
-          Indicative only — we confirm the final price before anything starts.
+          Nothing here is a commitment — we confirm scope and price in writing before anything starts.
         </p>
       </div>
     </div>
