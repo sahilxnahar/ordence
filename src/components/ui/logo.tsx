@@ -21,7 +21,7 @@ export function LogoMark({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 600 600"
       aria-hidden="true"
-      className={cn("size-9", className)}
+      className={cn("size-14", className)}
     >
       <g transform="translate(167.00 292.00) rotate(-6.00)">
         <path
@@ -91,7 +91,7 @@ export function LogoWordmark({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 1153.09 330"
       aria-hidden="true"
-      className={cn("h-4 w-auto", className)}
+      className={cn("h-6 w-auto", className)}
     >
       <path
         d="M89 724Q89 948 156 1100Q206 1212 292.5 1301.0Q379 1390 482 1433Q619 1491 798 1491Q1122 1491 1316.5 1290.0Q1511 1089 1511 731Q1511 376 1318.0 175.5Q1125 -25 802 -25Q475 -25 282.0 174.5Q89 374 89 724ZM394 734Q394 485 509.0 356.5Q624 228 801 228Q978 228 1091.5 355.5Q1205 483 1205 738Q1205 990 1094.5 1114.0Q984 1238 801 1238Q618 1238 506.0 1112.5Q394 987 394 734Z"

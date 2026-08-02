@@ -24,16 +24,19 @@ const nav = [
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
-      <Container className="flex h-24 items-center justify-between gap-4">
-        {/* The brand IS the header: an unmissable lockup. The orbital mark
-            slowly completes a turn on hover — a living logo, not a sticker. */}
+      <Container className="flex h-28 items-center justify-between gap-4 lg:h-32">
+        {/* The brand IS the header, so the lockup gets the height rather
+            than the height constraining the lockup: the bar grew to 7rem
+            (8rem on desktop) specifically to carry a mark this size with
+            air around it. The orbital mark completes a slow turn on
+            hover — a living logo, not a sticker. */}
         <Link
           href="/"
           aria-label="Ordence home"
-          className="group flex items-center gap-3.5 text-foreground"
+          className="group flex items-center gap-4 text-foreground sm:gap-5"
         >
-          <LogoMark className="logo-intro size-14 transition-transform duration-700 ease-out group-hover:rotate-[360deg] sm:size-[4.5rem]" />
-          <LogoWordmark className="h-6 sm:h-8" />
+          <LogoMark className="logo-intro size-[4.25rem] transition-transform duration-700 ease-out group-hover:rotate-[360deg] sm:size-24 lg:size-28" />
+          <LogoWordmark className="h-7 sm:h-10 lg:h-11" />
           <span className="sr-only">Ordence</span>
         </Link>
 
@@ -65,12 +68,17 @@ export function SiteHeader() {
           >
             Sign in
           </Button>
-          <Magnetic strength={0.25} className="max-sm:hidden">
-            <Button variant="accent" size="md" href="/get-started">
-              Get started
-              <span aria-hidden="true">→</span>
-            </Button>
-          </Magnetic>
+          {/* Responsive visibility sits on a plain wrapper rather than on
+              Magnetic itself: layout concerns should not depend on whether
+              the component inside happens to set its own display. */}
+          <div className="max-sm:hidden">
+            <Magnetic strength={0.25}>
+              <Button variant="accent" size="md" href="/get-started">
+                Get started
+                <span aria-hidden="true">→</span>
+              </Button>
+            </Magnetic>
+          </div>
           <MobileNav />
         </div>
       </Container>

@@ -13,7 +13,10 @@ import { TiltCard } from "@/components/motion/tilt-card";
 import { WordRotate } from "@/components/motion/word-rotate";
 import { CountUp } from "@/components/motion/count-up";
 import { LazyStrands } from "@/components/react-bits";
-import { LazyLedgerSection, LazyLampBand } from "@/components/three/lazy";
+import {
+  LazyLedgerSection,
+  LazyProductSpotlight,
+} from "@/components/three/lazy";
 import { BandFallback } from "@/components/marketing/band-fallback";
 import { DeferredMount } from "@/components/util/deferred-mount";
 
@@ -201,9 +204,7 @@ function LedgerFallback() {
       />
       <div className="relative px-6 text-center">
         <p className="text-eyebrow mb-4 text-[#8a94b8]!">One platform</p>
-        <p className="type-h1 text-[#f2f4f8]">
-          One system. Ordence.
-        </p>
+        <p className="type-h1 text-[#f2f4f8]">One system. Ordence.</p>
       </div>
     </section>
   );
@@ -326,8 +327,8 @@ export default function HomePage() {
             </div>
             <div className="space-y-4">
               <p className="type-body measure-narrow">
-                This is not a screenshot. Open a deal, move it between
-                stages, and watch the weighted forecast recalculate.
+                This is not a screenshot. Open a deal, move it between stages,
+                and watch the weighted forecast recalculate.
               </p>
               <Button variant="outline" href="/crm">
                 Explore the CRM
@@ -346,39 +347,37 @@ export default function HomePage() {
         <Container className="py-24">
           <Reveal className="mb-14 max-w-2xl space-y-4">
             <p className="text-eyebrow">Platform</p>
-            <h2 className="type-h1">
-              Four products. One system of record.
-            </h2>
+            <h2 className="type-h1">Four products. One system of record.</h2>
           </Reveal>
           <SpotlightGroup>
             <RevealGroup className="grid gap-5 sm:grid-cols-2">
-            {products.map((p) => (
-              <RevealItem key={p.name}>
-                <TiltCard
-                  data-spotlight
-                  className="spotlight group relative h-full rounded-panel border border-border bg-surface p-8 shadow-low transition-shadow duration-300 hover:shadow-mid"
-                >
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={
-                        p.tone === "accent"
-                          ? "inline-flex size-11 items-center justify-center rounded-2xl bg-accent-soft text-accent-strong transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
-                          : "inline-flex size-11 items-center justify-center rounded-2xl bg-danger-soft text-danger transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110"
-                      }
-                    >
-                      {p.icon}
+              {products.map((p) => (
+                <RevealItem key={p.name}>
+                  <TiltCard
+                    data-spotlight
+                    className="spotlight group relative h-full rounded-panel border border-border bg-surface p-8 shadow-low transition-shadow duration-300 hover:shadow-mid"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={
+                          p.tone === "accent"
+                            ? "inline-flex size-11 items-center justify-center rounded-2xl bg-accent-soft text-accent-strong transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
+                            : "inline-flex size-11 items-center justify-center rounded-2xl bg-danger-soft text-danger transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110"
+                        }
+                      >
+                        {p.icon}
+                      </span>
+                      <h3 className="text-lg font-semibold">{p.name}</h3>
+                    </div>
+                    <p className="mt-4 text-sm leading-relaxed text-muted">
+                      {p.description}
+                    </p>
+                    <span className="link-draw mt-6 inline-block text-sm font-medium text-foreground">
+                      Learn more →
                     </span>
-                    <h3 className="text-lg font-semibold">{p.name}</h3>
-                  </div>
-                  <p className="mt-4 text-sm leading-relaxed text-muted">
-                    {p.description}
-                  </p>
-                  <span className="link-draw mt-6 inline-block text-sm font-medium text-foreground">
-                    Learn more →
-                  </span>
-                </TiltCard>
-              </RevealItem>
-            ))}
+                  </TiltCard>
+                </RevealItem>
+              ))}
             </RevealGroup>
           </SpotlightGroup>
         </Container>
@@ -478,9 +477,7 @@ export default function HomePage() {
         <Container className="py-24">
           <Reveal className="mb-12 flex flex-col items-center gap-4 text-center">
             <span className="kicker">Our commitments</span>
-            <h2 className="type-h1 max-w-xl">
-              What you can hold us to.
-            </h2>
+            <h2 className="type-h1 max-w-xl">What you can hold us to.</h2>
           </Reveal>
           <RevealGroup className="grid gap-5 md:grid-cols-3">
             {[
@@ -536,20 +533,24 @@ export default function HomePage() {
       </section>
 
       {/*
-        ————— 7 · Close: the lamp —————
-        After three screens of capability the last note should be human,
-        so the closing band is the one calm scene of the set: a filament,
-        a cone of light and dust drifting through it. Warm amber against
-        the site's violet — the one place the brand palette steps aside.
+        ————— 7 · Spotlight: one engine, aimed —————
+        This section replaced a decorative closing band. Rather than a
+        third scene that argues nothing, the visitor aims a single engine
+        at one product line and the geometry becomes that product's
+        argument: channels collapsing to a record for CRM, modules
+        orbiting a ledger for ERP, a lit object for the studio work.
+
+        One WebGL context, four claims, and every frame of it is doing a
+        job. Same capability gate as everything else — phones get the
+        static composition, which carries the same headline.
       */}
       <DeferredMount
         requireCapableDevice
         placeholder={
           <BandFallback
-            eyebrow="Your brand. Your domain."
-            title="Someone is actually here."
-            glow="amber"
-            body="Launch on you.ordence.com today and move to your own domain when you're ready. No migration, no downtime — and a person, not a bot, on the other end."
+            eyebrow="What Ordence does"
+            title="One platform. Four ways in."
+            body="CRM, ERP, AI and the studio that builds your site — one system of record underneath all four, so nothing has to be re-typed between them."
           >
             <Button variant="accent" size="lg" href={siteConfig.authEntry}>
               Talk to us <span aria-hidden="true">→</span>
@@ -557,13 +558,7 @@ export default function HomePage() {
           </BandFallback>
         }
       >
-        <LazyLampBand
-          eyebrow="Your brand. Your domain."
-          title="Someone is actually here."
-          body="Launch on you.ordence.com today and move to your own domain when you're ready. No migration, no downtime — and a person, not a bot, on the other end."
-          primaryHref={siteConfig.authEntry}
-          primaryLabel="Talk to us"
-        />
+        <LazyProductSpotlight />
       </DeferredMount>
     </>
   );

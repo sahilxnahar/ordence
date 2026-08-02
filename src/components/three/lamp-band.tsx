@@ -97,11 +97,8 @@ export default function LampBand({
             </Button>
             <Button
               href={secondaryHref}
-              /* ghost, not outline: `cn` here is a plain class joiner with
-                 no tailwind-merge, so an override like bg-transparent would
-                 race bg-surface on CSS order rather than winning outright. */
-              variant="ghost"
-              className="border border-white/25 text-white hover:bg-white/10"
+              variant="outline"
+              className="border-white/25 bg-transparent text-white hover:border-white/40 hover:bg-white/10"
             >
               {secondaryLabel}
             </Button>

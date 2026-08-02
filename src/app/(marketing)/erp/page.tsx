@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { ProductPage } from "@/components/marketing/product-page";
-import { LazyMagnetosphereBand } from "@/components/three/lazy";
-import { DeferredMount } from "@/components/util/deferred-mount";
 import { BandFallback } from "@/components/marketing/band-fallback";
 
 export const metadata: Metadata = {
@@ -46,24 +44,17 @@ export default function ErpPage() {
         },
       ]}
     >
-      <DeferredMount
-        requireCapableDevice
-        placeholder={
-          <BandFallback
-            eyebrow="One core, every module"
-            title="Stock, orders and cash on one clock."
-            height="compact"
-            body="Procurement, production, inventory and invoicing orbit the same ledger — so a dispatch in one module is visible in all of them the moment it happens."
-          />
-        }
-      >
-        <LazyMagnetosphereBand
-          height="compact"
-          eyebrow="One core, every module"
-          title="Stock, orders and cash on one clock."
-          body="Procurement, production, inventory and invoicing orbit the same ledger — so a dispatch in one module is visible in all of them the moment it happens."
-        />
-      </DeferredMount>
+      {/*
+        The ERP argument is made live in the homepage spotlight, where the
+        visitor aims the engine at it themselves. Repeating the scene here
+        would be a second canvas saying the same thing.
+      */}
+      <BandFallback
+        eyebrow="One core, every module"
+        title="Stock, orders and cash on one clock."
+        height="compact"
+        body="Procurement, production, inventory and invoicing orbit the same ledger — so a dispatch in one module is visible in all of them the moment it happens."
+      />
     </ProductPage>
   );
 }

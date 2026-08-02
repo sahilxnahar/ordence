@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { cn } from "@/lib/utils";
 import {
   motion,
   useMotionValue,
@@ -30,13 +31,18 @@ export function Magnetic({
   const sy = useSpring(y, { stiffness: 260, damping: 18, mass: 0.5 });
   const reduce = useReducedMotion();
 
-  if (reduce) return <div className={className}>{children}</div>;
+  if (reduce) return <div className={cn("inline-block", className)}>{children}</div>;
 
   return (
     <motion.div
       ref={ref}
-      className={className}
-      style={{ x: sx, y: sy, display: "inline-block" }}
+      // `display` belongs in a class, not in `style`. As an inline style it
+      // beat every responsive utility a caller passed in — `max-sm:hidden`
+      // on a Magnetic-wrapped CTA silently did nothing, which is how the
+      // header's "Get started" button stayed visible on phones and pushed
+      // every page into horizontal overflow.
+      className={cn("inline-block", className)}
+      style={{ x: sx, y: sy }}
       onPointerMove={(e) => {
         const rect = ref.current?.getBoundingClientRect();
         if (!rect) return;

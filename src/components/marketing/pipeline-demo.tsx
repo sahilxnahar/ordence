@@ -44,10 +44,14 @@ const INITIAL: Deal[] = [
   { id: "d4", company: "Lumen Foods", value: 27, owner: "SN", stage: "negotiation", contact: "Founder", note: "Negotiating seats for a 40-person team." },
 ];
 
+/**
+ * Avatar inks, not brand inks. White initials on coral-500 measure 2.55:1 —
+ * these are the darkened variants that clear 4.5:1 against white text.
+ */
 const OWNER_TONE: Record<string, string> = {
-  SN: "var(--ordence-violet-600)",
-  AK: "var(--ordence-coral-500)",
-  RM: "var(--ordence-ink-600)",
+  SN: "var(--ordence-violet-700)",
+  AK: "#b52d2d",
+  RM: "var(--ordence-ink-700)",
 };
 
 function formatLakh(value: number): string {

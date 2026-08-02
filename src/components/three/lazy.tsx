@@ -49,7 +49,24 @@ export const LazyTenantPrism = dynamic(() => import("./tenant-prism"), {
  * not a loading state.
  */
 
-/** Homepage + /ai — omnichannel noise collapsing into one record. */
+/**
+ * Homepage — one engine aimed at one product at a time. This is the
+ * band that replaced three decorative ones.
+ */
+export const LazyProductSpotlight = dynamic(
+  () => import("./product-spotlight"),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        aria-hidden="true"
+        className="h-[700px] bg-[#080c14] bg-[radial-gradient(42%_44%_at_62%_48%,rgba(133,99,238,0.28),transparent_70%)] lg:h-[780px]"
+      />
+    ),
+  },
+);
+
+/** /crm — omnichannel noise collapsing into one record. */
 export const LazyConvergenceBand = dynamic(() => import("./convergence-band"), {
   ssr: false,
   loading: () => (

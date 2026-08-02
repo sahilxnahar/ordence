@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { ProductPage } from "@/components/marketing/product-page";
 import { CapabilitySection } from "@/components/marketing/capability-panel";
-import { LazyConvergenceBand } from "@/components/three/lazy";
-import { DeferredMount } from "@/components/util/deferred-mount";
 import { BandFallback } from "@/components/marketing/band-fallback";
 
 export const metadata: Metadata = {
@@ -69,18 +67,17 @@ export default function AiPage() {
           },
         ]}
       />
-      <DeferredMount
-        requireCapableDevice
-        placeholder={
-          <BandFallback
-            eyebrow="Ingest · reason · act"
-            title="Signal in. Decision out."
-            body="Every enquiry, message and event is pulled into one context window — so the model reasons over your whole business, not a fragment of it."
-          />
-        }
-      >
-        <LazyConvergenceBand />
-      </DeferredMount>
+      {/*
+        No WebGL here on purpose. The convergence field already makes this
+        argument on /crm and in the homepage spotlight; a third instance
+        would be decoration. The static composition carries the same line
+        at a fraction of the cost.
+      */}
+      <BandFallback
+        eyebrow="Ingest · reason · act"
+        title="Signal in. Decision out."
+        body="Every enquiry, message and event is pulled into one context window — so the model reasons over your whole business, not a fragment of it."
+      />
     </ProductPage>
   );
 }

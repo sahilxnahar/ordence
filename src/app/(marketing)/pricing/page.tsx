@@ -155,7 +155,7 @@ export default function PricingPage() {
                       </li>
                     ))}
                   </ul>
-                  <Magnetic strength={0.2} className="w-full">
+                  <Magnetic strength={0.2} className="block w-full">
                     <Button
                       variant={p.featured ? "accent" : "outline"}
                       className="w-full"

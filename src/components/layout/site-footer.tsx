@@ -37,7 +37,7 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-surface">
       <Container className="grid gap-10 py-16 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div className="space-y-4">
-          <Logo className="gap-3 [&>svg:first-child]:size-16 [&>svg:nth-child(2)]:h-7" />
+          <Logo className="gap-4 [&>svg:first-child]:size-20 [&>svg:nth-child(2)]:h-9" />
           <p className="max-w-xs text-sm text-muted">
             The operating system for ambitious businesses — CRM, ERP, web and AI
             on one platform.
