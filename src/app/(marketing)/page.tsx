@@ -234,7 +234,7 @@ export default function HomePage() {
           </Reveal>
           <Reveal delay={0.24} className="flex flex-wrap items-center gap-3">
             <Magnetic>
-              <Button variant="accent" size="lg" href={siteConfig.authEntry}>
+              <Button variant="accent" size="lg" href="/get-started">
                 Start building <span aria-hidden="true">→</span>
               </Button>
             </Magnetic>

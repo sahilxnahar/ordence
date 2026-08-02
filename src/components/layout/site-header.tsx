@@ -66,7 +66,7 @@ export function SiteHeader() {
             Sign in
           </Button>
           <Magnetic strength={0.25} className="max-sm:hidden">
-            <Button variant="accent" size="md" href={siteConfig.authEntry}>
+            <Button variant="accent" size="md" href="/get-started">
               Get started
               <span aria-hidden="true">→</span>
             </Button>

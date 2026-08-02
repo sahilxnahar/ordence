@@ -1,4 +1,3 @@
-import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -83,7 +82,7 @@ export default function ProductPage() {
           </RevealGroup>
           <Reveal className="mt-12 flex justify-center">
             <Magnetic>
-              <Button variant="accent" size="lg" href={siteConfig.authEntry}>
+              <Button variant="accent" size="lg" href="/get-started">
                 Run yours on Ordence <span aria-hidden="true">→</span>
               </Button>
             </Magnetic>

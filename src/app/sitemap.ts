@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/ai",
     "/services",
     "/pricing",
+    "/get-started",
     "/about",
     "/contact",
     "/insights",

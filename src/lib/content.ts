@@ -57,6 +57,24 @@ export interface ChangelogEntry {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-08-02",
+    title: "Self-serve signup & one-click provisioning",
+    tag: "Platform",
+    body: "Prospects request a workspace at /get-started; it lands in the operations console with an email alert. Choose their industry to pre-fill modules, set users and duration, and activate — the branded subdomain goes live immediately and the customer is emailed.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Plans that expire on their own",
+    tag: "Platform",
+    body: "Every workspace carries a plan with seats and a term. A lapsed subscription suspends itself the moment it expires — enforced on every read, with no scheduled job to fail.",
+  },
+  {
+    date: "2026-08-02",
+    title: "Ten industry packs",
+    tag: "New",
+    body: "Real Estate, Healthcare, Education, Financial Services, Retail, Manufacturing, Hospitality, Legal, Logistics and Agencies — each preset with the modules that vertical actually runs on.",
+  },
+  {
+    date: "2026-08-02",
     title: "Surfaces split",
     tag: "Platform",
     body: "ordence.com is now purely the marketing site. app.ordence.com is served by the separate CRM application, and the admin console is parked until it can ship behind authentication.",

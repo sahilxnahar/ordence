@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 
 const navigation = [
   { href: "/", label: "Overview" },
+  { href: "/requests", label: "Requests" }, // signup approval queue
   { href: "/tenants", label: "Tenants" }, // live provisioning + fleet grid
   { href: "/health", label: "Platform health" },
   { href: "/leads", label: "Leads" },

@@ -2,9 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import type { Tenant } from "./types";
+import type { Tenant, TenantPlan } from "./types";
 import { isValidTenantSlug } from "./resolve";
 import { SEED_TENANTS, seedTenantBySlug } from "./registry";
+import { industryByKey, productsFromModules } from "./industries";
+import { getRequest, markRequestActivated } from "@/lib/requests";
+import { button, emailShell, sendEmail } from "@/lib/email";
+import { siteConfig } from "@/config/site";
 
 /**
  * Admin provisioning + fleet management.
@@ -155,6 +159,103 @@ export async function updateTenant(formData: FormData): Promise<void> {
 
   revalidatePath("/tenants");
   redirect(`/tenants?updated=${slug}`);
+}
+
+/** Months → an exact expiry instant, anchored to the activation moment. */
+function addMonths(from: Date, months: number): Date {
+  const out = new Date(from);
+  out.setMonth(out.getMonth() + months);
+  return out;
+}
+
+/**
+ * The activation step: turns an approved signup request into a live
+ * tenant. This is the single moment a subdomain starts serving — there
+ * is no DNS call, because `*.ordence.com` already resolves to this
+ * Worker; provisioning is purely a write to the tenant store.
+ */
+export async function activateRequest(formData: FormData): Promise<void> {
+  const requestId = String(formData.get("requestId") ?? "");
+  const slug = String(formData.get("slug") ?? "").toLowerCase().trim();
+  const name = String(formData.get("name") ?? "").trim();
+  const industry = String(formData.get("industry") ?? "").trim();
+  const seats = Number(formData.get("seats") ?? 5);
+  const months = Number(formData.get("months") ?? 12);
+  const accent = String(formData.get("accent") ?? "#6d45e8");
+  const domain = String(formData.get("domain") ?? "").toLowerCase().trim();
+  const modules = formData.getAll("modules").map(String);
+
+  if (!isValidTenantSlug(slug) || !name || !industryByKey(industry)) {
+    redirect(`/requests?error=invalid&open=${requestId}`);
+  }
+  if (!Number.isFinite(seats) || seats < 1 || !Number.isFinite(months) || months < 1) {
+    redirect(`/requests?error=plan&open=${requestId}`);
+  }
+
+  const kv = await getKv();
+
+  // Never overwrite an existing workspace by accident.
+  if (kv) {
+    const clash = await kv.get(`tenant:slug:${slug}`);
+    if ((clash && clash !== "null") || seedTenantBySlug(slug)) {
+      redirect(`/requests?error=exists&open=${requestId}`);
+    }
+  }
+
+  const request = await getRequest(requestId);
+  const startedAt = new Date();
+  const plan: TenantPlan = {
+    industry,
+    modules,
+    seats,
+    months,
+    startedAt: startedAt.toISOString(),
+    expiresAt: addMonths(startedAt, months).toISOString(),
+  };
+
+  const tenant: Tenant = {
+    slug,
+    name,
+    domains: domain ? [domain] : [],
+    branding: { accent, accentContrast: "#ffffff", radius: "pill" },
+    // Product flags are derived so a badge can never contradict the modules.
+    features: productsFromModules(modules),
+    status: "active",
+    plan,
+    contact: request
+      ? { name: request.contactName, email: request.email }
+      : undefined,
+  };
+
+  if (kv) await writeTenant(kv, tenant);
+  else console.log("[ordence] activateRequest (no KV binding):", tenant);
+
+  if (requestId) await markRequestActivated(requestId, slug);
+
+  // Tell the customer they're live.
+  if (request?.email) {
+    const workspaceUrl = `https://${slug}.${siteConfig.rootDomain}`;
+    await sendEmail({
+      to: request.email,
+      subject: `Your Ordence workspace is live — ${name}`,
+      html: emailShell(`
+        <h1 style="margin:0 0 8px;font-size:22px;letter-spacing:-.02em">You're live, ${request.contactName.split(" ")[0]}.</h1>
+        <p style="margin:0 0 24px;color:#556075;font-size:14px">${name}'s workspace is ready on its own branded address.</p>
+        <table role="presentation" style="width:100%;font-size:14px;border-collapse:collapse">
+          <tr><td style="padding:6px 0;color:#556075;width:130px">Workspace</td><td>${slug}.${siteConfig.rootDomain}</td></tr>
+          <tr><td style="padding:6px 0;color:#556075">Plan</td><td>${industryByKey(industry)?.label ?? industry}</td></tr>
+          <tr><td style="padding:6px 0;color:#556075">Users</td><td>${seats}</td></tr>
+          <tr><td style="padding:6px 0;color:#556075">Active until</td><td>${addMonths(startedAt, months).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</td></tr>
+        </table>
+        <p style="margin:28px 0 0">${button(workspaceUrl, "Open your workspace →")}</p>
+        <p style="margin:24px 0 0;font-size:13px;color:#8a92a6">Reply to this email any time — a human reads it.</p>
+      `),
+    });
+  }
+
+  revalidatePath("/requests");
+  revalidatePath("/tenants");
+  redirect(`/tenants?created=${slug}`);
 }
 
 /**

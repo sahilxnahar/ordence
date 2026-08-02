@@ -1,4 +1,3 @@
-import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -59,7 +58,7 @@ export default function PlatformPage() {
             </Reveal>
             <Reveal delay={0.24}>
               <Magnetic>
-                <Button variant="accent" size="lg" href={siteConfig.authEntry}>
+                <Button variant="accent" size="lg" href="/get-started">
                   Provision a tenant <span aria-hidden="true">→</span>
                 </Button>
               </Magnetic>

@@ -186,7 +186,7 @@ export function MobileNav() {
 
                   <div className="space-y-3 border-t border-border p-6">
                     <Link
-                      href="/contact"
+                      href="/get-started"
                       onClick={() => setOpen(false)}
                       className="flex h-12 items-center justify-center rounded-full bg-brand font-medium text-brand-contrast"
                     >

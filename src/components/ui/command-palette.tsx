@@ -22,6 +22,7 @@ const COMMANDS = [
   { label: "Insights", hint: "Articles", href: "/insights" },
   { label: "Changelog", hint: "What shipped", href: "/changelog" },
   { label: "About", hint: "Company", href: "/about" },
+  { label: "Get started — request a workspace", hint: "Action", href: "/get-started" },
   { label: "Contact — talk to us", hint: "Action", href: "/contact" },
   { label: "Sign in", hint: "Workspace", href: siteConfig.authEntry },
 ] as const;

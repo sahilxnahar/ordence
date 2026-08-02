@@ -22,6 +22,26 @@ export interface TenantFeatures {
   web: boolean;
 }
 
+/**
+ * The commercial plan attached to a tenant.
+ *
+ * `expiresAt` is authoritative: a tenant whose plan has lapsed is treated
+ * as suspended on read, so a subscription can never silently run forever
+ * just because no scheduled job happened to fire.
+ */
+export interface TenantPlan {
+  /** Industry pack chosen at activation (see industries.ts). */
+  industry: string;
+  /** Granular module keys switched on for this tenant. */
+  modules: string[];
+  /** Licensed user seats. */
+  seats: number;
+  /** Subscription length in months, as sold. */
+  months: number;
+  startedAt: string; // ISO
+  expiresAt: string; // ISO
+}
+
 export interface Tenant {
   /** URL-safe unique identifier; doubles as the subdomain label. */
   slug: string;
@@ -31,6 +51,10 @@ export interface Tenant {
   branding: TenantBranding;
   features: TenantFeatures;
   status: "active" | "suspended";
+  /** Absent on legacy/seed tenants provisioned before plans existed. */
+  plan?: TenantPlan;
+  /** Primary contact, captured at signup. */
+  contact?: { name: string; email: string };
 }
 
 /** The surface a hostname resolves to. Set by proxy, read by layouts. */
@@ -47,4 +71,23 @@ export interface HostDecision {
   tenantSlug?: string;
   /** Present when the tenant must be resolved via custom-domain lookup. */
   customDomain?: string;
+}
+
+/** A signup request awaiting operator approval. */
+export interface TenantRequest {
+  id: string;
+  company: string;
+  /** Suggested subdomain, derived from the company name at signup. */
+  suggestedSlug: string;
+  contactName: string;
+  email: string;
+  phone?: string;
+  industry?: string;
+  teamSize?: string;
+  notes?: string;
+  status: "pending" | "activated" | "declined";
+  createdAt: string;
+  /** Set once approved, so the queue keeps an audit trail. */
+  activatedAt?: string;
+  activatedSlug?: string;
 }

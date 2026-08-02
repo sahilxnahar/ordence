@@ -29,9 +29,15 @@ import { siteConfig } from "@/config/site";
  *                        specificity). If a request still reaches here,
  *                        the CRM binding is missing — so we 404 rather
  *                        than serve a stub that looks like the product.
- *   admin.ordence.com  — parked (see src/app/_parked/README.md). Returns
- *                        404 so the hostname reveals nothing until an
- *                        authenticated console is deployed.
+ * Also served here:
+ *   admin.ordence.com  → /admin/*  (operations console)
+ *
+ *                        This surface has NO application-level auth by
+ *                        design: it is protected at the network edge by
+ *                        Cloudflare Access, which authenticates before a
+ *                        request ever reaches the Worker. See
+ *                        DEPLOYMENT-ACCESS.md — the console must not be
+ *                        exposed until that policy is in place.
  *
  * Security invariants:
  *   1. Internal path prefixes (/t, /admin, /app) are unreachable from the
@@ -64,10 +70,16 @@ export default async function middleware(
   const withHeaders = { request: { headers: requestHeaders } };
 
   switch (decision.surface) {
-    // Neither hostname is this Worker's to serve. Reaching this branch
-    // means a DNS/route binding is missing upstream, so fail closed with
-    // a 404 instead of exposing a placeholder or a parked console.
-    case "admin":
+    case "admin": {
+      // admin.ordence.com/*  →  /admin/*   (gated by Cloudflare Access)
+      const rewritten = url.clone();
+      rewritten.pathname = `/admin${url.pathname === "/" ? "" : url.pathname}`;
+      return NextResponse.rewrite(rewritten, withHeaders);
+    }
+
+    // app.ordence.com is not this Worker's to serve. Reaching this branch
+    // means the CRM's own binding is missing upstream, so fail closed
+    // rather than showing a stub that looks like the product.
     case "app": {
       const rewritten = url.clone();
       rewritten.pathname = "/404";

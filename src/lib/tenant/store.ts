@@ -115,12 +115,30 @@ async function lookup(key: string): Promise<Tenant | null> {
   return value;
 }
 
+/**
+ * Enforce the commercial plan at read time.
+ *
+ * A lapsed subscription must stop serving even if no scheduled job ran,
+ * no webhook fired, and nobody opened the admin console. Checking the
+ * expiry on every lookup makes that guarantee unconditional — the tenant
+ * simply reads as suspended the moment the date passes, everywhere at
+ * once, with no background infrastructure to keep alive.
+ */
+export function applyPlanState(tenant: Tenant | null): Tenant | null {
+  if (!tenant?.plan) return tenant;
+  const expired = Date.parse(tenant.plan.expiresAt) <= Date.now();
+  if (expired && tenant.status === "active") {
+    return { ...tenant, status: "suspended" };
+  }
+  return tenant;
+}
+
 export async function getTenantBySlug(slug: string): Promise<Tenant | null> {
-  return lookup(`slug:${slug}`);
+  return applyPlanState(await lookup(`slug:${slug}`));
 }
 
 export async function getTenantByDomain(
   domain: string,
 ): Promise<Tenant | null> {
-  return lookup(`domain:${domain.toLowerCase()}`);
+  return applyPlanState(await lookup(`domain:${domain.toLowerCase()}`));
 }
