@@ -1,6 +1,12 @@
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { listManagedTenants } from "@/lib/tenant/admin";
 import { listLeads } from "@/lib/leads";
+import {
+  expiringSoon,
+  formatExpiry,
+  RENEWAL_WARNING_DAYS,
+} from "@/lib/tenant/plan-view";
 
 export const dynamic = "force-dynamic";
 
@@ -71,6 +77,8 @@ export default async function AdminHealthPage() {
 
   const { last24h: leads24h, last7d: leads7d } =
     await bucketLeadsByRecency(leads);
+
+  const renewals = await expiringSoon(fleet.map((f) => f.tenant));
 
   // KV writes are the tightest free-tier constraint, so surface the one
   // number most likely to bite first.
@@ -166,6 +174,59 @@ export default async function AdminHealthPage() {
             </dd>
           </div>
         </dl>
+      </section>
+
+      {/* Revenue at risk — the screen that pays for itself. */}
+      <section className="rounded-panel border border-border bg-surface p-6 shadow-low">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-semibold">Renewals</h2>
+            <p className="mt-1 text-sm text-muted">
+              Plans expiring within {RENEWAL_WARNING_DAYS} days, most urgent
+              first. Renew or send a reminder from the Command Grid.
+            </p>
+          </div>
+          <Badge tone={renewals.length ? "coral" : "success"}>
+            {renewals.length} needing attention
+          </Badge>
+        </div>
+
+        {renewals.length === 0 ? (
+          <p className="mt-5 text-sm text-muted-subtle">
+            Nothing expiring soon. Every active plan has more than{" "}
+            {RENEWAL_WARNING_DAYS} days left.
+          </p>
+        ) : (
+          <ul className="mt-5 divide-y divide-border">
+            {renewals.map(({ tenant, daysRemaining }) => (
+              <li
+                key={tenant.slug}
+                className="flex flex-wrap items-center justify-between gap-3 py-3"
+              >
+                <div className="min-w-0">
+                  <p className="font-medium">{tenant.name}</p>
+                  <p className="font-mono text-xs text-muted">
+                    {tenant.slug} · {tenant.plan?.seats} users ·{" "}
+                    {tenant.plan && formatExpiry(tenant.plan.expiresAt)}
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge tone={daysRemaining < 0 ? "coral" : daysRemaining <= 7 ? "coral" : "accent"}>
+                    {daysRemaining < 0
+                      ? `expired ${Math.abs(daysRemaining)}d ago`
+                      : `${daysRemaining}d left`}
+                  </Badge>
+                  <Link
+                    href="/tenants"
+                    className="text-xs font-medium text-accent hover:underline"
+                  >
+                    Manage →
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section className="rounded-panel border border-border bg-surface p-6 shadow-low">

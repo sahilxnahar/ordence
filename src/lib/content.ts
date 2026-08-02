@@ -57,6 +57,12 @@ export interface ChangelogEntry {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-08-02",
+    title: "Renewals & plan visibility",
+    tag: "Platform",
+    body: "Every workspace now shows its seats, expiry and days remaining. Plans can be renewed in one click — extending from the existing expiry so early renewals never lose paid days — and customers can be sent a renewal reminder before anything lapses.",
+  },
+  {
+    date: "2026-08-02",
     title: "Self-serve signup & one-click provisioning",
     tag: "Platform",
     body: "Prospects request a workspace at /get-started; it lands in the operations console with an email alert. Choose their industry to pre-fill modules, set users and duration, and activate — the branded subdomain goes live immediately and the customer is emailed.",

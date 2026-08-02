@@ -3,9 +3,16 @@ import { Button } from "@/components/ui/button";
 import {
   createTenant,
   listManagedTenants,
+  renewTenant,
+  sendRenewalReminder,
   toggleTenantStatus,
   updateTenant,
 } from "@/lib/tenant/admin";
+import {
+  formatExpiry,
+  summarizePlans,
+  type PlanSummary,
+} from "@/lib/tenant/plan-view";
 import { siteConfig } from "@/config/site";
 import type { Tenant } from "@/lib/tenant/types";
 
@@ -26,7 +33,42 @@ const notices: Record<string, { tone: "success" | "danger"; text: string }> = {
     text: "Invalid slug or name. Slugs are lowercase letters, digits and hyphens.",
   },
   missing: { tone: "danger", text: "That tenant no longer exists." },
+  noplan: {
+    tone: "danger",
+    text: "That tenant has no plan to renew — edit it and activate a plan first.",
+  },
+  plan: { tone: "danger", text: "Renewal length must be at least 1 month." },
+  nocontact: {
+    tone: "danger",
+    text: "No contact email on file for that tenant, so no reminder was sent.",
+  },
 };
+
+const URGENCY_TONE = {
+  healthy: "success",
+  soon: "accent",
+  critical: "coral",
+  expired: "coral",
+  none: "neutral",
+} as const;
+
+/** Plan column — the commercial state of the workspace at a glance. */
+function PlanCell({ plan }: { plan?: PlanSummary }) {
+  if (!plan?.hasPlan) {
+    return <span className="text-xs text-muted-subtle">No plan</span>;
+  }
+  const days = plan.daysRemaining ?? 0;
+  return (
+    <div className="space-y-1">
+      <Badge tone={URGENCY_TONE[plan.urgency]}>
+        {days < 0 ? `Expired ${Math.abs(days)}d ago` : `${days}d left`}
+      </Badge>
+      <p className="text-xs text-muted">
+        {plan.seats} users · {formatExpiry(plan.expiresAt!)}
+      </p>
+    </div>
+  );
+}
 
 /** Inline editor — native <details>, so the grid stays zero-JS. */
 function TenantEditor({ tenant }: { tenant: Tenant }) {
@@ -118,10 +160,17 @@ function TenantEditor({ tenant }: { tenant: Tenant }) {
 export default async function AdminTenantsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ created?: string; updated?: string; error?: string }>;
+  searchParams: Promise<{
+    created?: string;
+    updated?: string;
+    renewed?: string;
+    reminded?: string;
+    error?: string;
+  }>;
 }) {
-  const { created, updated, error } = await searchParams;
+  const { created, updated, renewed, reminded, error } = await searchParams;
   const fleet = await listManagedTenants();
+  const plans = await summarizePlans(fleet.map((f) => f.tenant));
   const notice = error ? notices[error] : undefined;
 
   return (
@@ -147,6 +196,18 @@ export default async function AdminTenantsPage({
       {updated && (
         <p className="rounded-xl border border-success/30 bg-success/10 px-4 py-3 text-sm">
           <span className="font-medium">{updated}</span> updated.
+        </p>
+      )}
+      {renewed && (
+        <p className="rounded-xl border border-success/30 bg-success/10 px-4 py-3 text-sm">
+          <span className="font-medium">{renewed}</span> renewed — the new
+          expiry is live.
+        </p>
+      )}
+      {reminded && (
+        <p className="rounded-xl border border-success/30 bg-success/10 px-4 py-3 text-sm">
+          Renewal reminder sent to{" "}
+          <span className="font-medium">{reminded}</span>.
         </p>
       )}
       {notice && (
@@ -242,6 +303,7 @@ export default async function AdminTenantsPage({
               <th className="px-5 py-3 font-medium">Hostnames</th>
               <th className="px-5 py-3 font-medium">Brand</th>
               <th className="px-5 py-3 font-medium">Modules</th>
+              <th className="px-5 py-3 font-medium">Plan</th>
               <th className="px-5 py-3 font-medium">Status</th>
               <th className="px-5 py-3 font-medium">Actions</th>
             </tr>
@@ -281,6 +343,9 @@ export default async function AdminTenantsPage({
                   </div>
                 </td>
                 <td className="px-5 py-4">
+                  <PlanCell plan={plans.get(tenant.slug)} />
+                </td>
+                <td className="px-5 py-4">
                   <Badge
                     tone={tenant.status === "active" ? "success" : "coral"}
                   >
@@ -290,6 +355,49 @@ export default async function AdminTenantsPage({
                 <td className="px-5 py-4">
                   <div className="flex flex-col gap-2">
                     <TenantEditor tenant={tenant} />
+
+                    {plans.get(tenant.slug)?.hasPlan && (
+                      <>
+                        <form
+                          action={renewTenant}
+                          className="flex items-center gap-1.5"
+                        >
+                          <input type="hidden" name="slug" value={tenant.slug} />
+                          <input
+                            name="renewMonths"
+                            type="number"
+                            min={1}
+                            max={120}
+                            defaultValue={tenant.plan?.months ?? 12}
+                            aria-label={`Renewal months for ${tenant.name}`}
+                            className="h-7 w-14 rounded-lg border border-border bg-surface px-2 text-xs"
+                          />
+                          <button
+                            type="submit"
+                            className="text-xs font-medium text-accent hover:underline"
+                          >
+                            Renew
+                          </button>
+                        </form>
+
+                        {tenant.contact?.email && (
+                          <form action={sendRenewalReminder}>
+                            <input
+                              type="hidden"
+                              name="slug"
+                              value={tenant.slug}
+                            />
+                            <button
+                              type="submit"
+                              className="text-xs font-medium text-muted transition-colors hover:text-foreground"
+                            >
+                              Send reminder
+                            </button>
+                          </form>
+                        )}
+                      </>
+                    )}
+
                     <form action={toggleTenantStatus}>
                       <input type="hidden" name="slug" value={tenant.slug} />
                       <button

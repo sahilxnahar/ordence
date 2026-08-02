@@ -259,6 +259,79 @@ export async function activateRequest(formData: FormData): Promise<void> {
 }
 
 /**
+ * Extend a plan by N months.
+ *
+ * Extends from whichever is later — the current expiry or today — so
+ * renewing early never loses the customer the days they already paid for,
+ * and renewing late doesn't back-date the new term into the past.
+ */
+export async function renewTenant(formData: FormData): Promise<void> {
+  const slug = String(formData.get("slug") ?? "").toLowerCase().trim();
+  const months = Number(formData.get("renewMonths") ?? 12);
+  const existing = await getManagedTenant(slug);
+
+  if (!existing?.plan) redirect("/tenants?error=noplan");
+  if (!Number.isFinite(months) || months < 1) redirect("/tenants?error=plan");
+
+  const now = new Date();
+  const currentExpiry = new Date(existing.plan.expiresAt);
+  const base = currentExpiry > now ? currentExpiry : now;
+
+  const renewed: Tenant = {
+    ...existing,
+    // A renewal also lifts an expiry-driven suspension.
+    status: "active",
+    plan: {
+      ...existing.plan,
+      months,
+      expiresAt: addMonths(base, months).toISOString(),
+    },
+  };
+
+  const kv = await getKv();
+  if (kv) await writeTenant(kv, renewed);
+  else console.log("[ordence] renewTenant (no KV binding):", renewed);
+
+  revalidatePath("/tenants");
+  revalidatePath("/health");
+  redirect(`/tenants?renewed=${slug}`);
+}
+
+/** Nudge a customer whose term is running out. */
+export async function sendRenewalReminder(formData: FormData): Promise<void> {
+  const slug = String(formData.get("slug") ?? "").toLowerCase().trim();
+  const tenant = await getManagedTenant(slug);
+
+  if (!tenant?.plan || !tenant.contact?.email) {
+    redirect("/tenants?error=nocontact");
+  }
+
+  const expiry = new Date(tenant.plan.expiresAt);
+  const days = Math.max(
+    0,
+    Math.floor((expiry.getTime() - Date.now()) / 86_400_000),
+  );
+
+  await sendEmail({
+    to: tenant.contact.email,
+    subject: `${tenant.name} — your Ordence plan renews in ${days} days`,
+    html: emailShell(`
+      <h1 style="margin:0 0 8px;font-size:22px;letter-spacing:-.02em">Time to renew, ${tenant.contact.name.split(" ")[0]}.</h1>
+      <p style="margin:0 0 24px;color:#556075;font-size:14px">${tenant.name}'s workspace is active until <strong>${expiry.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</strong> — that's ${days} day${days === 1 ? "" : "s"} away.</p>
+      <table role="presentation" style="width:100%;font-size:14px;border-collapse:collapse">
+        <tr><td style="padding:6px 0;color:#556075;width:130px">Workspace</td><td>${tenant.slug}.${siteConfig.rootDomain}</td></tr>
+        <tr><td style="padding:6px 0;color:#556075">Users</td><td>${tenant.plan.seats}</td></tr>
+      </table>
+      <p style="margin:24px 0 0;color:#556075;font-size:14px">Reply to this email to renew or change your plan — we'll take care of it before anything lapses.</p>
+      <p style="margin:24px 0 0">${button(`https://${siteConfig.rootDomain}/contact`, "Talk to us →")}</p>
+    `),
+  });
+
+  revalidatePath("/tenants");
+  redirect(`/tenants?reminded=${slug}`);
+}
+
+/**
  * Suspend/resume. Suspended tenants fail the middleware's active check,
  * so their hostname immediately serves the domain-not-found page.
  */

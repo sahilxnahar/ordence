@@ -159,9 +159,24 @@ export async function markRequestActivated(
 export async function declineRequest(formData: FormData): Promise<void> {
   const id = String(formData.get("id") ?? "");
   const existing = await getRequest(id);
-  if (existing) {
-    await saveRequest({ ...existing, status: "declined" });
-  }
+  if (!existing) redirect("/requests?declined=1");
+
+  await saveRequest({ ...existing, status: "declined" });
+
+  // Close the loop with the prospect. Silence reads as rejection with no
+  // route back; a short honest note keeps the door open.
+  await sendEmail({
+    to: existing.email,
+    replyTo: OPERATOR_EMAIL,
+    subject: `About your Ordence request — ${existing.company}`,
+    html: emailShell(`
+      <h1 style="margin:0 0 8px;font-size:22px;letter-spacing:-.02em">Thanks for the interest, ${existing.contactName.split(" ")[0]}.</h1>
+      <p style="margin:0 0 20px;color:#556075;font-size:14px">We've looked at your request for ${existing.company}, and we're not able to set up a workspace right now.</p>
+      <p style="margin:0 0 20px;color:#556075;font-size:14px">That's usually a matter of timing or fit rather than anything you did — and it can change. If you'd like to talk it through, just reply to this email; it reaches a person, not a queue.</p>
+      <p style="margin:24px 0 0">${button(`https://${siteConfig.rootDomain}/contact`, "Start a conversation →")}</p>
+    `),
+  });
+
   revalidatePath("/requests");
   redirect("/requests?declined=1");
 }
