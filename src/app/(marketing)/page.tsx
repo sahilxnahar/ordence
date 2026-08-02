@@ -10,7 +10,7 @@ import { TiltCard } from "@/components/motion/tilt-card";
 import { WordRotate } from "@/components/motion/word-rotate";
 import { CountUp } from "@/components/motion/count-up";
 import { LazyCursorGrid, LazyStrands } from "@/components/react-bits";
-import { LazyHeroScene } from "@/components/three/lazy";
+import { LazyHeroScene, LazyLedgerSection } from "@/components/three/lazy";
 
 export const metadata: Metadata = {
   title: "Ordence — The operating system for ambitious businesses",
@@ -191,6 +191,9 @@ export default function HomePage() {
           </Marquee>
         </div>
       </section>
+
+      {/* ————— 1.5 · The Living Ledger: flagship scroll story ————— */}
+      <LazyLedgerSection />
 
       {/* ————— 2 · Product demo: live-feeling CRM card in a tilt frame ————— */}
       <section id="demo" className="border-t border-border bg-surface-subtle">

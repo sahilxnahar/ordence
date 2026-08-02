@@ -36,11 +36,17 @@ export default function SceneCanvas({
   className,
   frameloop = "demand",
   fallback = null,
+  camera,
+  lookAt,
 }: {
   children: ReactNode;
   className?: string;
   frameloop?: "always" | "demand" | "never";
   fallback?: ReactNode;
+  /** Camera placement per scene; defaults to a straight-on hero framing. */
+  camera?: { position: [number, number, number]; fov?: number };
+  /** Optional aim point (e.g. isometric scenes looking at the origin). */
+  lookAt?: [number, number, number];
 }) {
   return (
     <WebGLErrorBoundary fallback={fallback}>
@@ -53,7 +59,10 @@ export default function SceneCanvas({
           alpha: true,
           powerPreference: "high-performance",
         }}
-        camera={{ position: [0, 0, 5], fov: 45 }}
+        camera={camera ?? { position: [0, 0, 5], fov: 45 }}
+        onCreated={({ camera: cam }) => {
+          if (lookAt) cam.lookAt(...lookAt);
+        }}
       >
         <Suspense fallback={null}>{children}</Suspense>
       </Canvas>

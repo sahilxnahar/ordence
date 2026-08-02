@@ -6,8 +6,8 @@ import { Container } from "@/components/ui/container";
 import { Magnetic } from "@/components/motion/magnetic";
 
 const nav = [
-  { href: "/#platform", label: "Platform" },
-  { href: "/#demo", label: "Product" },
+  { href: "/platform", label: "Platform" },
+  { href: "/product", label: "Product" },
   { href: "/#craft", label: "Craft" },
   { href: "/#faq", label: "FAQ" },
 ] as const;
