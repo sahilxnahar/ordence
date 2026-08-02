@@ -6,25 +6,28 @@ const columns = [
   {
     title: "Platform",
     links: [
-      { label: "CRM", href: "/#platform" },
-      { label: "ERP", href: "/#platform" },
-      { label: "AI Services", href: "/#platform" },
-      { label: "Web Development", href: "/#services" },
+      { label: "CRM", href: "/crm" },
+      { label: "ERP", href: "/erp" },
+      { label: "AI Services", href: "/ai" },
+      { label: "Web Development", href: "/services" },
+      { label: "Multi-tenant", href: "/platform" },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "About", href: "/#craft" },
-      { label: "Careers", href: "/#craft" },
-      { label: "Contact", href: "/#craft" },
+      { label: "About", href: "/about" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Insights", href: "/insights" },
+      { label: "Changelog", href: "/changelog" },
+      { label: "Contact", href: "/contact" },
     ],
   },
   {
     title: "Legal",
     links: [
-      { label: "Privacy", href: "/#" },
-      { label: "Terms", href: "/#" },
+      { label: "Privacy", href: "/contact" },
+      { label: "Terms", href: "/contact" },
     ],
   },
 ] as const;

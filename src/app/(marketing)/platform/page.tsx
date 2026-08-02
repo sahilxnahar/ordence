@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { Magnetic } from "@/components/motion/magnetic";
 import { LazyTenantPrism } from "@/components/three/lazy";
+import { ThemePreview } from "@/components/marketing/theme-preview";
 
 export const metadata: Metadata = {
   title: "Platform — one codebase, every brand",
@@ -68,6 +69,13 @@ export default function PlatformPage() {
           <Reveal delay={0.1}>
             <LazyTenantPrism />
           </Reveal>
+        </Container>
+      </section>
+
+      {/* Live theme repainter — the pitch as a toy */}
+      <section className="border-t border-border">
+        <Container className="py-24">
+          <ThemePreview />
         </Container>
       </section>
 

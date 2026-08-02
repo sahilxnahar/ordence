@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 const navigation = [
   { href: "/", label: "Overview" },
-  { href: "/tenants", label: "Tenants" },
+  { href: "/tenants", label: "Tenants" }, // ← live provisioning console
   { href: "/domains", label: "Domains" },
   { href: "/users", label: "Users" },
   { href: "/billing", label: "Billing" },

@@ -145,7 +145,9 @@ export default function HomePage() {
         <LazyStrands className="absolute inset-0 size-full opacity-70" />
         <Container className="relative flex min-h-[78svh] flex-col items-start justify-center gap-8 py-24">
           <Reveal>
-            <Badge tone="accent">CRM · ERP · Web · AI — one platform</Badge>
+            <span className="kicker">
+              <span className="glow-dot" aria-hidden="true" /> CRM · ERP · Web · AI
+            </span>
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="text-display max-w-4xl text-5xl font-semibold sm:text-6xl md:text-7xl">
@@ -174,6 +176,17 @@ export default function HomePage() {
               </Button>
             </Magnetic>
           </Reveal>
+
+          {/* TERRA-style corner captions */}
+          <span className="corner-caption absolute bottom-8 left-6 hidden md:block">
+            Ordence · Business OS
+          </span>
+          <span className="corner-caption absolute right-6 bottom-8 hidden items-center gap-2 md:flex">
+            Scroll to organize
+            <svg viewBox="0 0 24 24" className="size-3.5 opacity-70" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 4v16m0 0-5-5m5 5 5-5" />
+            </svg>
+          </span>
         </Container>
 
         {/* capability marquee — the fun, always-moving strip */}
@@ -347,6 +360,39 @@ export default function HomePage() {
           <div className="relative aspect-square max-h-[480px] w-full">
             <LazyHeroScene className="absolute! inset-0" />
           </div>
+        </Container>
+      </section>
+
+      {/* ————— 5.5 · Proof: testimonials ————— */}
+      <section className="border-t border-border bg-surface-subtle">
+        <Container className="py-24">
+          <Reveal className="mb-12 flex flex-col items-center gap-4 text-center">
+            <span className="kicker">Loved by operators</span>
+            <h2 className="text-display max-w-xl text-3xl font-semibold sm:text-4xl">
+              Teams run their whole business here.
+            </h2>
+          </Reveal>
+          <RevealGroup className="grid gap-5 md:grid-cols-3">
+            {[
+              { quote: "Leads used to sit for hours. Now the first call happens before the enquiry form finishes celebrating.", name: "Sales Head", org: "Real-estate developer" },
+              { quote: "GST invoicing that just works, inside the same system as our pipeline. We deleted three tools.", name: "Finance Lead", org: "D2C brand" },
+              { quote: "Our clients think the platform is ours. That white-label polish wins us the pitch every time.", name: "Founder", org: "Digital agency" },
+            ].map((t) => (
+              <RevealItem key={t.quote} className="flex h-full flex-col justify-between gap-6 rounded-panel border border-border bg-surface p-8 shadow-low">
+                <p className="text-sm leading-relaxed text-foreground">“{t.quote}”</p>
+                <div className="flex items-center gap-3">
+                  <span aria-hidden="true" className="size-9 rounded-full bg-gradient-brand opacity-80" />
+                  <div className="text-xs">
+                    <p className="font-semibold">{t.name}</p>
+                    <p className="text-muted">{t.org}</p>
+                  </div>
+                </div>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+          <p className="corner-caption mt-10 text-center">
+            Early-partner quotes — named case studies publishing soon
+          </p>
         </Container>
       </section>
 

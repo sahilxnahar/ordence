@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Manrope } from "next/font/google";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
@@ -22,6 +22,14 @@ const fontMono = Geist_Mono({
   display: "swap",
 });
 
+/** Display voice — geometric, confident, pairs with the orbital wordmark. */
+const fontDisplay = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -33,6 +41,11 @@ export const metadata: Metadata = {
     type: "website",
     siteName: siteConfig.name,
     url: siteConfig.url,
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Ordence" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og.png"],
   },
   // Official brand-kit favicon set (public/ + src/app/favicon.ico).
   manifest: "/site.webmanifest",
@@ -62,9 +75,24 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fontSans.variable} ${fontMono.variable} h-full antialiased`}
+      className={`${fontSans.variable} ${fontMono.variable} ${fontDisplay.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        {/* Organization structured data for rich search results */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: siteConfig.name,
+              url: siteConfig.url,
+              logo: `${siteConfig.url}/ordence-icon-512.png`,
+              description: siteConfig.description,
+              sameAs: [siteConfig.links.twitter, siteConfig.links.linkedin],
+            }),
+          }}
+        />
         <ThemeProvider>
           {/* Skip link: first tabbable element on every page */}
           <a

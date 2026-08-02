@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Container } from "@/components/ui/container";
 import { Magnetic } from "@/components/motion/magnetic";
+import { CommandPalette } from "@/components/ui/command-palette";
+import { ScrollProgress } from "@/components/ui/scroll-progress";
 
 const nav = [
   { href: "/platform", label: "Platform" },
   { href: "/product", label: "Product" },
-  { href: "/#craft", label: "Craft" },
-  { href: "/#faq", label: "FAQ" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/insights", label: "Insights" },
 ] as const;
 
 /**
@@ -28,7 +30,7 @@ export function SiteHeader() {
           aria-label="Ordence home"
           className="group flex items-center gap-3.5 text-foreground"
         >
-          <LogoMark className="size-14 transition-transform duration-700 ease-out group-hover:rotate-[360deg] sm:size-[4.5rem]" />
+          <LogoMark className="logo-intro size-14 transition-transform duration-700 ease-out group-hover:rotate-[360deg] sm:size-[4.5rem]" />
           <LogoWordmark className="h-6 sm:h-8" />
           <span className="sr-only">Ordence</span>
         </Link>
@@ -50,6 +52,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2.5">
+          <ScrollProgress />
+          <CommandPalette />
           <ThemeToggle />
           <Button variant="ghost" size="md" href="/auth/login" className="hidden sm:inline-flex">
             Sign in

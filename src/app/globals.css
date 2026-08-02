@@ -186,7 +186,8 @@
   --color-violet-700: var(--ordence-violet-700);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-manrope), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --radius-control: var(--radius-control);
@@ -260,6 +261,138 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* ————— Blur-rise entrance (ASCEND/TERRA-style cascade) ————— */
+@keyframes blurFadeUp {
+  from {
+    opacity: 0;
+    filter: blur(18px);
+    transform: translateY(34px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.rise {
+  opacity: 0;
+  animation: blurFadeUp 1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+/* ————— Mono kicker with flanking hairline rules ————— */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.kicker::before,
+.kicker::after {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+/* ————— Accent dot with soft glow (eyebrow ornament) ————— */
+.glow-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+}
+
+/* ————— Corner captions (mono, dim) ————— */
+.corner-caption {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-subtle);
+}
+
+/* ————— Paper grain (barely-there texture) ————— */
+.bg-grain {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--foreground) 5%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 4px 4px;
+  mask-image: radial-gradient(80% 70% at 50% 40%, black, transparent);
+}
+
+/* ————— Logo entrance: the orbital assembles once per load ————— */
+@keyframes logo-in {
+  from {
+    opacity: 0;
+    transform: rotate(-70deg) scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.logo-intro {
+  animation: logo-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* ————— Glass material system (NovaAI-style, for dark media sections) ————— */
+.glass {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.glass-soft {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+/* Left-accent mono badge over dark media */
+.badge-accent-left {
+  display: inline-flex;
+  align-items: center;
+  border-left: 2px solid #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+/* ————— Branded scrollbar ————— */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--foreground) 18%, transparent);
+  border-radius: 8px;
+  border: 2px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 /* ————— Marquee (infinite capability strip) ————— */
