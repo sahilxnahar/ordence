@@ -49,6 +49,17 @@ export const LazyTenantPrism = dynamic(() => import("./tenant-prism"), {
  * not a loading state.
  */
 
+/** Homepage opening — the swarm layered over the headline. */
+export const LazyHeroStage = dynamic(() => import("./hero-stage"), {
+  ssr: false,
+  loading: () => (
+    <div
+      aria-hidden="true"
+      className="min-h-[88svh] bg-[#080c14] bg-[radial-gradient(46%_46%_at_66%_50%,rgba(133,99,238,0.34),transparent_70%)]"
+    />
+  ),
+});
+
 /**
  * Homepage — one engine aimed at one product at a time. This is the
  * band that replaced three decorative ones.

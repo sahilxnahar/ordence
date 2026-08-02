@@ -3,10 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { useReducedMotion, useInView } from "framer-motion";
 import SceneCanvas from "./scene-canvas";
-import ParticleField, {
-  FIELD_CONTROLS,
-  defaultParams,
-} from "./particle-field";
+import ParticleField, { FIELD_CONTROLS, defaultParams } from "./particle-field";
 import { SceneControls } from "./scene-controls";
 import { Container } from "@/components/ui/container";
 
@@ -52,8 +49,10 @@ export default function MagnetosphereBand({
     (key: string, value: number) => setParams((p) => ({ ...p, [key]: value })),
     [],
   );
-  const resetParams = useCallback(() => setParams(defaultParams("magnetosphere")), []);
-
+  const resetParams = useCallback(
+    () => setParams(defaultParams("magnetosphere")),
+    [],
+  );
 
   return (
     <section

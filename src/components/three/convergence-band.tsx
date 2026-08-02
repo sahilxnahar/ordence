@@ -9,10 +9,7 @@ import {
   useInView,
 } from "framer-motion";
 import SceneCanvas from "./scene-canvas";
-import ParticleField, {
-  FIELD_CONTROLS,
-  defaultParams,
-} from "./particle-field";
+import ParticleField, { FIELD_CONTROLS, defaultParams } from "./particle-field";
 import { SceneControls } from "./scene-controls";
 import { Container } from "@/components/ui/container";
 
@@ -52,7 +49,10 @@ export default function ConvergenceBand() {
     (key: string, value: number) => setParams((p) => ({ ...p, [key]: value })),
     [],
   );
-  const resetParams = useCallback(() => setParams(defaultParams("convergence")), []);
+  const resetParams = useCallback(
+    () => setParams(defaultParams("convergence")),
+    [],
+  );
 
   const { scrollYProgress } = useScroll({
     target: wrapper,
@@ -140,9 +140,9 @@ export default function ConvergenceBand() {
             style={{ opacity: reduce ? 1 : coreOpacity }}
             className="measure-narrow mt-5 text-white/60"
           >
-            WhatsApp, missed calls, forms and email stop being four inboxes
-            and start being one timeline — owned by a named person, seconds
-            after it arrives.
+            WhatsApp, missed calls, forms and email stop being four inboxes and
+            start being one timeline — owned by a named person, seconds after it
+            arrives.
           </motion.p>
         </Container>
 

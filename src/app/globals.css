@@ -107,6 +107,22 @@
   --duration-base: 240ms;
   --duration-slow: 420ms;
 
+  /* ————— Header lockup —————
+     Defaults live here so the header renders at full size on the server,
+     before HeaderScroll hydrates. Without them the first paint would show
+     a zero-height bar and the logo would pop in. */
+  --header-h: 6.5rem;
+  --logo-mark: 4.5rem;
+  --logo-word: 2rem;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 9rem;
+    --logo-mark: 8rem;
+    --logo-word: 3.5rem;
+  }
+
   /* ————— Radii: pill-shaped controls, soft surfaces ————— */
   --radius-control: 9999px;
   --radius-surface: 1rem;

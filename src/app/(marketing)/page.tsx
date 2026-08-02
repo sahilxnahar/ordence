@@ -8,12 +8,10 @@ import { SpotlightGroup } from "@/components/motion/spotlight-group";
 import { LogoMark } from "@/components/ui/logo";
 import { AccordionItem } from "@/components/ui/accordion";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
-import { Magnetic } from "@/components/motion/magnetic";
 import { TiltCard } from "@/components/motion/tilt-card";
-import { WordRotate } from "@/components/motion/word-rotate";
 import { CountUp } from "@/components/motion/count-up";
-import { LazyStrands } from "@/components/react-bits";
 import {
+  LazyHeroStage,
   LazyLedgerSection,
   LazyProductSpotlight,
 } from "@/components/three/lazy";
@@ -213,65 +211,57 @@ function LedgerFallback() {
 export default function HomePage() {
   return (
     <>
-      {/* ————— 1 · Hero: rotating headline + magnetic CTAs + strands ————— */}
-      <section className="relative overflow-hidden">
-        <div className="bg-aurora absolute inset-0" aria-hidden="true" />
-        <LazyStrands className="absolute inset-0 size-full opacity-70" />
-        <Container className="relative flex min-h-[78svh] flex-col items-start justify-center gap-8 py-24">
-          <Reveal>
-            <span className="kicker">
-              <span className="glow-dot" aria-hidden="true" /> CRM · ERP · Web ·
-              AI
-            </span>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <h1 className="type-display max-w-4xl">
-              The operating system for ambitious{" "}
-              <WordRotate
-                words={["businesses.", "founders.", "brands.", "teams."]}
-                className="text-gradient-brand"
-              />
-            </h1>
-          </Reveal>
-          <Reveal delay={0.16}>
-            <p className="max-w-xl text-lg text-muted">
-              Ordence unifies your customers, operations and intelligence on one
-              enterprise-grade platform — under your brand, on your domain.
-            </p>
-          </Reveal>
-          <Reveal delay={0.24} className="flex flex-wrap items-center gap-3">
-            <Magnetic>
-              <Button variant="accent" size="lg" href="/get-started">
-                Start building <span aria-hidden="true">→</span>
-              </Button>
-            </Magnetic>
-            <Magnetic strength={0.2}>
-              <Button variant="outline" size="lg" href="/#demo">
-                See it in action
-              </Button>
-            </Magnetic>
-          </Reveal>
+      {/*
+        ————— 1 · Hero: the object comes out of the page —————
+        The swarm is layered *above* the headline with additive blending,
+        so particles pass in front of the words as light rather than
+        hiding them. "Play with it" hands over drag-to-turn and the
+        tuning panel; until then the copy leads and the scene drifts.
 
-          {/* TERRA-style corner captions */}
-          <span className="corner-caption absolute bottom-8 left-6 hidden md:block">
-            Ordence · Business OS
-          </span>
-          <span className="corner-caption absolute right-6 bottom-8 hidden items-center gap-2 md:flex">
-            Scroll to organize
-            <svg
-              viewBox="0 0 24 24"
-              className="size-3.5 opacity-70"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M12 4v16m0 0-5-5m5 5 5-5" />
-            </svg>
-          </span>
-        </Container>
+        Phones and reduced-motion get the static composition — the same
+        gate every other scene uses.
+      */}
+      <section className="relative overflow-hidden">
+        <DeferredMount
+          requireCapableDevice
+          placeholder={
+            <div className="relative isolate flex min-h-[80svh] items-center overflow-hidden bg-[#080c14]">
+              <div
+                aria-hidden="true"
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(46% 46% at 68% 50%, rgba(133,99,238,0.38), transparent 70%), radial-gradient(40% 40% at 20% 90%, rgba(255,92,92,0.14), transparent 70%)",
+                }}
+              />
+              <div
+                aria-hidden="true"
+                className="bg-grain absolute inset-0 opacity-40"
+              />
+              <Container className="relative flex flex-col items-start gap-7 py-24">
+                <span className="font-mono text-[11px] tracking-[0.24em] text-white/55 uppercase">
+                  CRM · ERP · Web · AI
+                </span>
+                <h1 className="type-display max-w-4xl text-white">
+                  The operating system for ambitious{" "}
+                  <span className="text-gradient-brand">businesses.</span>
+                </h1>
+                <p className="max-w-xl text-lg text-white/60">
+                  Ordence unifies your customers, operations and intelligence on
+                  one enterprise-grade platform — under your brand, on your
+                  domain.
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button variant="accent" size="lg" href="/get-started">
+                    Start building <span aria-hidden="true">→</span>
+                  </Button>
+                </div>
+              </Container>
+            </div>
+          }
+        >
+          <LazyHeroStage />
+        </DeferredMount>
 
         {/* capability marquee — the fun, always-moving strip */}
         <div className="relative border-t border-border bg-surface/60 py-5 backdrop-blur-sm">

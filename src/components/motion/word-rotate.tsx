@@ -38,7 +38,14 @@ export function WordRotate({
           key={w}
           aria-hidden="true"
           className={className}
-          style={{ gridArea: "1 / 1", visibility: "hidden", height: 0 }}
+          /* `height: 0` used to be here. All the sizers share grid area
+             1/1, so they overlap rather than stack — collapsing them to
+             zero height left the row sized by the mask alone, and on the
+             hero's display-size headline the mask resolved to a ~10px
+             strip. The rotating word rendered as a sliver. Letting the
+             sizers hold their natural height gives the row a real, stable
+             measure; `visibility: hidden` keeps them invisible. */
+          style={{ gridArea: "1 / 1", visibility: "hidden" }}
         >
           {w}
         </span>
@@ -55,23 +62,39 @@ export function WordRotate({
         style={{
           gridArea: "1 / 1",
           position: "relative",
+          display: "block",
           overflow: "hidden",
-          paddingBottom: "0.14em",
-          marginBottom: "-0.14em",
+          // Symmetric bleed. Bottom-only padding was enough at heading
+          // sizes but not at display sizes, where the taller ascenders of
+          // the incoming word were sheared off by the mask — on the hero
+          // the rotating word rendered as a sliver.
+          paddingTop: "0.2em",
+          marginTop: "-0.2em",
+          paddingBottom: "0.2em",
+          marginBottom: "-0.2em",
         }}
       >
-        <AnimatePresence mode="popLayout" initial={false}>
+        {/*
+          `mode="wait"`, not `popLayout`. popLayout yanks the exiting word
+          out of flow with position:absolute, and in this grid-inside-a-
+          wrapping-heading arrangement the incoming word never settled out
+          of its `y: 80%` entry offset — it sat pinned at the bottom of the
+          mask, so all a visitor ever saw was the top few pixels of the
+          glyphs. Waiting for the exit to finish keeps both words in normal
+          flow, which is the only thing this animation actually needed.
+        */}
+        <AnimatePresence mode="wait" initial={false}>
           {/* className lives on the WORD itself — gradient-text utilities
               (background-clip: text) don't reach through child boundaries,
               so applying it on a wrapper renders the word invisible. */}
           <motion.span
             key={words[index]}
             className={className}
-            initial={{ y: "80%", opacity: 0 }}
+            initial={{ y: "70%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: "-80%", opacity: 0 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            style={{ display: "inline-block" }}
+            exit={{ y: "-70%", opacity: 0 }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            style={{ display: "block" }}
           >
             {words[index]}
           </motion.span>

@@ -34,7 +34,6 @@ import type { MotionValue } from "framer-motion";
 
 export type FieldName = "convergence" | "magnetosphere" | "lamp";
 
-
 /**
  * The tunable surface of each field.
  *
@@ -57,15 +56,57 @@ export interface FieldControl {
 
 export const FIELD_CONTROLS: Record<FieldName, FieldControl[]> = {
   convergence: [
-    { key: "uSpeed", label: "Ingest rate", min: 0.05, max: 1.6, step: 0.05, value: 0.3 },
-    { key: "uChaos", label: "Channel noise", min: 0, max: 50, step: 1, value: 20 },
-    { key: "uCore", label: "Core density", min: 0.5, max: 24, step: 0.5, value: 2.5 },
+    {
+      key: "uSpeed",
+      label: "Ingest rate",
+      min: 0.05,
+      max: 1.6,
+      step: 0.05,
+      value: 0.3,
+    },
+    {
+      key: "uChaos",
+      label: "Channel noise",
+      min: 0,
+      max: 50,
+      step: 1,
+      value: 20,
+    },
+    {
+      key: "uCore",
+      label: "Core density",
+      min: 0.5,
+      max: 24,
+      step: 0.5,
+      value: 2.5,
+    },
   ],
   magnetosphere: [
-    { key: "uFieldStrength", label: "Workspaces in orbit", min: 0.5, max: 8, step: 0.1, value: 3 },
+    {
+      key: "uFieldStrength",
+      label: "Workspaces in orbit",
+      min: 0.5,
+      max: 8,
+      step: 0.1,
+      value: 3,
+    },
     { key: "uScale", label: "Core size", min: 12, max: 55, step: 1, value: 30 },
-    { key: "uFlare", label: "Flare reach", min: 0, max: 7, step: 0.1, value: 2.6 },
-    { key: "uSpeed", label: "Plasma flow", min: 0.1, max: 3, step: 0.05, value: 1.1 },
+    {
+      key: "uFlare",
+      label: "Flare reach",
+      min: 0,
+      max: 7,
+      step: 0.1,
+      value: 2.6,
+    },
+    {
+      key: "uSpeed",
+      label: "Plasma flow",
+      min: 0.1,
+      max: 3,
+      step: 0.05,
+      value: 1.1,
+    },
     {
       key: "uSat",
       label: "Brand tint",
@@ -77,10 +118,31 @@ export const FIELD_CONTROLS: Record<FieldName, FieldControl[]> = {
     },
   ],
   lamp: [
-    { key: "uSpread", label: "Beam spread", min: 0.1, max: 1, step: 0.02, value: 0.64 },
-    { key: "uReach", label: "Beam reach", min: 20, max: 95, step: 1, value: 58 },
+    {
+      key: "uSpread",
+      label: "Beam spread",
+      min: 0.1,
+      max: 1,
+      step: 0.02,
+      value: 0.64,
+    },
+    {
+      key: "uReach",
+      label: "Beam reach",
+      min: 20,
+      max: 95,
+      step: 1,
+      value: 58,
+    },
     { key: "uHaze", label: "Air haze", min: 0, max: 3, step: 0.05, value: 1.2 },
-    { key: "uFlicker", label: "Filament flicker", min: 0, max: 1, step: 0.05, value: 0.25 },
+    {
+      key: "uFlicker",
+      label: "Filament flicker",
+      min: 0,
+      max: 1,
+      step: 0.05,
+      value: 0.25,
+    },
     {
       key: "uWarmth",
       label: "Warmth",
@@ -90,7 +152,14 @@ export const FIELD_CONTROLS: Record<FieldName, FieldControl[]> = {
       value: 0.075,
       format: (v) => `${Math.round((1 - v / 0.18) * 100)}%`,
     },
-    { key: "uDrift", label: "Mote drift", min: 0, max: 2, step: 0.05, value: 0.6 },
+    {
+      key: "uDrift",
+      label: "Mote drift",
+      min: 0,
+      max: 2,
+      step: 0.05,
+      value: 0.6,
+    },
   ],
 };
 
@@ -446,6 +515,12 @@ export interface ParticleFieldProps {
   offset?: [number, number];
   /** Live control values, keyed by uniform name. See FIELD_CONTROLS. */
   params?: Record<string, number>;
+  /**
+   * Object-space rotation in radians, for scenes the visitor can grab and
+   * turn. Applied to the Points, not the camera, so the composition's
+   * framing and offset stay exactly where they were designed.
+   */
+  spin?: { x: number; y: number };
 }
 
 export function ParticleField({
@@ -457,6 +532,7 @@ export function ParticleField({
   still = false,
   offset = [0, 0],
   params,
+  spin,
 }: ParticleFieldProps) {
   const points = useRef<THREE.Points>(null);
   const material = useRef<THREE.ShaderMaterial>(null);
@@ -544,6 +620,11 @@ export function ParticleField({
       const fit = Math.min(1, viewport.width / 100);
       points.current.scale.setScalar(breathe * fit);
       points.current.position.set(offset[0] * fit, offset[1] * fit, 0);
+      if (spin) {
+        // Eased rather than assigned: a grabbed scene should have weight.
+        points.current.rotation.x += (spin.x - points.current.rotation.x) * 0.1;
+        points.current.rotation.y += (spin.y - points.current.rotation.y) * 0.1;
+      }
     }
   });
 

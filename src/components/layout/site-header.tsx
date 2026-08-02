@@ -8,6 +8,7 @@ import { Magnetic } from "@/components/motion/magnetic";
 import { CommandPalette } from "@/components/ui/command-palette";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { MobileNav } from "@/components/layout/mobile-nav";
+import { HeaderScroll } from "@/components/layout/header-scroll";
 
 const nav = [
   { href: "/platform", label: "Platform" },
@@ -23,20 +24,30 @@ const nav = [
  */
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl">
-      <Container className="flex h-28 items-center justify-between gap-4 lg:h-32">
-        {/* The brand IS the header, so the lockup gets the height rather
-            than the height constraining the lockup: the bar grew to 7rem
-            (8rem on desktop) specifically to carry a mark this size with
-            air around it. The orbital mark completes a slow turn on
-            hover — a living logo, not a sticker. */}
+    <header
+      data-site-header
+      className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl"
+    >
+      {/*
+        The lockup is deliberately oversized — 128px of mark at rest — and
+        the bar condenses to roughly half that once you scroll past the
+        first screen. That is the only way to have it both ways: an
+        unmissable brand statement on arrival, and a header that is not
+        still eating a fifth of the viewport on page nine.
+
+        Height and scale are driven by a CSS variable set once by
+        HeaderScroll, so the transition is a single compositor-friendly
+        animation rather than a class swap that re-lays-out the page.
+      */}
+      <HeaderScroll />
+      <Container className="flex h-[var(--header-h)] items-center justify-between gap-4 transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
         <Link
           href="/"
           aria-label="Ordence home"
-          className="group flex items-center gap-4 text-foreground sm:gap-5"
+          className="group flex items-center gap-4 text-foreground sm:gap-6"
         >
-          <LogoMark className="logo-intro size-[4.25rem] transition-transform duration-700 ease-out group-hover:rotate-[360deg] sm:size-24 lg:size-28" />
-          <LogoWordmark className="h-7 sm:h-10 lg:h-11" />
+          <LogoMark className="logo-intro size-[var(--logo-mark)] transition-[width,height,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:rotate-[360deg] group-hover:duration-700" />
+          <LogoWordmark className="h-[var(--logo-word)] transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
           <span className="sr-only">Ordence</span>
         </Link>
 
