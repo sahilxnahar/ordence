@@ -26,7 +26,16 @@ import type { MotionValue } from "framer-motion";
  * tested — the formations read by their silhouette, not their density —
  * so the extra 2,000 were pure GPU cost with no visual return.
  */
-const COUNT = 3000;
+/*
+ * 3,000 → 9,000.
+ *
+ * At 3k the four formations read as sparse constellations rather than as
+ * material — the orbit in the final act was a dotted outline instead of a
+ * ring of light. Tripling the count is nearly free here: positions are
+ * precomputed once into typed arrays and the shader interpolates between
+ * them, so per-frame cost is a uniform write regardless of population.
+ */
+const COUNT = 9000;
 
 const BRAND = {
   /*
@@ -39,11 +48,11 @@ const BRAND = {
     be a change in the material itself: tarnished and uneven before,
     refined and bright after.
   */
-  goldDull: new THREE.Color("#7a5a18"),
-  goldMid: new THREE.Color("#a8791f"),
-  goldBright: new THREE.Color("#e8bd63"),
-  goldPale: new THREE.Color("#f2d494"),
-  violet: new THREE.Color("#8563ee"),
+  goldDull: new THREE.Color("#8a6620"),
+  goldMid: new THREE.Color("#c28f28"),
+  goldBright: new THREE.Color("#ffd27a"),
+  goldPale: new THREE.Color("#fff0c4"),
+  violet: new THREE.Color("#a78bff"),
 };
 
 function buildFormations() {
@@ -178,7 +187,7 @@ const vertexShader = /* glsl */ `
     gl_Position = projectionMatrix * mv;
     // Bigger than before. At 2px on a near-black canvas these read as
     // sensor noise; the scene has to be legible before it can be pretty.
-    gl_PointSize = uSize * 1.55 * (1.0 / -mv.z) * (0.7 + aSeed * 0.6);
+    gl_PointSize = uSize * 1.35 * (1.0 / -mv.z) * (0.7 + aSeed * 0.6);
   }
 `;
 
@@ -192,7 +201,12 @@ const fragmentShader = /* glsl */ `
     float d = length(uv);
     float alpha = smoothstep(0.5, 0.12, d) * vTwinkle;
     if (alpha < 0.01) discard;
-    gl_FragColor = vec4(vColor, alpha);
+    // A hot core inside each point: the centre is pushed past the colour
+    // toward white, which is what makes a field of dots read as lit
+    // rather than painted.
+    float core = smoothstep(0.34, 0.0, d);
+    vec3 lit = mix(vColor, min(vColor + 0.55, vec3(1.0)), core);
+    gl_FragColor = vec4(lit, alpha);
   }
 `;
 

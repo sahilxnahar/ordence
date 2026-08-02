@@ -128,9 +128,9 @@
      Defaults live here so the header renders at full size on the server,
      before HeaderScroll hydrates. Without them the first paint would show
      a zero-height bar and the logo would pop in. */
-  --header-h: 6.5rem;
-  --logo-mark: 4.5rem;
-  --logo-word: 2rem;
+  --header-h: 7.5rem;
+  --logo-mark: 5.5rem;
+  --logo-word: 2.25rem;
 
   /* ————— Radii: pill-shaped controls, soft surfaces ————— */
   --radius-control: 9999px;
@@ -138,11 +138,29 @@
   --radius-panel: 1.5rem;
 }
 
+/* Three tiers, and the middle one exists for a reason.
+
+   The doubled lockup is tied to the SAME breakpoint as the two-row nav
+   (xl / 1280px). When it was tied to 1024 instead, tablets got a 16rem
+   mark inside a single-row 11.5rem bar — the logo overflowed its own
+   header. Sizes and layout have to change together. */
 @media (min-width: 1024px) {
   :root {
-    --header-h: 9rem;
-    --logo-mark: 8rem;
-    --logo-word: 3.5rem;
+    --header-h: 9.5rem;
+    --logo-mark: 7.5rem;
+    --logo-word: 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    /* Doubled. A 16rem mark cannot share a row with a five-item nav pill
+       and the action cluster, so here the nav drops to its own line —
+       the honest way to give the brand the space it was asked for
+       rather than shrinking it back until it fits. */
+    --header-h: 11.5rem;
+    --logo-mark: 16rem;
+    --logo-word: 5rem;
   }
 }
 
@@ -536,6 +554,117 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .logo-intro {
     animation: none;
+  }
+}
+
+/* ————— Pill navigation —————
+   A textured surface and a hover that fills rather than tints.
+
+   The surface is a faint diagonal sheen over the panel colour — enough
+   to catch the eye as light rather than as a flat rectangle, and cheap
+   because it is a gradient rather than an image. On hover a circle
+   swells up from below the pill while a second copy of the label rises
+   into place behind it, so the label appears to be lifted *by* the fill
+   instead of just changing colour on top of it.
+
+   Everything animates transform and opacity only, so the whole thing
+   stays on the compositor. */
+.pill-nav {
+  background:
+    linear-gradient(
+      118deg,
+      color-mix(in srgb, var(--foreground) 7%, transparent) 0%,
+      transparent 38%,
+      transparent 62%,
+      color-mix(in srgb, var(--foreground) 5%, transparent) 100%
+    ),
+    var(--surface);
+}
+
+.pill {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--muted);
+  transition: color 0.28s var(--ease-swift);
+}
+
+.pill:hover {
+  color: var(--accent-foreground);
+}
+
+.pill-fill {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: -1;
+  display: block;
+  aspect-ratio: 1;
+  width: 160%;
+  translate: -50% 0;
+  border-radius: 9999px;
+  background: var(--brand);
+  transform: scale(0);
+  transform-origin: 50% 100%;
+  transition: transform 0.42s var(--ease-swift);
+  pointer-events: none;
+}
+
+.pill:hover .pill-fill,
+.pill:focus-visible .pill-fill {
+  transform: scale(1);
+}
+
+.pill-stack {
+  position: relative;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.pill-label,
+.pill-label-hover {
+  display: block;
+  transition: transform 0.42s var(--ease-swift);
+}
+
+.pill-label-hover {
+  position: absolute;
+  inset: 0;
+  color: var(--brand-contrast);
+  transform: translateY(130%);
+}
+
+.pill:hover .pill-label,
+.pill:focus-visible .pill-label {
+  transform: translateY(-130%);
+}
+
+.pill:hover .pill-label-hover,
+.pill:focus-visible .pill-label-hover {
+  transform: translateY(0);
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill-fill,
+  .pill-label,
+  .pill-label-hover {
+    transition: none;
+  }
+  .pill:hover .pill-fill {
+    transform: scale(1);
   }
 }
 

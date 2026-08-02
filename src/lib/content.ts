@@ -57,6 +57,12 @@ export interface ChangelogEntry {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-08-02",
+    title: "The pipeline opens up",
+    tag: "New",
+    body: "Every record on the homepage board now carries the things a kanban card hides: the stored row with the fields the platform derives for you, the instalment plan with amounts and status, and the double-entry postings each instalment produced. Four tabs in the record panel, and the ledger foots.",
+  },
+  {
+    date: "2026-08-02",
     title: "The site turned black",
     tag: "Improved",
     body: "One canvas from top to bottom — near-black with violet and a new gold ramp, replacing a page that alternated white and ivory panels. Section rules became fading seams, the three dark bands stopped being three slightly different darks, and black is now the default rather than whatever your operating system preferred.",

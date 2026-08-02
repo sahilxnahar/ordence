@@ -30,18 +30,24 @@ export function SiteHeader() {
       className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-xl"
     >
       {/*
-        The lockup is deliberately oversized — 128px of mark at rest — and
-        the bar condenses to roughly half that once you scroll past the
-        first screen. That is the only way to have it both ways: an
-        unmissable brand statement on arrival, and a header that is not
-        still eating a fifth of the viewport on page nine.
+        The lockup is deliberately oversized — 256px of mark at rest on
+        desktop — and the bar condenses to about a fifth of that once you
+        scroll past the first screen. That is the only way to have it both
+        ways: an unmissable brand statement on arrival, and a header that
+        is not still eating a third of the viewport on page nine.
 
-        Height and scale are driven by a CSS variable set once by
+        At that size the nav cannot share a row with it, so on desktop the
+        pill drops to its own line beneath the lockup. Squeezing the brand
+        back down until a five-item nav fit would have been solving the
+        wrong problem.
+
+        Height and scale are driven by CSS variables set once by
         HeaderScroll, so the transition is a single compositor-friendly
         animation rather than a class swap that re-lays-out the page.
       */}
       <HeaderScroll />
-      <Container className="flex h-[var(--header-h)] items-center justify-between gap-3 transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+      <Container className="flex h-[var(--header-h)] items-center justify-between gap-3 transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] xl:h-auto xl:flex-col xl:items-stretch xl:gap-0 xl:py-4">
+        <div className="flex w-full items-center justify-between gap-3">
         <Link
           href="/"
           aria-label="Ordence home"
@@ -51,30 +57,6 @@ export function SiteHeader() {
           <LogoWordmark className="h-[var(--logo-word)] transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
           <span className="sr-only">Ordence</span>
         </Link>
-
-        {/*
-          The nav sits in normal flow, not absolutely centred.
-
-          Absolute centring looked tidy while the logo was small, but it
-          takes the pill out of the layout — so as the lockup grew and a
-          fifth nav item was added, the two silently overlapped instead of
-          pushing each other apart. In flow, `justify-between` guarantees
-          they can never collide at any width or item count.
-        */}
-        <nav
-          aria-label="Primary"
-          className="mx-auto hidden shrink-0 items-center gap-0.5 rounded-full border border-border bg-surface p-1.5 shadow-low xl:flex"
-        >
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full px-3.5 py-2 text-sm font-medium whitespace-nowrap text-muted transition-all duration-200 hover:bg-foreground/[0.06] hover:text-foreground active:scale-95 xl:px-4"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
 
         <div className="flex items-center gap-2.5">
           <ScrollProgress />
@@ -109,6 +91,33 @@ export function SiteHeader() {
           </div>
           <MobileNav />
         </div>
+        </div>
+
+        {/*
+          The pill, on its own row on desktop.
+
+          Each item carries a circle that swells up from beneath on hover
+          and a second copy of the label that rises with it — so the pill
+          fills rather than merely tinting. Both halves are pure CSS
+          transforms on a masked element, which keeps it on the compositor
+          and off the main thread.
+        */}
+        <nav
+          aria-label="Primary"
+          className="pill-nav mx-auto mt-3 hidden shrink-0 items-center gap-0.5 rounded-full border border-border p-1.5 shadow-low xl:flex"
+        >
+          {nav.map((item) => (
+            <Link key={item.href} href={item.href} className="pill">
+              <span aria-hidden="true" className="pill-fill" />
+              <span className="pill-stack">
+                <span className="pill-label">{item.label}</span>
+                <span aria-hidden="true" className="pill-label-hover">
+                  {item.label}
+                </span>
+              </span>
+            </Link>
+          ))}
+        </nav>
       </Container>
     </header>
   );
