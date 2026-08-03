@@ -1,52 +1,69 @@
-# Ordence Platform
+# Ordence — static site
 
-Enterprise multi-tenant SaaS platform for ordence.com — Next.js 16, Tailwind v4,
-Framer Motion, React Three Fiber, deployed to Cloudflare Workers (free plan)
-via OpenNext.
+A complete marketing site with no build step. Plain HTML, one shared
+stylesheet, one shared scene engine. Push it and it is live.
 
-**Read `BLUEPRINT.md` first** — it is the full architecture record: design
-review, brand system, multi-tenant routing, performance strategy, deployment
-runbook.
+## Deploy on Cloudflare Pages
 
-## Quickstart
+1. Push this folder to a GitHub repository.
+2. Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** →
+   **Connect to Git**, and pick the repo.
+3. Build settings:
+   - Framework preset: **None**
+   - Build command: *leave empty*
+   - Build output directory: **/**
+4. Save and Deploy.
 
-```bash
-npm install
-npm run dev
-# http://localhost:3000            → marketing (ordence.com)
-# http://ameyaa.localhost:3000     → tenant site
-# http://admin.localhost:3000      → admin console
-# http://app.localhost:3000       → product shell
+There is no build command because there is nothing to build. That is the
+point: no Node version to pin, no dependency that can break a deploy, no
+lockfile drift. What you push is what is served.
+
+## Structure
+
+```
+index.html            home
+crm/  erp/  ai/       product pages
+services/             websites
+pricing/  about/
+get-started/ contact/
+security/
+assets/
+  scene.js            the particle engine
+  site.css            every style on the site
+  three.module.min.js three.js (cached forever)
+  three.core.min.js
+  mark-layers.json    the logo, split into its seven glyphs
+brand/                official SVG logo set
+_headers              cache policy for Cloudflare Pages
 ```
 
-## Scripts
+## Editing content
 
-| Script | Purpose |
-|---|---|
-| `npm run dev` | Next dev server (with simulated Cloudflare bindings) |
-| `npm run build` | Production Next build (strict TS) |
-| `npm run lint` / `typecheck` | Quality gates |
-| `npm run preview` | Full Cloudflare workerd runtime locally |
-| `npm run deploy` | Build + deploy to Cloudflare Workers |
+Headlines, ledes and buttons live in the HTML of each page. Search for
+the text you want to change; it appears exactly once.
 
-Before first deploy: create the KV namespaces and paste their ids into
-`wrangler.jsonc` (instructions inside that file).
+To change what the particles do on a page, edit the `data-program`
+attribute on `<body>`. Available shapes:
 
-## CI: Cloudflare Workers Builds (git-connected deploys)
+`chaos` `rows` `grid` `funnel` `orbit` `wave` `columns` `shell` `drift` `mark`
 
-In the Workers Builds settings for this repo, set:
+Two to four, comma separated. Particles morph between them as you scroll.
+`data-anchor` is the index of the beat that must be fully resolved when it
+lands — usually the last one.
 
-| Setting | Value |
-|---|---|
-| Build command | `npm run build:worker` |
-| Deploy command | `npx wrangler deploy` (default is fine) |
+## Testing
 
-`npm run build` alone is NOT enough for CI — it only compiles Next.js.
-`build:worker` runs `opennextjs-cloudflare build`, which performs the Next
-build **and** generates `.open-next/` (worker bundle + compiled OpenNext
-config). Without it, the deploy step fails with
-`Could not find compiled Open Next config`.
+Add `?debug` to any URL, or press `d`, for the engine readout: which
+quality tier was chosen, particle count, frame rate.
 
-Also required before the first successful deploy: real KV namespace ids in
-`wrangler.jsonc` — a deploy with the `<REPLACE_WITH_…>` placeholders will be
-rejected when bindings are validated.
+Add `?tier=ultra` (or `high` / `medium` / `low` / `minimal`) to force a
+level and see how it looks on hardware you do not have in front of you.
+
+## Notes
+
+- The scene picks a quality tier from the visitor's cores, memory, GPU and
+  pixel count, then adjusts down if the frame rate drops. A cheap Android
+  and an M3 Max both get something that runs smoothly.
+- `prefers-reduced-motion` pins it to the minimal tier automatically.
+- Verified: 10 pages × 2 viewports, no horizontal overflow, exactly one
+  `<h1>` per page, no console errors.

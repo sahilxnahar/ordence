@@ -1,0 +1,244 @@
+:root{
+    --page:#08090c; --ink:#f4f5f7;
+    --muted:rgba(255,255,255,.62); --caption:rgba(255,255,255,.48);
+    --line:rgba(244,245,247,.09); --violet:#8563ee;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--page);color:var(--ink);
+    font:400 16px/1.6 ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  #stage{position:fixed;inset:0;z-index:0}
+  #scroller{position:relative;z-index:1}
+  /* ————— THE RAIL —————
+     Padding measured from the viewport edge does not survive a wide
+     monitor. At 2560px it leaves a 1,232px void down the middle with the
+     copy pinned to both bezels, reading as two unrelated columns rather
+     than one composition. A centred rail fixes the relationship: the copy
+     is positioned against the middle of the scene, which is where the
+     mark forms, so the wider the display the more breathing room it gets
+     instead of more emptiness. */
+  section{min-height:125svh;position:relative;overflow-x:clip}
+  /* ————— STICKY RAILS —————
+     The clipped headlines were geometry, not styling. With sections
+     exactly one viewport tall and copy centred inside them, any scroll
+     position between two beats puts BOTH blocks hard against the edges —
+     one leaving through the top, one arriving through the bottom, neither
+     ever composed. No amount of padding fixes that; the copy has to stop
+     travelling with the page.
+
+     So each beat's rail sticks to the viewport and holds its copy dead
+     centre for the whole time that beat owns the screen, while the
+     section behind it keeps scrolling. Combined with the opacity
+     governor, beats cross-fade in place instead of sliding past each
+     other. Nothing is ever half off the top of the screen. */
+  .rail{position:sticky;top:0;height:100svh;
+    width:100%;max-width:min(1360px,88vw);margin:0 auto;
+    display:flex;align-items:center;justify-content:flex-start;
+    padding-block:clamp(64px,9vh,130px);}
+  .rail.to-right{justify-content:flex-end}
+  .rail.center{justify-content:center}
+  /* Copy fades with its own beat. With a fixed canvas and 100svh
+     sections, two blocks are on screen for most of the scroll and both
+     read at half strength — which is what made the hero headline and the
+     next section's headline compete in the same frame. Now the beat
+     nearest the centre of the viewport owns it, and the others get out of
+     the way. Driven from the render loop, so it is exactly in step with
+     the formation it belongs to. */
+  .col{max-width:34rem;position:relative;isolation:isolate;
+    will-change:opacity,transform}
+  /* Scrims travel with the copy block, never with the section — two
+     sections are on screen at once, so section-level scrims stack and
+     dim a band that belongs to neither. */
+  .col::before{content:"";position:absolute;z-index:-1;inset:-14% -22%;
+    background:radial-gradient(64% 62% at 50% 50%,var(--page) 0%,rgba(8,9,12,.96) 40%,rgba(8,9,12,.66) 66%,transparent 90%);}
+  /* Both closing sections reserve room for the pill, not just the last
+     one — the pill arrives with the mark, so it is already on screen while
+     the mark's own section is being read. */
+  section.bottom > .rail{align-items:flex-end;padding-bottom:clamp(150px,19vh,210px)}
+  .eyebrow{font:500 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--caption);margin-bottom:18px;}
+  h1{font-size:clamp(38px,5.6vw,74px);line-height:1.02;letter-spacing:-.03em;font-weight:700}
+  h2{font-size:clamp(30px,3.8vw,50px);line-height:1.06;letter-spacing:-.025em;font-weight:700}
+  .lede{margin-top:20px;color:var(--muted);font-size:clamp(16px,1.35vw,19px);max-width:30rem}
+  .accent{color:var(--violet)}
+  .right{margin-left:auto;text-align:right}
+  .right .lede{margin-left:auto}
+
+  /* ————— one beat at a time —————
+   Section geometry is measured once and cached. Reading it per frame would
+   force a layout on every tick; scrollY alone is free. */
+const BEATS = [...document.querySelectorAll("#scroller section")].map(el => ({
+  el, col: el.querySelector(".col"), top: 0, h: 0,
+}));
+/* The scroll-to-progress scale is DERIVED, never guessed. A hardcoded
+   multiplier silently goes wrong the moment a section height changes —
+   which is exactly how the mark ended up only 84% formed under its own
+   headline. This solves for the value that puts progress at exactly 3.0
+   when the mark's beat is centred, whatever the section heights are. */
+let PROG_SCALE = 3.8;
+const MARK_BEAT = 4;
+function measure(){
+  for (const b of BEATS){
+    const r = b.el.getBoundingClientRect();
+    b.top = r.top + scrollY; b.h = r.height;
+  }
+  const max = document.body.scrollHeight - innerHeight;
+  const m = BEATS[MARK_BEAT];
+  if (m && max > 0){
+    /* Target the START of the mark beat's pinned window, not its middle:
+       the logo is then fully formed the instant that beat takes the
+       screen and STAYS formed for the whole time it holds it, rather than
+       still assembling under its own headline. */
+    PROG_SCALE = 3 / Math.max(0.05, Math.min(0.999, m.top / max));
+  }
+}
+measure();
+addEventListener("load", measure);
+setTimeout(measure, 600);            // after webfonts settle the metrics
+
+function beats(){
+  const vh = innerHeight;
+  for (const b of BEATS){
+    /* A beat is at full strength for exactly as long as its rail is
+       pinned — because that is precisely the range over which its copy is
+       dead centre and cannot be clipped. Measuring from the section's
+       midpoint instead was subtly wrong: it left the hero at 65% on
+       arrival, since a 125svh section's midpoint sits below the centre of
+       the viewport at scroll zero.
+
+       So distance is measured from the pinned WINDOW, and is zero
+       anywhere inside it. Outside, the copy has started travelling toward
+       an edge and fades steeply enough to be gone before it clips. */
+    const s0 = b.top, s1 = b.top + b.h - vh;
+    /* Signed displacement of this rail from its pinned position. */
+    const off = scrollY < s0 ? (s0 - scrollY)
+              : scrollY > s1 ? -(scrollY - s1) : 0;
+    const d = Math.min(1, Math.abs(off) / (vh * 1.15));
+    b.col.style.opacity = Math.pow(1 - d, 1.5).toFixed(3);
+    /* Counteract most of the drift. The gap between two pinned windows is
+       always exactly one viewport tall — that is forced by the geometry,
+       not a tunable — so without this there is a full screen of scrolling
+       where every beat has faded to nothing and the page looks broken.
+       Holding the copy near centre while it cross-fades turns that dead
+       zone into a proper hand-off, and keeps a half-faded block from
+       sliding off an edge on its way out. */
+    b.col.style.transform = `translateY(${(-off * 0.8).toFixed(1)}px)`;
+  }
+}
+
+/* ————— the arrival pill ————— */
+  #pill{position:fixed;left:50%;bottom:clamp(24px,5vh,54px);
+    transform:translate(-50%,26px);z-index:8;opacity:0;pointer-events:none;
+    transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);
+    text-align:center;max-width:min(94vw,780px);}
+  #pill.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+  #pillHint{font:500 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--caption);
+    margin-bottom:14px;height:1em;}
+  #pillBar{position:relative;display:flex;align-items:center;gap:2px;padding:6px;
+    border-radius:999px;background:rgba(8,9,12,.78);backdrop-filter:blur(20px);
+    border:1px solid var(--line);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 50px -12px rgba(0,0,0,.9);
+    overflow-x:auto;scrollbar-width:none;}
+  #pillBar::-webkit-scrollbar{display:none}
+  #pillGlide{position:absolute;top:6px;height:calc(100% - 12px);border-radius:999px;
+    background:rgba(255,255,255,.09);opacity:0;left:0;pointer-events:none;
+    transition:opacity .2s,transform .34s cubic-bezier(.22,1,.36,1),width .34s cubic-bezier(.22,1,.36,1);}
+  #pillBar:hover #pillGlide{opacity:1}
+  #pillBar a{position:relative;z-index:1;white-space:nowrap;padding:11px 17px;
+    border-radius:999px;text-decoration:none;font:500 14px/1 inherit;
+    color:var(--muted);transition:color .18s;}
+  #pillBar a:hover,#pillBar a:focus-visible{color:var(--ink)}
+  #pillBar a.go{background:var(--violet);color:#fff;margin-left:4px}
+  #pillBar a.go:hover{background:#9576f2}
+  #hint{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:9;
+    font:500 11px/1 ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--caption);transition:opacity .4s;}
+  @media (prefers-reduced-motion:reduce){#pill,#pillGlide{transition-duration:.01ms}}
+  @media (max-width:640px){#pillBar a{padding:10px 13px;font-size:13px}#pillHint{display:none}}
+
+  /* ————— diagnostics —————
+     Hidden. Add ?debug to the URL, or press D, when tuning. */
+  #dbg{position:fixed;right:16px;bottom:16px;z-index:20;display:none;
+    background:rgba(8,9,12,.86);backdrop-filter:blur(18px);border:1px solid var(--line);
+    border-radius:14px;padding:14px 16px;min-width:250px;
+    font:400 11px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07);}
+  #dbg.on{display:block}
+  #dbg b{color:var(--caption);font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+    display:block;margin-bottom:9px;font-size:10px}
+  #dbg div{display:flex;justify-content:space-between;gap:18px}
+  #dbg span{color:var(--ink)}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SITE CHROME
+   Header, buttons and footer — the parts the single-file preview never
+   needed because it was one page with no navigation.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.skip{
+  position:fixed;top:-100px;left:16px;z-index:60;
+  background:var(--violet);color:#fff;padding:10px 18px;border-radius:999px;
+  font-size:14px;text-decoration:none;transition:top .2s;
+}
+.skip:focus{top:16px}
+
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:30;
+  display:flex;align-items:center;gap:clamp(16px,3vw,40px);
+  padding:14px clamp(16px,4vw,40px);
+  /* No solid bar. A gradient that fades to nothing keeps the field
+     continuous behind the chrome instead of slicing a band off the top. */
+  background:linear-gradient(to bottom,rgba(8,9,12,.92) 0%,rgba(8,9,12,.72) 55%,transparent 100%);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.lockup{
+  display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);
+  font:600 14px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.14em;
+}
+.lockup img{display:block}
+.site-nav{display:flex;gap:4px;margin-left:auto}
+.site-nav a{
+  padding:8px 14px;border-radius:999px;text-decoration:none;
+  font:500 14px/1 inherit;color:var(--muted);transition:color .18s,background .18s;
+}
+.site-nav a:hover,.site-nav a:focus-visible{color:var(--ink);background:rgba(255,255,255,.06)}
+.site-nav a[aria-current]{color:var(--ink)}
+@media (max-width:860px){
+  .site-nav{display:none}
+  .site-header{gap:12px}
+  .site-header .btn.sm{margin-left:auto}
+}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:44px;padding:0 24px;border-radius:999px;text-decoration:none;
+  font:500 14px/1 inherit;white-space:nowrap;transition:background .18s,border-color .18s;
+}
+.btn.sm{height:36px;padding:0 18px;font-size:13px}
+.btn.primary{background:var(--violet);color:#fff}
+.btn.primary:hover{background:#9576f2}
+.btn.ghost{border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{background:rgba(255,255,255,.05)}
+.btnrow{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.col.right .btnrow{justify-content:flex-end}
+.bottom .btnrow{justify-content:center}
+
+.site-footer{
+  position:relative;z-index:2;
+  display:flex;flex-wrap:wrap;align-items:center;gap:16px;
+  padding:28px clamp(16px,4vw,40px) 120px;
+  border-top:1px solid var(--line);
+  font-size:13px;color:var(--caption);
+  /* Opaque, because it sits at the very bottom where the field is
+     densest and a transparent footer there is unreadable. */
+  background:var(--page);
+}
+.site-footer nav{display:flex;gap:18px;margin-left:auto}
+.site-footer a{color:var(--muted);text-decoration:none}
+.site-footer a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+/* The first beat sits under the fixed header; give it clearance. */
+#scroller > section:first-of-type .rail{padding-top:clamp(96px,12vh,150px)}
