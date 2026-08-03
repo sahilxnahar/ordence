@@ -1,0 +1,30 @@
+{
+  // The Worker this deploys to. It has to match the Worker's name in the
+  // Cloudflare dashboard exactly — a mismatch does not fail the build, it
+  // quietly creates a second Worker on a different subdomain and leaves
+  // the live one untouched, which reads as "the deploy did nothing".
+  "name": "ordence",
+
+  "compatibility_date": "2026-08-01",
+
+  // No "main". This is a site, not a Worker with code: Cloudflare serves
+  // the files below straight from its edge, and adding an entrypoint would
+  // put a script in front of every request for no reason.
+  "assets": {
+    // ./dist, not "./". The site is authored at the repo root, so pointing
+    // Wrangler at the root would upload .git, the build script and this
+    // file along with it. scripts/build.mjs assembles a folder that holds
+    // the site and nothing else.
+    "directory": "./dist",
+
+    // /crm and /crm/ both resolve to /crm/index.html, and the canonical
+    // form redirects. Without this, every link on the site that omits the
+    // trailing slash 404s.
+    "html_handling": "auto-trailing-slash",
+
+    // "none" rather than "404-page" because there is no 404.html to point
+    // at yet; naming one that does not exist gets a blank body instead of
+    // Cloudflare's own not-found page. Worth revisiting with a real 404.
+    "not_found_handling": "none"
+  }
+}

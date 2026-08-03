@@ -44,3 +44,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# assembled by scripts/build.mjs on every build; never committed
+/dist/
