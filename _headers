@@ -4,9 +4,16 @@
 /brand/*
   Cache-Control: public, max-age=604800
 
-/*.html
+# Pretty URLs, so the rule cannot match on a .html suffix: /crm/ is a
+# directory. Matching on the suffix meant every document page shipped
+# with no Cache-Control at all and got whatever the CDN felt like.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*/
   Cache-Control: public, max-age=0, must-revalidate
 
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN

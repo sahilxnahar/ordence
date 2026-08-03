@@ -12,7 +12,7 @@
  * lockfile resolved over the network in order to deploy. That also means
  * this file cannot import anything outside node: builtins.
  */
-import { cp, rm, mkdir, readdir } from "node:fs/promises";
+import { readFile, writeFile, rm, mkdir, readdir } from "node:fs/promises";
 import { join } from "node:path";
 
 const OUT = "dist";
@@ -54,15 +54,69 @@ if (!entries.some((e) => e.name === "index.html")) {
   );
 }
 
-await rm(OUT, { recursive: true, force: true });
+/*
+ * Clean first, and carry on if the filesystem will not allow it.
+ *
+ * On Cloudflare this is a no-op: every build starts from a fresh clone
+ * with no dist to remove. It matters locally, where a page deleted from
+ * the repo would otherwise linger in dist forever and keep getting
+ * deployed. But some environments — a synced folder, a mount that
+ * refuses unlink, a file held open by an editor — make rm fail on a
+ * directory that is perfectly readable and writable. Aborting the whole
+ * build over that is the wrong trade: a stale extra file is a much
+ * smaller problem than no build at all. So we say so, loudly, and copy
+ * over the top.
+ */
+let clean = true;
+try {
+  await rm(OUT, { recursive: true, force: true });
+} catch (err) {
+  clean = false;
+  console.warn(
+    `\n  WARNING: could not clear ./${OUT} (${err.code}).\n` +
+      "  Copying over the top instead. Files deleted from the repo may\n" +
+      "  still be present in the build. Cloudflare builds from a fresh\n" +
+      "  clone, so this affects local builds only.\n",
+  );
+}
 await mkdir(OUT, { recursive: true });
 
+/*
+ * Read-and-write rather than fs.cp.
+ *
+ * cp() unlinks an existing destination before writing it, so on a
+ * filesystem that refuses unlink it fails on the second build for
+ * exactly the same reason rm did — and it fails halfway through, leaving
+ * a partially updated dist, which is worse than either succeeding or
+ * refusing. writeFile truncates in place and never needs to delete
+ * anything. The site is a couple of megabytes; buffering a file at a
+ * time costs nothing worth optimising.
+ */
+async function copyInto(src, dest) {
+  const entry = await readdir(src, { withFileTypes: true }).catch(() => null);
+  if (entry === null) {                       // a file, not a directory
+    await writeFile(dest, await readFile(src));
+    return 1;
+  }
+  await mkdir(dest, { recursive: true });
+  let n = 0;
+  for (const e of entry) {
+    if (e.name === ".DS_Store") continue;
+    n += await copyInto(join(src, e.name), join(dest, e.name));
+  }
+  return n;
+}
+
 const shipped = [];
+let files = 0;
 for (const entry of entries) {
   if (SKIP.has(entry.name)) continue;
-  await cp(entry.name, join(OUT, entry.name), { recursive: true });
+  files += await copyInto(entry.name, join(OUT, entry.name));
   shipped.push(entry.name);
 }
 
-console.log(`dist/ assembled — ${shipped.length} entries:`);
+console.log(
+  `dist/ assembled${clean ? "" : " (not cleaned)"} — ` +
+    `${shipped.length} entries, ${files} files:`,
+);
 console.log(shipped.sort().join(", "));
