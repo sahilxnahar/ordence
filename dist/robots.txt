@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+# Drafts carry noindex in the page itself; they are absent from the
+# sitemap rather than disallowed, so the directive is not contradicted.
+Sitemap: https://ordence.com/sitemap.xml

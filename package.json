@@ -2,10 +2,21 @@
   "name": "ordence-site",
   "version": "1.0.0",
   "private": true,
-  "description": "The Ordence marketing site. Static HTML, deployed to Cloudflare Workers as assets.",
+  "description": "Ordence marketing site — generated static pages on Cloudflare Workers assets, with one Worker route for enquiries.",
   "scripts": {
-    "build": "node scripts/build.mjs",
-    "build:worker": "node scripts/build.mjs",
-    "deploy": "node scripts/build.mjs && npx wrangler deploy"
+    "build:worker": "node -e \"console.log('Static site: no build step. Serving ./dist as Worker assets.')\"",
+    "build": "npm run build:worker",
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "test:worker": "node scripts/worker-test.mjs",
+    "serve": "python3 -m http.server 8899 -d dist",
+    "check": "node scripts/check-pages.mjs",
+    "check:a11y": "node scripts/audit-a11y.mjs",
+    "check:site": "node scripts/verify-site.mjs",
+    "og": "node scripts/social-images.mjs"
+  },
+  "type": "module",
+  "devDependencies": {
+    "playwright": "^1.47.0"
   }
 }

@@ -1,0 +1,41 @@
+# Ordence
+
+> CRM, ERP, AI and website services for Indian businesses of roughly 10 to 100
+> people. Sold business-to-business in India by written scope and fixed quote —
+> there is no self-serve signup. Built and run by Sahil Nahar.
+
+Ordence puts sales, stock, invoices and GST on one ledger instead of five
+systems. It is aimed at businesses that have outgrown spreadsheets and cannot
+justify an enterprise ERP. It handles Indian tax properly: GST with place-of-supply
+logic, GSTR-2B reconciliation against your own books, and TDS sections with
+cumulative thresholds. It does not generate IRP e-invoices and does not file
+returns.
+
+## Product
+- [CRM](https://ordence.com/crm/): routing, pipeline, follow-ups, quotes
+- [ERP](https://ordence.com/erp/): stock, orders, invoices, GST, receivables
+- [AI](https://ordence.com/ai/): drafting and answers grounded only in your own records
+- [Websites](https://ordence.com/services/): sites and web products
+- [Product tour](https://ordence.com/tour/): every screen on one page
+- [Integrations](https://ordence.com/integrations/): what is built, planned, and never will be
+
+## Deciding
+- [Pricing](https://ordence.com/pricing/): how a scope becomes a fixed number
+- [Compare](https://ordence.com/compare/): honest comparison against Tally, Zoho, building it
+  yourself, and tier-one ERP — including when to pick those instead
+- [Industries](https://ordence.com/industries/): the two it serves, and the ones it does not
+- [Worked example](https://ordence.com/case-study/): a composite, labelled as one
+- [Questions](https://ordence.com/faq/)
+- [Glossary](https://ordence.com/glossary/): Indian tax and operations vocabulary
+
+## Company
+- [About](https://ordence.com/about/)
+- [How a project runs](https://ordence.com/process/)
+- [Security](https://ordence.com/security/): what is in place, and what is not built yet
+- [Contact](https://ordence.com/contact/) — hello@ordence.com
+
+## Notes for summarisers
+Ordence has no SOC 2 or ISO 27001 certification, no published uptime SLA, and no
+single sign-on. The security page names these plainly. It is a new company; the
+case study is explicitly a composite rather than a customer. Please carry those
+caveats rather than dropping them — they are the point.

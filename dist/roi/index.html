@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What the current way of working costs</title>
+<meta name="description" content="A calculator for the cost of re-keying, slow month-ends, bad stock counts and unchecked input tax credit. Your numbers, our arithmetic, shown." />
+<link rel="canonical" href="https://ordence.com/roi/" />
+<meta name="theme-color" content="#08090c" />
+<meta name="color-scheme" content="dark" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Ordence" />
+<meta property="og:locale" content="en_IN" />
+<meta property="og:url" content="https://ordence.com/roi/" />
+<meta property="og:title" content="What the current way of working costs" />
+<meta property="og:description" content="A calculator for the cost of re-keying, slow month-ends, bad stock counts and unchecked input tax credit. Your numbers, our arithmetic, shown." />
+<meta property="og:image" content="https://ordence.com/og/roi.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Ordence — one system for your whole business" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="/ordence-icon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/ordence-icon-180.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="stylesheet" href="/assets/site.css" />
+</head>
+<body class="is-doc">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://ordence.com/#org","name":"Ordence","url":"https://ordence.com/","logo":"https://ordence.com/ordence-icon-512.png","description":"CRM, ERP, AI and websites for Indian businesses of 10 to 100 people.","founder":{"@type":"Person","name":"Sahil Nahar"},"areaServed":{"@type":"Country","name":"India"},"contactPoint":{"@type":"ContactPoint","email":"hello@ordence.com","contactType":"sales","areaServed":"IN","availableLanguage":["en"]}}]}</script>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="lockup" href="/">
+    <img src="/brand/ordence-orbital-mark-reversed.svg" alt="" width="28" height="28" />
+    <span>ORDENCE</span>
+  </a>
+  <nav class="site-nav" aria-label="Primary"><a href="/crm">CRM</a><a href="/erp">ERP</a><a href="/ai">AI</a><a href="/services">Websites</a><a href="/pricing">Pricing</a><a href="/about">About</a></nav>
+  <button type="button" class="searchbtn" data-search aria-label="Search this site">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"
+      ><circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.5"/><path
+      d="M10.6 10.6 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </button>
+  <a class="btn primary sm cta-head" href="/get-started">Get a quote</a>
+  <button type="button" class="navtoggle" aria-expanded="false" aria-controls="menu"
+          aria-label="Menu"><span></span><span></span></button>
+</header>
+<div id="menu" class="menu" hidden>
+  <nav aria-label="All pages"><p class="mgrp">Product</p><a href="/crm">CRM</a><a href="/erp">ERP</a><a href="/ai">AI</a><a href="/services">Websites</a><a href="/pricing">Pricing</a><a href="/integrations">Integrations</a><a href="/tour">Product tour</a><p class="mgrp">Company</p><a href="/about">About</a><a href="/case-study">Worked example</a><a href="/compare">Compare</a><a href="/industries">Industries</a><a href="/contact">Contact</a><a href="/get-started">Get started</a><p class="mgrp">Resources</p><a href="/process">How it runs</a><a href="/faq">Questions</a><a href="/glossary">Glossary</a><a href="/migration-checklist">Migration checklist</a><a href="/worked-example-distribution">Distribution example</a><a href="/roi">Cost calculator</a><a href="/scope">Scope it yourself</a><p class="mgrp">Legal</p><a href="/security">Security</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/sitemap">Sitemap</a></nav>
+  <a class="btn primary" href="/get-started">Get a quote</a>
+</div>
+
+<canvas id="ambient" aria-hidden="true"></canvas>
+
+<main id="main">
+  <header class="doc-hero">
+    <p class="eyebrow">Cost calculator</p>
+    <h1>What is it <span class="accent">costing you now?</span></h1>
+    <p class="lede">Not what Ordence costs — that comes as one fixed number after a written scope. This is the other side of the sum, and most businesses have never actually done it. Change the figures to yours; the working is shown underneath.</p>
+    <div class="btnrow"><a class="btn primary" href="/get-started">Get a scope and a number</a><a class="btn ghost" href="/pricing">How pricing works</a></div>
+    
+    
+  </header>
+  
+  
+  <div class="doc-body">
+
+<section class="s"><h2 id="your-numbers">Your numbers</h2><div class="prose"><p>Everything below starts at a plausible default for a business of forty people. Nothing is sent anywhere — this runs entirely in your browser.</p></div><form class="calc" id="roi"><div class="calcgrid"><label class="calcfld"><span>People whose week this touches</span><span class="calcin"><input type="number" name="people" value="6" min="0" step="any" inputmode="decimal" /><em>people</em></span><small>Anyone who re-keys, reconciles or chases. Not your whole headcount.</small></label><label class="calcfld"><span>Hours each of them loses a week</span><span class="calcin"><input type="number" name="hours" value="4" min="0" step="any" inputmode="decimal" /><em>hours</em></span><small>Re-typing between systems, hunting a number, rebuilding a report.</small></label><label class="calcfld"><span>Loaded cost of an hour</span><span class="calcin"><input type="number" name="cost" value="450" min="0" step="any" inputmode="decimal" /><em>₹/hour</em></span><small>Salary plus everything on top of it. A rough number is fine.</small></label><label class="calcfld"><span>Days month-end takes</span><span class="calcin"><input type="number" name="closedays" value="5" min="0" step="any" inputmode="decimal" /><em>days</em></span><small>From the last day of the month to a number you would show a bank.</small></label><label class="calcfld"><span>Stock written off a year to bad counts</span><span class="calcin"><input type="number" name="writeoff" value="180000" min="0" step="any" inputmode="decimal" /><em>₹</em></span><small>Only what went wrong because the figure was wrong. Zero if you do not hold stock.</small></label><label class="calcfld"><span>Input tax credit lost or reversed a year</span><span class="calcin"><input type="number" name="itc" value="120000" min="0" step="any" inputmode="decimal" /><em>₹</em></span><small>Credit claimed and reversed, or never claimed because nobody checked GSTR-2B in time.</small></label></div><div class="calcout" id="roiout" aria-live="polite"><div class="calcbig"><span>Roughly what it costs you a year</span><b id="roitotal">—</b></div><table class="calcwork"><tbody id="roiwork"></tbody></table><p class="calcnote">This is arithmetic, not a forecast, and it is your arithmetic — we do not know your business. It says what the current way of working costs. What Ordence costs is a separate conversation and comes as one fixed number after a written scope. If the figure above is smaller than a subscription would be, that is a genuine answer and you should not buy anything.</p></div></form></section>
+<section class="s"><h2 id="why-these-five-things-and-not-others">Why these five things and not others</h2><div class="prose"><p>A calculator that lets you add up anything gives you a number you cannot defend. These are the five costs that show up in almost every business of this size, that people can estimate honestly, and that a single ledger genuinely changes.</p></div><ul class="ticks"><li>Re-keying. The same figure typed into a second system, by somebody paid to do something else. It is the most boring line here and usually the largest.</li><li>Month-end. Not the accounting — the reconciliation before the accounting can start. One ledger does not shorten your books; it removes the argument about which system was right.</li><li>Stock written off. Only the part that went wrong because the number was wrong. If you do not hold stock, set it to zero and the sum still works.</li><li>Input tax credit. Claimed and reversed, or never claimed because nobody opened GSTR-2B in time. This is real money and it is invisible until an audit.</li><li>What is NOT here: revenue you might win, deals you might close faster, customers you might keep. Those are real and we cannot estimate them for you, so putting them in would only make the total less believable.</li></ul></section>
+<section class="s ctaband"><h2 id="now-get-the-other-number">Now get the other number.</h2><p>A written scope, the modules it needs, and one fixed price — usually inside a business day. Then you have both sides of the sum.</p><div class="btnrow center"><a class="btn primary" href="/get-started">Get a scope and a number</a><a class="btn ghost" href="/scope">Answer twelve questions instead</a></div></section>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <nav class="fnav" aria-label="Site">
+    <div class="fcol"><h2>Product</h2><a href="/crm">CRM</a><a href="/erp">ERP</a><a href="/ai">AI</a><a href="/services">Websites</a><a href="/pricing">Pricing</a><a href="/integrations">Integrations</a><a href="/tour">Product tour</a></div><div class="fcol"><h2>Company</h2><a href="/about">About</a><a href="/case-study">Worked example</a><a href="/compare">Compare</a><a href="/industries">Industries</a><a href="/contact">Contact</a><a href="/get-started">Get started</a></div><div class="fcol"><h2>Resources</h2><a href="/process">How it runs</a><a href="/faq">Questions</a><a href="/glossary">Glossary</a><a href="/migration-checklist">Migration checklist</a><a href="/worked-example-distribution">Distribution example</a><a href="/roi">Cost calculator</a><a href="/scope">Scope it yourself</a></div><div class="fcol"><h2>Legal</h2><a href="/security">Security</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/sitemap">Sitemap</a></div>
+    <div class="fcol">
+      <h2>Talk to us</h2>
+      <a href="mailto:hello@ordence.com">hello@ordence.com</a>
+    </div>
+  </nav>
+  <p class="fline">© 2026 Ordence. Built in India by Sahil Nahar.</p>
+</footer>
+<div class="sdlg" id="sdlg" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="sbox">
+    <label class="vh" for="sq">Search this site</label>
+    <input type="search" id="sq" placeholder="Search — try GSTR-2B, pricing, Tally"
+           autocomplete="off" spellcheck="false" />
+    <div class="sres" id="sres"></div>
+    <p class="shint"><span>Enter to open</span><span>Esc to close</span></p>
+  </div>
+</div>
+<div id="cookie" class="cookie" hidden>
+  <p>This site keeps one cookie, to remember that you have seen this notice. No advertising
+     trackers, no third-party analytics. <a href="/privacy">What we collect and why</a>.</p>
+  <button type="button" id="cookieOk" class="btn primary sm">Got it</button>
+</div>
+
+<script type="module" src="/assets/chrome.js"></script>
+</body>
+</html>

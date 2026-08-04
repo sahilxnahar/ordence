@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Design system — Ordence</title>
+<meta name="description" content="Every component on one page, the tokens named, and the rules this stylesheet cannot survive breaking." />
+<meta name="robots" content="noindex,nofollow" />
+<meta name="theme-color" content="#08090c" />
+<meta name="color-scheme" content="dark" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Ordence" />
+<meta property="og:locale" content="en_IN" />
+<meta property="og:title" content="Design system — Ordence" />
+<meta property="og:description" content="Every component on one page, the tokens named, and the rules this stylesheet cannot survive breaking." />
+<meta property="og:image" content="https://ordence.com/og/design-system.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Ordence — one system for your whole business" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="/ordence-icon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/ordence-icon-180.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="stylesheet" href="/assets/site.css" />
+</head>
+<body class="is-doc">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://ordence.com/#org","name":"Ordence","url":"https://ordence.com/","logo":"https://ordence.com/ordence-icon-512.png","description":"CRM, ERP, AI and websites for Indian businesses of 10 to 100 people.","founder":{"@type":"Person","name":"Sahil Nahar"},"areaServed":{"@type":"Country","name":"India"},"contactPoint":{"@type":"ContactPoint","email":"hello@ordence.com","contactType":"sales","areaServed":"IN","availableLanguage":["en"]}},{"@type":"FAQPage","@id":"https://ordence.com/design-system/#faq","mainEntity":[{"@type":"Question","name":"Why is this page noindex?","acceptedAnswer":{"@type":"Answer","text":"Because it is for whoever is building the site. It should not compete with the ERP page for a search term, and nobody arriving from Google wants a list of hex values."}},{"@type":"Question","name":"What happens if a token is renamed?","acceptedAnswer":{"@type":"Answer","text":"The build fails. read_tokens() looks each one up by name in the stylesheet, and a missing name raises rather than rendering a blank swatch."}}]}]}</script>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="lockup" href="/">
+    <img src="/brand/ordence-orbital-mark-reversed.svg" alt="" width="28" height="28" />
+    <span>ORDENCE</span>
+  </a>
+  <nav class="site-nav" aria-label="Primary"><a href="/crm">CRM</a><a href="/erp">ERP</a><a href="/ai">AI</a><a href="/services">Websites</a><a href="/pricing">Pricing</a><a href="/about">About</a></nav>
+  <button type="button" class="searchbtn" data-search aria-label="Search this site">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"
+      ><circle cx="7" cy="7" r="4.6" stroke="currentColor" stroke-width="1.5"/><path
+      d="M10.6 10.6 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </button>
+  <a class="btn primary sm cta-head" href="/get-started">Get a quote</a>
+  <button type="button" class="navtoggle" aria-expanded="false" aria-controls="menu"
+          aria-label="Menu"><span></span><span></span></button>
+</header>
+<div id="menu" class="menu" hidden>
+  <nav aria-label="All pages"><p class="mgrp">Product</p><a href="/crm">CRM</a><a href="/erp">ERP</a><a href="/ai">AI</a><a href="/services">Websites</a><a href="/pricing">Pricing</a><a href="/integrations">Integrations</a><a href="/tour">Product tour</a><p class="mgrp">Company</p><a href="/about">About</a><a href="/case-study">Worked example</a><a href="/compare">Compare</a><a href="/industries">Industries</a><a href="/contact">Contact</a><a href="/get-started">Get started</a><p class="mgrp">Resources</p><a href="/process">How it runs</a><a href="/faq">Questions</a><a href="/glossary">Glossary</a><a href="/migration-checklist">Migration checklist</a><a href="/worked-example-distribution">Distribution example</a><a href="/roi">Cost calculator</a><a href="/scope">Scope it yourself</a><p class="mgrp">Legal</p><a href="/security">Security</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/sitemap">Sitemap</a></nav>
+  <a class="btn primary" href="/get-started">Get a quote</a>
+</div>
+
+<canvas id="ambient" aria-hidden="true"></canvas>
+
+<main id="main">
+  <header class="doc-hero">
+    <p class="eyebrow">Internal</p>
+    <h1>The system, on one page</h1>
+    <p class="lede">Every component the site uses, rendered live rather than described. The tokens are read out of the stylesheet at build time, so nothing on this page can disagree with what ships.</p>
+    
+    
+    
+  </header>
+  
+  <nav class="toc" aria-label="On this page" tabindex="0"><p>On this page</p><a href="#why-this-page-exists">Why this page exists</a><a href="#twelve-tokens">Twelve tokens</a><a href="#type">Type</a><a href="#buttons">Buttons</a><a href="#points">Points</a><a href="#cards">Cards</a><a href="#steps">Steps</a><a href="#tables">Tables</a><a href="#faq">FAQ</a><a href="#the-rules-this-stylesheet-cannot-survive">The rules this stylesheet cannot survive</a></nav>
+  <div class="doc-body">
+
+<section class="s"><h2 id="why-this-page-exists">Why this page exists</h2><div class="prose"><p>A stylesheet nobody can see the whole of is a stylesheet everybody adds to. Four months in, that is how a site ends up with three greys that are nearly the same grey and two button heights that are nearly the same height.</p><p>So: one screen with all of it on. If a component is not here it does not exist, and if it is here and looks wrong, it looks wrong everywhere. That is the intended failure mode — this page should break first.</p></div></section>
+<section class="s"><h2 id="twelve-tokens">Twelve tokens</h2><div class="prose"><p>Read out of <code>scene.css</code>, <code>chrome.css</code> and <code>app.css</code> at build time. If a name here stops being defined, the build fails rather than shipping a page describing a colour nobody uses.</p></div><h3 class="tokh">The site</h3><ul class="toks"><li class="tok"><span class="tokchip" style="background:#08090c"></span><code>--page</code><b>#08090c</b><span>Everything sits on this. Near-black rather than black: pure #000 makes the type look like it is floating in a hole.</span></li><li class="tok"><span class="tokchip" style="background:#f4f5f7"></span><code>--ink</code><b>#f4f5f7</b><span>Body text and headings. Off-white, for the same reason.</span></li><li class="tok"><span class="tokchip" style="background:rgba(255,255,255,.62)"></span><code>--muted</code><b>rgba(255,255,255,.62)</b><span>A second voice — ledes, footer links, the text inside a card. Set in white at an alpha so it works over any surface.</span></li><li class="tok"><span class="tokchip" style="background:rgba(255,255,255,.48)"></span><code>--caption</code><b>rgba(255,255,255,.48)</b><span>The third and quietest: captions, field hints, eyebrows. Below this the text stops passing contrast, so there is no fourth.</span></li><li class="tok"><span class="tokchip" style="background:rgba(244,245,247,.09)"></span><code>--line</code><b>rgba(244,245,247,.09)</b><span>Every border and rule on the site. One value, so nothing is nearly-the-same-grey as anything else.</span></li><li class="tok"><span class="tokchip" style="background:#8563ee"></span><code>--violet</code><b>#8563ee</b><span>The accent. Figures, bars, focus rings, one word per headline.</span></li><li class="tok"><span class="tokchip" style="background:#7452e6"></span><code>--violet-solid</code><b>#7452e6</b><span>The same accent, deep enough to carry white text at 4.5:1. Buttons and the skip link only.</span></li></ul><h3 class="tokh">The product screens</h3><ul class="toks"><li class="tok"><span class="tokchip" style="background:#ffffff"></span><code>--a-bg</code><b>#ffffff</b><span>The application is light. These frames are light because it is.</span></li><li class="tok"><span class="tokchip" style="background:#1a1a1a"></span><code>--a-fg</code><b>#1a1a1a</b><span>Text inside a frame.</span></li><li class="tok"><span class="tokchip" style="background:#aa8340"></span><code>--a-primary</code><b>#aa8340</b><span>The brass the product actually uses. Borders, accents, rules.</span></li><li class="tok"><span class="tokchip" style="background:#7a5d24"></span><code>--a-primary-solid</code><b>#7a5d24</b><span>The same brass, deep enough for white text on top of it.</span></li><li class="tok"><span class="tokchip" style="background:#eae6dd"></span><code>--a-border</code><b>#eae6dd</b><span>The warm border the app draws every card with.</span></li></ul></section>
+<aside class="inlinecta"><p>Ready to see this against your own numbers?</p><a class="btn ghost sm" href="/get-started">Get a scope and a number</a></aside>
+<section class="s"><h2 id="type">Type</h2><div class="specimen"><p class="sp-h1">Run your whole business on one system.</p><p class="sp-m">h1 · clamp(38px, 5.6vw, 74px) / 1.02 / -0.03em / 700</p><p class="sp-h2">Every order, on time.</p><p class="sp-m">h2 · clamp(30px, 3.8vw, 50px) / 1.06 / -0.025em / 700</p><p class="sp-h3">What it handles out of the box</p><p class="sp-m">section heading · clamp(24px, 2.6vw, 32px) / 700</p><p class="sp-b">Body copy. Sales, stock, invoices and GST in one place instead of five, for businesses of 10 to 100 people who have outgrown spreadsheets and cannot afford SAP.</p><p class="sp-m">body · 16px / 1.6 / 400 · system sans</p><p class="sp-c">Caption. The quietest voice on the site.</p><p class="sp-m">caption · 13px / 1.5 · --caption</p><p class="sp-e">EYEBROW · SET IN MONO</p><p class="sp-m">eyebrow · 11px / 0.22em tracking · mono</p></div></section>
+<section class="s"><h2 id="buttons">Buttons</h2><div class="btnrow"><a class="btn primary" href="#">Primary, 44px</a><a class="btn ghost" href="#">Ghost, 44px</a><a class="btn primary sm" href="#">Primary small, 36px</a><a class="btn ghost sm" href="#">Ghost small, 36px</a></div><p class="calcnote">Two weights and two sizes. There is no third weight and no third size, and adding one is a decision, not a convenience. Tab to any of them to see the ring.</p></section>
+<aside class="inlinecta"><p>Ready to see this against your own numbers?</p><a class="btn ghost sm" href="/get-started">Get a scope and a number</a></aside>
+<section class="s"><h2 id="points">Points</h2><div class="prose"></div><ul class="ticks"><li>A points block. Used where three or four things are true at once and none of them needs a paragraph.</li><li>Each item is a sentence, not a fragment — a bulleted noun tells the reader nothing they could not have guessed.</li><li>Four is the usual maximum. At six it stops being a list and starts being an inventory.</li></ul></section>
+<section class="s"><h2 id="cards">Cards</h2><ul class="cards"><li><h3>What it is</h3><p>Three or four across, each with a heading and two lines. The heading is the claim.</p></li><li><h3>When to use it</h3><p>When the items are peers — four modules, three stages, five industries.</p></li><li><h3>When not to</h3><p>When one item matters more than the others. A grid says they are equal.</p></li></ul></section>
+<aside class="inlinecta"><p>Ready to see this against your own numbers?</p><a class="btn ghost sm" href="/get-started">Get a scope and a number</a></aside>
+<section class="s"><h2 id="steps">Steps</h2><ol class="steps"><li><h3>Numbered</h3><p>Where order is the point. A card grid says these are peers; steps say this one comes first.</p></li><li><h3>Sequential</h3><p>The number is generated, not typed, so inserting one in the middle cannot leave two threes.</p></li><li><h3>Finite</h3><p>Every step block on the site ends somewhere the reader can see from the first one.</p></li></ol></section>
+<section class="s"><h2 id="tables">Tables</h2><div class="prose"></div><div class="tablewrap" tabindex="0" role="region" aria-label="Tables — table"><table><thead><tr><th scope="col">Component</th><th scope="col">Where it is used</th><th scope="col">Notes</th></tr></thead><tbody><tr><td>Table</td><td>Comparisons, pricing, module lists</td><td>Scrolls sideways below 760px rather than squashing</td></tr><tr><td>FAQ</td><td>Product pages and /faq</td><td>A details element, so find-in-page reaches a closed answer</td></tr><tr><td>Screen</td><td>Every product page</td><td>HTML recreation, out of the tab order</td></tr></tbody></table></div></section>
+<aside class="inlinecta"><p>Ready to see this against your own numbers?</p><a class="btn ghost sm" href="/get-started">Get a scope and a number</a></aside>
+<section class="s"><p class="note">A note band. One idea, set apart, where the surrounding prose would bury it. Used sparingly — a page with three of these has none, because the reader stops seeing them.</p></section>
+<section class="s"><h2 id="faq">FAQ</h2><div class="faq"><details><summary>Why is this page noindex?</summary><p>Because it is for whoever is building the site. It should not compete with the ERP page for a search term, and nobody arriving from Google wants a list of hex values.</p></details><details><summary>What happens if a token is renamed?</summary><p>The build fails. read_tokens() looks each one up by name in the stylesheet, and a missing name raises rather than rendering a blank swatch.</p></details></div></section>
+<aside class="inlinecta"><p>Ready to see this against your own numbers?</p><a class="btn ghost sm" href="/get-started">Get a scope and a number</a></aside>
+<section class="s"><h2 id="the-rules-this-stylesheet-cannot-survive">The rules this stylesheet cannot survive</h2><div class="prose"><p>Five. Each has been broken at least once, each took longer to find than it should have, and each fails quietly enough to ship. Three are enforced by the build; the other two are enforced by a test and by having one door.</p></div><ul class="rules"><li class="rule"><b>1. <code>font</code> shorthand may not contain <code>inherit</code></b><p><code>inherit</code> is not a valid component of the <code>font</code> shorthand, so a browser that meets one discards the whole declaration and falls back to 16px/400 in its default family. It looks almost right, which is why this shipped twice before anyone caught it: buttons a size too large, and a textarea rendering in monospace. Use the longhand properties.</p><p class="ruleg"><span>Guard</span>The build greps for it and refuses to write the stylesheet.</p></li><li class="rule"><b>2. <code>overflow: clip</code>, never <code>overflow: hidden</code></b><p><code>hidden</code> makes an element a scroll container. <code>position: sticky</code> sticks to its nearest scroll container — so one <code>overflow:hidden</code> on an ancestor and every sticky rail on the home page silently stops sticking, with no error and no visual clue except that the composition is wrong. <code>clip</code> does the same visual job and creates no scroll container.</p><p class="ruleg"><span>Guard</span>The build rejects <code>overflow:hidden</code> unless the line carries a <code>/* sticky-safe */</code> marker saying nothing inside it is sticky.</p></li><li class="rule"><b>3. A canvas needs an explicit width</b><p>A canvas is a replaced element, so <code>width:auto</code> resolves to its intrinsic bitmap width — not to the width of its container. The ambient canvas was 928 pixels wide on a 390-pixel phone, from a rule that reads correctly and is invisible on a desktop.</p><p class="ruleg"><span>Guard</span>The build rejects any rule whose selector names a canvas and whose block does not set a width.</p></li><li class="rule"><b>4. Nothing removes a focus indicator</b><p><code>outline:none</code> on a form field is the single most common way a site becomes unusable by keyboard, and it is almost always written to remove a ring the author found ugly rather than to replace it. Every interactive element on this site takes one ring, defined once. Where a field is borderless inside a shell that clips, the shell wears the ring instead.</p><p class="ruleg"><span>Guard</span>Not build-guarded — a keyboard walk of every page checks it instead, because whether an indicator is <em>visible</em> is not a thing a grep can answer.</p></li><li class="rule"><b>5. Format, then escape — always that order</b><p>Every string on the site goes through <code>fmt()</code> to fill placeholders and <code>E()</code> to escape HTML. Escaping first and formatting after would let a value carrying an angle bracket land in the markup unescaped, which is the shape of most template injection bugs.</p><p class="ruleg"><span>Guard</span><code>esc()</code> is the only sanctioned door and does both, in that order.</p></li></ul></section>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <nav class="fnav" aria-label="Site">
+    <div class="fcol"><h2>Product</h2><a href="/crm">CRM</a><a href="/erp">ERP</a><a href="/ai">AI</a><a href="/services">Websites</a><a href="/pricing">Pricing</a><a href="/integrations">Integrations</a><a href="/tour">Product tour</a></div><div class="fcol"><h2>Company</h2><a href="/about">About</a><a href="/case-study">Worked example</a><a href="/compare">Compare</a><a href="/industries">Industries</a><a href="/contact">Contact</a><a href="/get-started">Get started</a></div><div class="fcol"><h2>Resources</h2><a href="/process">How it runs</a><a href="/faq">Questions</a><a href="/glossary">Glossary</a><a href="/migration-checklist">Migration checklist</a><a href="/worked-example-distribution">Distribution example</a><a href="/roi">Cost calculator</a><a href="/scope">Scope it yourself</a></div><div class="fcol"><h2>Legal</h2><a href="/security">Security</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="/sitemap">Sitemap</a></div>
+    <div class="fcol">
+      <h2>Talk to us</h2>
+      <a href="mailto:hello@ordence.com">hello@ordence.com</a>
+    </div>
+  </nav>
+  <p class="fline">© 2026 Ordence. Built in India by Sahil Nahar.</p>
+</footer>
+<div class="sdlg" id="sdlg" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="sbox">
+    <label class="vh" for="sq">Search this site</label>
+    <input type="search" id="sq" placeholder="Search — try GSTR-2B, pricing, Tally"
+           autocomplete="off" spellcheck="false" />
+    <div class="sres" id="sres"></div>
+    <p class="shint"><span>Enter to open</span><span>Esc to close</span></p>
+  </div>
+</div>
+<div id="cookie" class="cookie" hidden>
+  <p>This site keeps one cookie, to remember that you have seen this notice. No advertising
+     trackers, no third-party analytics. <a href="/privacy">What we collect and why</a>.</p>
+  <button type="button" id="cookieOk" class="btn primary sm">Got it</button>
+</div>
+
+<script type="module" src="/assets/chrome.js"></script>
+</body>
+</html>

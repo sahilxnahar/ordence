@@ -7,15 +7,21 @@
 
   "compatibility_date": "2026-08-01",
 
-  // No "main". This is a site, not a Worker with code: Cloudflare serves
-  // the files below straight from its edge, and adding an entrypoint would
-  // put a script in front of every request for no reason.
+  // There IS an entrypoint now, for exactly one route: POST /api/enquiry.
+  // Cloudflare serves a matching static asset without ever invoking this
+  // script, so every HTML page and every image still comes straight off
+  // the edge. Only a request that matches no asset reaches the Worker.
+  "main": "worker/index.js",
+
   "assets": {
     // ./dist, not "./". The site is authored at the repo root, so pointing
     // Wrangler at the root would upload .git, the build script and this
     // file along with it. scripts/build.mjs assembles a folder that holds
     // the site and nothing else.
     "directory": "./dist",
+
+    // Gives the Worker a way to hand a request back to the asset layer.
+    "binding": "ASSETS",
 
     // /crm and /crm/ both resolve to /crm/index.html, and the canonical
     // form redirects. Without this, every link on the site that omits the
@@ -25,6 +31,53 @@
     // "none" rather than "404-page" because there is no 404.html to point
     // at yet; naming one that does not exist gets a blank body instead of
     // Cloudflare's own not-found page. Worth revisiting with a real 404.
-    "not_found_handling": "none"
+    "not_found_handling": "404-page"
+  },
+
+  // ── PLAIN SETTINGS ────────────────────────────────────────────────
+  // Not secrets. These are safe to have in the repo and safe to change
+  // here — edit, save, `npm run deploy`, done.
+  //
+  //   MAIL_FROM    who the automatic emails come from. The address must
+  //                be on a domain verified in Resend, or Resend refuses
+  //                to send. The friendly name in front of it is free text.
+  //   NOTIFY_TO    where a new enquiry lands. Replies to it go straight
+  //                to whoever sent the enquiry, because the Worker sets
+  //                Reply-To to their address.
+  //   SAMPLE_URL   the piece of work linked in the acknowledgement email
+  //   SAMPLE_NAME  how that link is described in the sentence around it
+  "vars": {
+    "MAIL_FROM": "Ordence <sahil@ordence.com>",
+    "NOTIFY_TO": "sahil@ordence.com",
+    "SAMPLE_URL": "https://ordence.com",
+    "SAMPLE_NAME": "ordence.com — this site"
   }
+
+  // ── THE LOG — not bound yet, and that is fine ──────────────────────
+  //
+  // The Worker writes enquiries, 404 paths and events to a KV namespace
+  // called LOG. With no binding here, every one of those writes returns
+  // immediately and nothing else changes: the site works exactly as it
+  // does today, the emails still send, and there is simply no record.
+  //
+  // To turn it on, once, from a terminal in this folder:
+  //
+  //     npx wrangler kv namespace create LOG
+  //
+  // That prints an id. Uncomment the block below, paste the id in, and
+  // deploy. Nothing in worker/index.js needs to change.
+  //
+  //   ,"kv_namespaces": [
+  //     { "binding": "LOG", "id": "paste-the-id-here" }
+  //   ]
+  //
+  // What lands in it: enquiries under `enq:`, not-found paths under
+  // `notfound:`, client events under `event:` — each key prefixed with an
+  // ISO timestamp so a list comes back in order. Enquiries are kept two
+  // years, everything else ninety days, expiring on their own.
+  //
+  // To read the enquiries back:
+  //
+  //     npx wrangler kv key list --binding LOG --prefix enq:
+  //     npx wrangler kv key get --binding LOG "<the key>"
 }
