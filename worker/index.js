@@ -344,10 +344,15 @@ export default {
       html: internalEmail(data, meta),
       replyTo: data.email,
     });
+    /* Reply-To matters more than it looks. The From address is on a
+       sending subdomain, which can send but has no inbound MX and cannot
+       receive — so a person who simply hits Reply on the acknowledgement
+       would get a bounce, having done exactly what we invited them to do. */
     ctx.waitUntil(send(env, {
       to: data.email,
       subject: "Ordence — we have your message",
       html: ackEmail(data, env),
+      replyTo: env.REPLY_TO || to,
     }));
 
     /* `kept` is deliberately not returned to the browser. Whether the

@@ -47,7 +47,14 @@
   //   SAMPLE_URL   the piece of work linked in the acknowledgement email
   //   SAMPLE_NAME  how that link is described in the sentence around it
   "vars": {
-    "MAIL_FROM": "Ordence <sahil@ordence.com>",
+    // Resend is verified on updates.ordence.com, not ordence.com — so this
+    // MUST be an address on that subdomain or Resend rejects every send.
+    // Verified 4 Aug: resend._domainkey.updates.ordence.com exists,
+    // resend._domainkey.ordence.com does not.
+    "MAIL_FROM": "Ordence <sahil@updates.ordence.com>",
+    // updates.ordence.com can send but cannot receive — it has no inbound MX.
+    // Without this, a reply to the acknowledgement bounces.
+    "REPLY_TO": "sahil@ordence.com",
     "NOTIFY_TO": "sahil@ordence.com",
     "SAMPLE_URL": "https://ordence.com",
     "SAMPLE_NAME": "ordence.com — this site"
